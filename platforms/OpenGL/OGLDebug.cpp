@@ -43,7 +43,7 @@ namespace selyan
         return errorCode;
     }
 
-    void APIENTRY OGLDebugOutput(GLenum source,
+    void APIENTRY oglDebugOutput(GLenum source,
                                  GLenum type,
                                  GLuint id,
                                  GLenum severity,
