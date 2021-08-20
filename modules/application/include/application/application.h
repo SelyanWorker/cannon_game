@@ -7,6 +7,7 @@
 #include "event/mouse_event.h"
 #include "event/window_events.h"
 #include "core/window.h"
+#include "layers/layer_stack.h"
 
 namespace selyan
 {
@@ -16,17 +17,17 @@ namespace selyan
         void onEvent(Event &e);
 
         bool onWindowClose(WindowCloseEvent &e);
-        /*
-        bool OnWindowResize(WindowResizeEvent& e);
-        bool OnKeyPressed(KeyPressedEvent& e);
-        bool OnKeyRelease(KeyReleaseEvent& e);
-        */
+
         void shutDown();
 
     public:
         Application();
 
         virtual ~Application();
+
+        void pushLayer(Layer *layer);
+
+        void popLayer();
 
         void run();
 
@@ -44,6 +45,7 @@ namespace selyan
         bool m_run;
         Window *m_window;
         float m_frameTime;
+        LayerStack m_layerStack;
         static Application *m_application;
     };
 

@@ -1,8 +1,4 @@
-
 #include "application/application.h"
-
-#include "core/input.h"
-#include "core/window.h"
 #include "render/renderer.h"
 
 #include <GLFW/glfw3.h>
@@ -12,8 +8,6 @@ namespace selyan
     uint8_t KeyStates[512];
 
     Application *Application::m_application = nullptr;
-
-    //ImGuiLayer *imguiLayer;
 
     Application::Application()
     {
@@ -31,15 +25,13 @@ namespace selyan
         for (uint16_t i = 0; i < 512; i++)
             KeyStates[i] = 0;
 
-//        imguiLayer = new ImGuiLayer();
-//        pushLayer(imguiLayer);
     }
 
     Application::~Application() { shutDown(); }
 
-//    void Application::pushLayer(Layer *layer) { m_layerStack.pushLayer(layer); }
-//
-//    void Application::popLayer() { m_layerStack.popLayer(); }
+    void Application::pushLayer(Layer *layer) { m_layerStack.pushLayer(layer); }
+
+    void Application::popLayer() { m_layerStack.popLayer(); }
 
     Application *Application::get() { return m_application; }
 
@@ -59,17 +51,15 @@ namespace selyan
 
             Clear();
 
-//            for (auto layer : m_layerStack)
-//            {
-//                layer->onUpdate();
-//            }
-//
-//            imguiLayer->begin();
-//            for (auto layer : m_layerStack)
-//            {
-//                layer->onImGuiRender();
-//            }
-//            imguiLayer->end();
+            for (auto layer : m_layerStack)
+            {
+                layer->onUpdate();
+            }
+
+            for (auto layer : m_layerStack)
+            {
+              layer->onRender();
+            }
 
             m_window->swapBuffers();
 
@@ -96,12 +86,12 @@ namespace selyan
         dispatcher.dispatch<WindowCloseEvent>(std::bind(
             &Application::onWindowClose, this, std::placeholders::_1));
 
-        //        for (auto layer : m_layerStack)
-//        {
-//            layer->onEvent(e);
-//            if (e.Handled)
-//                break;
-//        }
+                for (auto layer : m_layerStack)
+        {
+            layer->onEvent(e);
+            if (e.Handled)
+                break;
+        }
     }
 
     bool Application::onWindowClose(WindowCloseEvent &e)

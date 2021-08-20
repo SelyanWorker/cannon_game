@@ -1,0 +1,10 @@
+add_library(layers
+        STATIC
+        src/layer_stack.cpp)
+target_include_directories(layers
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(layers
+        PUBLIC
+        event
+        )

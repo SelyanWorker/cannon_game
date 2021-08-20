@@ -9,5 +9,6 @@ target_link_libraries(application
         core
         event
         render
+        layers
         glfw
         )
