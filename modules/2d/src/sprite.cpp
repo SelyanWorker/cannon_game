@@ -13,8 +13,8 @@ namespace selyan
             m_sheet->GetTranslationMatrix(m_frames.back().row, m_frames.back().column);
 
         Vector2f textureSize = m_sheet->GetSpriteSize();
-        textureSize.x /= m_sheet->GetWidth();
-        textureSize.y /= m_sheet->GetHeight();
+        textureSize.x /= m_sheet->getWidth();
+        textureSize.y /= m_sheet->getHeight();
 
         m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
         m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left

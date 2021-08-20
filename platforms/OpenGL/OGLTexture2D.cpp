@@ -122,8 +122,8 @@ namespace selyan
 
     void OGLTexture2D::TextureData(Image *image)
     {
-        m_width = image->GetWidth();
-        m_height = image->GetHeight();
+        m_width = image->getWidth();
+        m_height = image->getHeight();
 
         glBindTexture(GL_TEXTURE_2D, m_index);
 
@@ -134,19 +134,19 @@ namespace selyan
         m_internalFormat = GL_RGBA8;
         m_dataFormat = GL_RGBA;
         GLint aligment = 4;
-        if (image->GetChannels() == 3)
+        if (image->getChannels() == 3)
         {
             m_internalFormat = GL_RGB8;
             m_dataFormat = GL_RGB;
             aligment = 1;
         }
-        else if (image->GetChannels() == 2)
+        else if (image->getChannels() == 2)
         {
             m_internalFormat = GL_RG8;
             m_dataFormat = GL_RG;
             aligment = 2;
         }
-        else if (image->GetChannels() == 1)
+        else if (image->getChannels() == 1)
         {
             m_internalFormat = GL_R8;
             m_dataFormat = GL_RED;
@@ -161,8 +161,7 @@ namespace selyan
                      m_height,
                      0,
                      m_dataFormat,
-                     m_dataType,
-                     image->GetData());
+                     m_dataType, image->getData());
 
         glBindTexture(GL_TEXTURE_2D, 0);
     }

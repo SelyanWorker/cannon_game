@@ -16,19 +16,19 @@ namespace selyan
 
         ~ImageSTB();
 
-        uint32_t GetWidth() const override;
+        uint32_t getWidth() const override;
 
-        uint32_t GetHeight() const override;
+        uint32_t getHeight() const override;
 
-        uint32_t GetChannels() const override;
+        uint32_t getChannels() const override;
 
-        uint8_t *GetData() const override;
+        uint8_t *getData() const override;
 
-        ImageTypes GetType() const override;
+        ImageTypes getType() const override;
 
-        bool SaveImage(char const *file_name, ImageTypes Type) override;
+        bool saveImage(char const *file_name, ImageTypes Type) override;
 
-        void Rescale(size_t width, size_t height) override;
+        void rescale(size_t width, size_t height) override;
 
     private:
         ImageSTB() : m_width(0), m_height(0), m_channels(0), m_data(nullptr) {}
