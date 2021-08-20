@@ -59,12 +59,12 @@ namespace selyan
 
     uint8_t *ImageSTB::getData() const { return m_data; }
 
-    ImageTypes ImageSTB::getType() const { return ImageTypes::RN_PNG; }
+    ImageTypes ImageSTB::getType() const { return ImageTypes::png; }
 
     bool ImageSTB::saveImage(char const *fileName, ImageTypes Type)
     {
         int result = 0;
-        if (Type == ImageTypes::RN_PNG)
+        if (Type == ImageTypes::png)
             result = stbi_write_png(fileName,
                                     m_width,
                                     m_height,

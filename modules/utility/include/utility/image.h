@@ -6,8 +6,8 @@ namespace selyan
 {
     enum class ImageTypes
     {
-        RN_PNG,
-        RN_JPEG
+        png,
+        jpeg
     };
 
     class Image
