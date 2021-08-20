@@ -1,0 +1,13 @@
+add_library(sprite
+        STATIC
+        src/sprite.cpp
+        src/sprite_sheet.cpp)
+target_include_directories(sprite
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(sprite
+        PUBLIC
+        core
+        render
+        glm
+        )
