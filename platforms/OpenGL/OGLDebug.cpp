@@ -6,7 +6,7 @@
 
 namespace selyan
 {
-    GLenum CheckError_(int line)
+    GLenum checkError_(int line)
     {
         GLenum errorCode;
         while ((errorCode = glGetError()) != GL_NO_ERROR)
@@ -37,13 +37,13 @@ namespace selyan
                     break;
             }
             // std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-            //RN_CORE_ERROR("{0} line: {1}", error, line);
+            // RN_CORE_ERROR("{0} line: {1}", error, line);
             std::cout << error << " line:  " << line << std::endl;
         }
         return errorCode;
     }
 
-    void APIENTRY OGLDebugOutput(GLenum source,
+    void APIENTRY oglDebugOutput(GLenum source,
                                  GLenum type,
                                  GLuint id,
                                  GLenum severity,
@@ -125,17 +125,16 @@ namespace selyan
                 severityLine += "notification";
                 break;
         }
-//
-//        RN_CORE_ERROR("OpenGL Debug message ({0}): {1} \n {2} \n {3} \n {4}",
-//                      id,
-//                      message,
-//                      srcLine,
-//                      typeLine,
-//                      severityLine);
+        //
+        //        RN_CORE_ERROR("OpenGL Debug message ({0}): {1} \n {2} \n {3} \n {4}",
+        //                      id,
+        //                      message,
+        //                      srcLine,
+        //                      typeLine,
+        //                      severityLine);
 
-        std::cout << "OpenGL Debug message (" << id << "): " << message << "\n "
-                  << srcLine << " \n " << typeLine << " \n " << severityLine
-                  << std::endl;
+        std::cout << "OpenGL Debug message (" << id << "): " << message << "\n " << srcLine
+                  << " \n " << typeLine << " \n " << severityLine << std::endl;
     }
 
 }

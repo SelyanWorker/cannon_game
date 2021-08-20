@@ -3,7 +3,7 @@
 namespace selyan
 {
     // vertex buffer
-    VertexBuffer *VertexBuffer::Create(uint32_t size, void *data)
+    VertexBuffer *VertexBuffer::create(uint32_t size, void *data)
     {
         return new OGLVertexBuffer(size, data);
     }
@@ -18,31 +18,31 @@ namespace selyan
 
     OGLVertexBuffer::~OGLVertexBuffer() { glDeleteBuffers(1, &m_index); }
 
-    void OGLVertexBuffer::SetBufferLayout(BufferLayout layout) { m_layout = layout; }
+    void OGLVertexBuffer::setBufferLayout(BufferLayout layout) { m_layout = layout; }
 
-    BufferLayout const &OGLVertexBuffer::GetBufferLayout() const { return m_layout; }
+    BufferLayout const &OGLVertexBuffer::getBufferLayout() const { return m_layout; }
 
-    void OGLVertexBuffer::SubData(int64_t offset, int64_t size, void *data)
+    void OGLVertexBuffer::subData(int64_t offset, int64_t size, void *data)
     {
-        Bind();
+        bind();
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-        UnBind();
+        unbind();
     }
 
-    void OGLVertexBuffer::Reallocate(uint32_t size, void *data)
+    void OGLVertexBuffer::reallocate(uint32_t size, void *data)
     {
-        Bind();
+        bind();
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
         m_size = size;
-        UnBind();
+        unbind();
     }
 
-    void OGLVertexBuffer::Bind() { glBindBuffer(GL_ARRAY_BUFFER, m_index); }
+    void OGLVertexBuffer::bind() { glBindBuffer(GL_ARRAY_BUFFER, m_index); }
 
-    void OGLVertexBuffer::UnBind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+    void OGLVertexBuffer::unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
     // index buffer
-    IndexBuffer *IndexBuffer::Create(uint32_t size, uint32_t count, void *data)
+    IndexBuffer *IndexBuffer::create(uint32_t size, uint32_t count, void *data)
     {
         return new OGLIndexBuffer(size, count, data);
     }
@@ -59,30 +59,30 @@ namespace selyan
 
     OGLIndexBuffer::~OGLIndexBuffer() { glDeleteBuffers(1, &m_index); }
 
-    uint32_t OGLIndexBuffer::GetCount() const { return m_count; }
+    uint32_t OGLIndexBuffer::getCount() const { return m_count; }
 
-    void OGLIndexBuffer::SubData(int64_t offset, int64_t size, void *data)
+    void OGLIndexBuffer::subData(int64_t offset, int64_t size, void *data)
     {
-        Bind();
+        bind();
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
-        UnBind();
+        unbind();
     }
 
-    void OGLIndexBuffer::Reallocate(uint32_t size, void *data, uint32_t count)
+    void OGLIndexBuffer::reallocate(uint32_t size, void *data, uint32_t count)
     {
-        Bind();
+        bind();
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_ELEMENT_ARRAY_BUFFER);
         if (count != 0)
             m_count = count;
-        UnBind();
+        unbind();
     }
 
-    void OGLIndexBuffer::Bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index); }
+    void OGLIndexBuffer::bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index); }
 
-    void OGLIndexBuffer::UnBind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+    void OGLIndexBuffer::unbind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 
     // shader buffer
-    ShaderBuffer *ShaderBuffer::Create(uint32_t size, void *data)
+    ShaderBuffer *ShaderBuffer::create(uint32_t size, void *data)
     {
         return new OGLShaderBuffer(size, data);
     }
@@ -97,34 +97,34 @@ namespace selyan
 
     OGLShaderBuffer::~OGLShaderBuffer() { glDeleteBuffers(1, &m_index); }
 
-    void *OGLShaderBuffer::GetData(uint32_t offset, uint32_t size) const
+    void *OGLShaderBuffer::getData(uint32_t offset, uint32_t size) const
     {
         uint8_t *data = new uint8_t[size];
         glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, size, data);
         return data;
     }
 
-    void OGLShaderBuffer::SubData(int64_t offset, int64_t size, void *data)
+    void OGLShaderBuffer::subData(int64_t offset, int64_t size, void *data)
     {
-        Bind();
+        bind();
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, size, data);
-        UnBind();
+        unbind();
     }
 
-    void OGLShaderBuffer::Reallocate(uint32_t size, void *data)
+    void OGLShaderBuffer::reallocate(uint32_t size, void *data)
     {
-        Bind();
+        bind();
         glBufferData(GL_SHADER_STORAGE_BUFFER, size, data, GL_STATIC_DRAW);
         m_size = size;
-        UnBind();
+        unbind();
     }
 
-    void OGLShaderBuffer::Bind()
+    void OGLShaderBuffer::bind()
     {
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_index);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_index);
     }
 
-    void OGLShaderBuffer::UnBind() { glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); }
+    void OGLShaderBuffer::unbind() { glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); }
 
 }

@@ -16,15 +16,13 @@ namespace selyan
         m_run = true;
 
         m_window = Window::create({ "Terrain Editor", 1024, 768 });
-        //RN_APP_INFO("GLFW windows create!");
+        // RN_APP_INFO("GLFW windows create!");
         std::cout << "GLFW windows create!" << std::endl;
 
-        m_window->setEventFunction(
-            std::bind(&Application::onEvent, this, std::placeholders::_1));
+        m_window->setEventFunction(std::bind(&Application::onEvent, this, std::placeholders::_1));
 
         for (uint16_t i = 0; i < 512; i++)
             KeyStates[i] = 0;
-
     }
 
     Application::~Application() { shutDown(); }
@@ -41,7 +39,7 @@ namespace selyan
 
     void Application::run()
     {
-        Setup();
+        setup();
 
         constexpr float BORDER_FRAME_TIME = 1.f / 120.f;
         TimeStep time = TimeStep::getTime();
@@ -49,7 +47,7 @@ namespace selyan
         {
             m_window->onUpdate();
 
-            Clear();
+            clear();
 
             for (auto layer : m_layerStack)
             {
@@ -58,7 +56,7 @@ namespace selyan
 
             for (auto layer : m_layerStack)
             {
-              layer->onRender();
+                layer->onRender();
             }
 
             m_window->swapBuffers();
@@ -83,10 +81,10 @@ namespace selyan
     void Application::onEvent(Event &e)
     {
         EventDispatcher dispatcher(e);
-        dispatcher.dispatch<WindowCloseEvent>(std::bind(
-            &Application::onWindowClose, this, std::placeholders::_1));
+        dispatcher.dispatch<WindowCloseEvent>(
+            std::bind(&Application::onWindowClose, this, std::placeholders::_1));
 
-                for (auto layer : m_layerStack)
+        for (auto layer : m_layerStack)
         {
             layer->onEvent(e);
             if (e.Handled)
@@ -118,12 +116,12 @@ namespace selyan
 
     void Application::shutDown()
     {
-        if(m_window == nullptr)
-          return;
+        if (m_window == nullptr)
+            return;
 
         delete m_window;
         m_window = nullptr;
-        //RN_APP_INFO("Application shutdown.");
+        // RN_APP_INFO("Application shutdown.");
         std::cout << "Application shutdown." << std::endl;
     }
 }

@@ -8,11 +8,11 @@ namespace selyan
     class ShaderLibrary
     {
     public:
-        static Shader *CreateShader(std::istream *input, std::string shaderName = "");
+        static Shader *createShader(std::istream *input, std::string shaderName = "");
 
-        static Shader *CreateShaderFromFile(std::string file);
+        static Shader *createShaderFromFile(std::string file);
 
-        static Shader *GetShader(std::string name);
+        static Shader *getShader(std::string name);
 
     private:
         static std::unordered_map<std::string, Shader *> m_shaders;

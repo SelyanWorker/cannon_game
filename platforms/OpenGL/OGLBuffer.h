@@ -13,17 +13,17 @@ namespace selyan
 
         ~OGLVertexBuffer();
 
-        void SetBufferLayout(BufferLayout layout) override;
+        void setBufferLayout(BufferLayout layout) override;
 
-        BufferLayout const &GetBufferLayout() const override;
+        BufferLayout const &getBufferLayout() const override;
 
-        void SubData(int64_t offset, int64_t size, void *data) override;
+        void subData(int64_t offset, int64_t size, void *data) override;
 
-        void Reallocate(uint32_t size, void *data) override;
+        void reallocate(uint32_t size, void *data) override;
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
     private:
         GLsizeiptr m_size;
@@ -39,15 +39,15 @@ namespace selyan
 
         ~OGLIndexBuffer();
 
-        uint32_t GetCount() const override;
+        uint32_t getCount() const override;
 
-        void SubData(int64_t offset, int64_t size, void *data) override;
+        void subData(int64_t offset, int64_t size, void *data) override;
 
-        void Reallocate(uint32_t size, void *data, uint32_t count = 0) override;
+        void reallocate(uint32_t size, void *data, uint32_t count = 0) override;
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
     private:
         GLsizeiptr m_size;
@@ -62,15 +62,15 @@ namespace selyan
 
         ~OGLShaderBuffer();
 
-        void *GetData(uint32_t offset, uint32_t size) const override;
+        void *getData(uint32_t offset, uint32_t size) const override;
 
-        void SubData(int64_t offset, int64_t size, void *data) override;
+        void subData(int64_t offset, int64_t size, void *data) override;
 
-        void Reallocate(uint32_t size, void *data) override;
+        void reallocate(uint32_t size, void *data) override;
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
     private:
         GLsizeiptr m_size;

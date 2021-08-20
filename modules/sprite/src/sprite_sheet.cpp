@@ -8,17 +8,17 @@ namespace selyan
         m_rowsNumber(rowsNumber),
         m_columnsNumber(columnsNumber)
     {
-        m_spriteSize = { float(m_texture->GetWidth()) / m_columnsNumber,
-                         float(m_texture->GetHeight()) / m_rowsNumber };
+        m_spriteSize = { float(m_texture->getWidth()) / m_columnsNumber,
+                         float(m_texture->getHeight()) / m_rowsNumber };
     }
 
     SpriteSheet::~SpriteSheet() { delete m_texture; }
 
-    void SpriteSheet::bind() { m_texture->Bind(); }
+    void SpriteSheet::bind() { m_texture->bind(); }
 
-    uint32_t SpriteSheet::getWidth() const { return m_texture->GetWidth(); }
+    uint32_t SpriteSheet::getWidth() const { return m_texture->getWidth(); }
 
-    uint32_t SpriteSheet::getHeight() const { return m_texture->GetHeight(); }
+    uint32_t SpriteSheet::getHeight() const { return m_texture->getHeight(); }
 
     uint32_t SpriteSheet::getRowsNumber() const { return m_rowsNumber; }
 
@@ -29,8 +29,8 @@ namespace selyan
     glm::mat3 SpriteSheet::getTranslationMatrix(uint32_t row, uint32_t column) const
     {
         glm::mat3 matrix;
-        matrix[0][2] = m_spriteSize.x * column / m_texture->GetWidth();
-        matrix[1][2] = m_spriteSize.y * row / m_texture->GetHeight();
+        matrix[0][2] = m_spriteSize.x * column / m_texture->getWidth();
+        matrix[1][2] = m_spriteSize.y * row / m_texture->getHeight();
         return matrix;
     }
 

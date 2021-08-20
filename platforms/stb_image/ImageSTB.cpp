@@ -7,14 +7,14 @@
 
 namespace selyan
 {
-    Image *Image::Create(char const *name) { return ImageSTB::Create(name); }
+    Image *Image::create(char const *name) { return ImageSTB::create(name); }
 
-    Image *Image::Create(uint8_t const *pixels, uint32_t channels, uint32_t width, uint32_t height)
+    Image *Image::create(uint8_t const *pixels, uint32_t channels, uint32_t width, uint32_t height)
     {
-        return ImageSTB::Create(pixels, channels, width, height);
+        return ImageSTB::create(pixels, channels, width, height);
     }
 
-    ImageSTB *ImageSTB::Create(const char *name)
+    ImageSTB *ImageSTB::create(const char *name)
     {
         int width;
         int height;
@@ -35,7 +35,7 @@ namespace selyan
         return image;
     }
 
-    ImageSTB *ImageSTB::Create(uint8_t const *pixels,
+    ImageSTB *ImageSTB::create(uint8_t const *pixels,
                                uint32_t channels,
                                uint32_t width,
                                uint32_t height)
@@ -51,20 +51,20 @@ namespace selyan
 
     ImageSTB::~ImageSTB() { stbi_image_free(m_data); }
 
-    uint32_t ImageSTB::GetWidth() const { return m_width; }
+    uint32_t ImageSTB::getWidth() const { return m_width; }
 
-    uint32_t ImageSTB::GetHeight() const { return m_height; }
+    uint32_t ImageSTB::getHeight() const { return m_height; }
 
-    uint32_t ImageSTB::GetChannels() const { return m_channels; }
+    uint32_t ImageSTB::getChannels() const { return m_channels; }
 
-    uint8_t *ImageSTB::GetData() const { return m_data; }
+    uint8_t *ImageSTB::getData() const { return m_data; }
 
-    ImageTypes ImageSTB::GetType() const { return ImageTypes::RN_PNG; }
+    ImageTypes ImageSTB::getType() const { return ImageTypes::png; }
 
-    bool ImageSTB::SaveImage(char const *fileName, ImageTypes Type)
+    bool ImageSTB::saveImage(char const *fileName, ImageTypes Type)
     {
         int result = 0;
-        if (Type == ImageTypes::RN_PNG)
+        if (Type == ImageTypes::png)
             result = stbi_write_png(fileName,
                                     m_width,
                                     m_height,
@@ -78,6 +78,6 @@ namespace selyan
         return true;
     }
 
-    void ImageSTB::Rescale(size_t width, size_t height) {}
+    void ImageSTB::rescale(size_t width, size_t height) {}
 
 }

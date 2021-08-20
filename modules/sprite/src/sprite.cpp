@@ -1,5 +1,5 @@
-#include "core/time.h"
 #include "sprite/sprite.h"
+#include "core/time.h"
 
 namespace selyan
 {
@@ -15,27 +15,27 @@ namespace selyan
         textureSize.x /= m_sheet->getWidth();
         textureSize.y /= m_sheet->getHeight();
 
-//        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
-//        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
-//        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
-//        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
+        //        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
+        //        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
+        //        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
+        //        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
 
         m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
         m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
         m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
         m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
 
-        m_vertexBuffer = VertexBuffer::Create(sizeof(Vertex2d) * 4, m_vertices);
-        m_vertexArray = VertexArray::Create();
+        m_vertexBuffer = VertexBuffer::create(sizeof(Vertex2d) * 4, m_vertices);
+        m_vertexArray = VertexArray::create();
 
         auto elements = {
-            BufferElement(FLOAT3, false),
-            BufferElement(FLOAT2, false),
-            BufferElement(FLOAT2, false),
+            BufferElement(float3, false),
+            BufferElement(float2, false),
+            BufferElement(float2, false),
         };
-        m_vertexBuffer->SetBufferLayout({ elements, 4 });
+        m_vertexBuffer->setBufferLayout({ elements, 4 });
 
-        m_vertexArray->SetVertexBuffers({ m_vertexBuffer });
+        m_vertexArray->setVertexBuffers({ m_vertexBuffer });
         /*BufferAttach(m_vertexArray, m_vertexBuffer, 0, 3, sizeof(Vertex2D), (void*)0);
         BufferAttach(m_vertexArray, m_vertexBuffer, 1, 2, sizeof(Vertex2D),
         (void*)(offsetof(Vertex2D, textCoord))); BufferAttach(m_vertexArray, m_vertexBuffer, 2, 2,
@@ -71,12 +71,12 @@ namespace selyan
 
         frameTime = currentTime - timeFromStart;
 
-        program->SetUniform("textureMatrix", m_textureMatrix);
+        program->setUniform("textureMatrix", m_textureMatrix);
 
         m_sheet->bind();
 
-        // DrawArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray, 4);
-        DrawVertexArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray);
+        // DrawArray(RenderMode::triangle_strip, m_vertexArray, 4);
+        drawVertexArray(RenderMode::triangle_strip, m_vertexArray);
     }
 
 }

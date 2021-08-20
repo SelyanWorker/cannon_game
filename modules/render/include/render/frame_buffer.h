@@ -10,19 +10,19 @@ namespace selyan
     class FrameBuffer
     {
     public:
-        static FrameBuffer *Create(std::initializer_list<Texture2D *> colorTextures);
+        static FrameBuffer *create(std::initializer_list<Texture2D *> colorTextures);
 
-        virtual void Bind() = 0;
+        virtual void bind() = 0;
 
-        virtual void UnBind() = 0;
+        virtual void unbind() = 0;
 
-        virtual void SetSize(float width, float height) = 0;
+        virtual void setSize(float width, float height) = 0;
 
-        virtual std::pair<float, float> GetSize() = 0;
+        virtual std::pair<float, float> getSize() = 0;
 
-        virtual Texture2D *GetAttachmentColorTexture(uint32_t number) = 0;
+        virtual Texture2D *getAttachmentColorTexture(uint32_t number) = 0;
 
-        virtual void *GetColorData(uint32_t number) = 0;
+        virtual void *getColorData(uint32_t number) = 0;
     };
 
 }

@@ -6,7 +6,7 @@ namespace selyan
 {
     std::unordered_map<std::string, Shader *> ShaderLibrary::m_shaders;
 
-    Shader *ShaderLibrary::CreateShader(std::istream *input, std::string shaderName)
+    Shader *ShaderLibrary::createShader(std::istream *input, std::string shaderName)
     {
         if (input == nullptr)
             return nullptr;
@@ -28,18 +28,17 @@ namespace selyan
         }
         // file process
 
-        //RN_ASSERT(currentSrc != nullptr, "ShaderLibrary.cpp 32");
+        // RN_ASSERT(currentSrc != nullptr, "ShaderLibrary.cpp 32");
         assert(currentSrc != nullptr);
 
-        Shader *shader = Shader::Create(sources);
+        Shader *shader = Shader::create(sources);
         if (shader != nullptr)
         {
             if (shaderName == "")
                 shaderName += std::to_string(m_shaders.size());
 
-            std::cout << "Shader from " << shaderName
-                      << " file loaded successfully." << std::endl;
-            //RN_CORE_INFO("Shader from {0} file loaded successfully.", shaderName);
+            std::cout << "Shader from " << shaderName << " file loaded successfully." << std::endl;
+            // RN_CORE_INFO("Shader from {0} file loaded successfully.", shaderName);
 
             m_shaders.emplace(shaderName, shader);
 
@@ -49,7 +48,7 @@ namespace selyan
         return nullptr;
     }
 
-    Shader *ShaderLibrary::CreateShaderFromFile(std::string fileName)
+    Shader *ShaderLibrary::createShaderFromFile(std::string fileName)
     {
         std::vector<std::string> sources;
 
@@ -59,11 +58,10 @@ namespace selyan
 
         std::ifstream file(fileName);
         if (!file.good())
-            //RN_CORE_ERROR("File {0} not found!", fileName.data());
-          std::cout << "File " << fileName.data()
-          << " not found!" << std::endl;
+            // RN_CORE_ERROR("File {0} not found!", fileName.data());
+            std::cout << "File " << fileName.data() << " not found!" << std::endl;
 
-        return CreateShader(&file, fileName);
+        return createShader(&file, fileName);
 
         // for(std::getline(file, buffer); !file.eof(); std::getline(file, buffer))
         //{
@@ -91,7 +89,7 @@ namespace selyan
         // return nullptr;
     }
 
-    Shader *ShaderLibrary::GetShader(std::string name)
+    Shader *ShaderLibrary::getShader(std::string name)
     {
         auto findResult = m_shaders.find(name);
         if (findResult != m_shaders.end())

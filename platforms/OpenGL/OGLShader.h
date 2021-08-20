@@ -13,31 +13,31 @@ namespace selyan
 
         ~OGLShader();
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
-        void SetUniform(const char *name, bool value) override;
+        void setUniform(const char *name, bool value) override;
 
-        void SetUniform(const char *name, uint32_t value) override;
+        void setUniform(const char *name, uint32_t value) override;
 
-        void SetUniform(const char *name, int32_t value) override;
+        void setUniform(const char *name, int32_t value) override;
 
-        void SetUniform(const char *name, float value) override;
+        void setUniform(const char *name, float value) override;
 
-        void SetUniform(const char *name, const glm::vec2& vector) override;
+        void setUniform(const char *name, const glm::vec2 &vector) override;
 
-        void SetUniform(const char *name, const glm::vec3& vector) override;
+        void setUniform(const char *name, const glm::vec3 &vector) override;
 
-        void SetUniform(const char *name, const glm::vec4& vector) override;
+        void setUniform(const char *name, const glm::vec4 &vector) override;
 
-        void SetUniform(const char *name, const glm::mat3& matrix, bool transpose = true) override;
+        void setUniform(const char *name, const glm::mat3 &matrix, bool transpose = true) override;
 
-        void SetUniform(const char *name, const glm::mat4& matrix, bool transpose = true) override;
+        void setUniform(const char *name, const glm::mat4 &matrix, bool transpose = true) override;
 
-        glm::vec4 GetUniformValue(const char *name) const override;
+        glm::vec4 getUniformValue(const char *name) const override;
 
-        void AddStorageBlock(ShaderBuffer *buffer, const char *name) override;
+        void addStorageBlock(ShaderBuffer *buffer, const char *name) override;
 
         bool GetLinkStatus() const;
 

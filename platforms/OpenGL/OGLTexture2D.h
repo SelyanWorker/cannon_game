@@ -15,11 +15,11 @@ namespace selyan
 
         ~OGLTexture2D();
 
-        uint32_t GetNative() override;
+        uint32_t getNative() override;
 
-        uint32_t GetWidth() override;
+        uint32_t getWidth() override;
 
-        uint32_t GetHeight() override;
+        uint32_t getHeight() override;
 
         void TextureData(uint32_t width,
                          uint32_t height,
@@ -31,21 +31,21 @@ namespace selyan
 
         void TextureData(Image *image) override;
 
-        void TextureSubData(uint32_t widthOffset,
+        void textureSubData(uint32_t widthOffset,
                             uint32_t heightOffset,
                             uint32_t width,
                             uint32_t height,
                             void *data) override;
 
-        void *GetTextureData() override;
+        void *getTextureData() override;
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
-        uint32_t GetTexUnit() const override { return m_texUnit; }
+        uint32_t getTexUnit() const override { return m_texUnit; }
 
-        void SetTexUnit(uint32_t unit) override;
+        void setTexUnit(uint32_t unit) override;
 
     private:
         GLuint m_index;
