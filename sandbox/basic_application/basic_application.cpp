@@ -1,11 +1,10 @@
 #include <application/application.h>
 
-
 int main()
 {
-  selyan::Application app{};
+    selyan::Application app{};
 
-  app.run();
+    app.run();
 
-  return 0;
+    return 0;
 }

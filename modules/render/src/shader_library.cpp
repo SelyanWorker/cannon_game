@@ -28,7 +28,7 @@ namespace selyan
         }
         // file process
 
-        //RN_ASSERT(currentSrc != nullptr, "ShaderLibrary.cpp 32");
+        // RN_ASSERT(currentSrc != nullptr, "ShaderLibrary.cpp 32");
         assert(currentSrc != nullptr);
 
         Shader *shader = Shader::create(sources);
@@ -37,9 +37,8 @@ namespace selyan
             if (shaderName == "")
                 shaderName += std::to_string(m_shaders.size());
 
-            std::cout << "Shader from " << shaderName
-                      << " file loaded successfully." << std::endl;
-            //RN_CORE_INFO("Shader from {0} file loaded successfully.", shaderName);
+            std::cout << "Shader from " << shaderName << " file loaded successfully." << std::endl;
+            // RN_CORE_INFO("Shader from {0} file loaded successfully.", shaderName);
 
             m_shaders.emplace(shaderName, shader);
 
@@ -59,9 +58,8 @@ namespace selyan
 
         std::ifstream file(fileName);
         if (!file.good())
-            //RN_CORE_ERROR("File {0} not found!", fileName.data());
-          std::cout << "File " << fileName.data()
-          << " not found!" << std::endl;
+            // RN_CORE_ERROR("File {0} not found!", fileName.data());
+            std::cout << "File " << fileName.data() << " not found!" << std::endl;
 
         return createShader(&file, fileName);
 

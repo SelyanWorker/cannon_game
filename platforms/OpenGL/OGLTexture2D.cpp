@@ -86,7 +86,7 @@ namespace selyan
 
     void OGLTexture2D::TextureData(uint32_t width, uint32_t height, void *data)
     {
-      bind();
+        bind();
 
         m_width = width;
         m_height = height;
@@ -161,7 +161,8 @@ namespace selyan
                      m_height,
                      0,
                      m_dataFormat,
-                     m_dataType, image->getData());
+                     m_dataType,
+                     image->getData());
 
         glBindTexture(GL_TEXTURE_2D, 0);
     }
@@ -189,7 +190,7 @@ namespace selyan
 
     void *OGLTexture2D::getTextureData()
     {
-      bind();
+        bind();
 
         size_t channels = 4;
         GLint aligment = 4;

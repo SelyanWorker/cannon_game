@@ -1,8 +1,8 @@
 #include "render/buffer.h"
 #include "render/renderer.h"
 
-#include <glad/glad.h>
 #include <cassert>
+#include <glad/glad.h>
 
 namespace selyan
 {
@@ -63,9 +63,10 @@ namespace selyan
                       uint32_t stride,
                       void *pointer)
     {
-//        RN_ASSERT(vertexArray != 0 && buffer != 0,
-//                  "VertexArray == 0 or Buffer == 0 in \"bufferAttach\"");
-        assert(vertexArray != 0 && buffer != 0 && "VertexArray == 0 or Buffer == 0 in \"bufferAttach\"");
+        //        RN_ASSERT(vertexArray != 0 && buffer != 0,
+        //                  "VertexArray == 0 or Buffer == 0 in \"bufferAttach\"");
+        assert(vertexArray != 0 && buffer != 0 &&
+               "VertexArray == 0 or Buffer == 0 in \"bufferAttach\"");
         glBindVertexArray(vertexArray);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
         glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
@@ -140,19 +141,18 @@ namespace selyan
     // new
     void drawVertexArray(RenderMode mode, VertexArray *vertexArray)
     {
-      vertexArray->bind();
+        vertexArray->bind();
 
         if (vertexArray->getIndexBuffer() != nullptr)
-            glDrawElementsInstanced(mode, vertexArray->getIndexBuffer()->getCount(),
+            glDrawElementsInstanced(mode,
+                                    vertexArray->getIndexBuffer()->getCount(),
                                     GL_UNSIGNED_INT,
-                                    nullptr, vertexArray->getInstanceCount());
+                                    nullptr,
+                                    vertexArray->getInstanceCount());
         else
         {
-            GLuint count = vertexArray->getVertexBuffers()[0]
-                             ->getBufferLayout()
-                             .getVertexCount();
-            glDrawArraysInstanced(mode, 0, count,
-                                  vertexArray->getInstanceCount());
+            GLuint count = vertexArray->getVertexBuffers()[0]->getBufferLayout().getVertexCount();
+            glDrawArraysInstanced(mode, 0, count, vertexArray->getInstanceCount());
         }
 
         vertexArray->unbind();

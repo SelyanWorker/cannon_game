@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace selyan
 {
     enum EventCategory

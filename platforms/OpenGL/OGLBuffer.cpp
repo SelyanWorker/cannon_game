@@ -24,14 +24,14 @@ namespace selyan
 
     void OGLVertexBuffer::subData(int64_t offset, int64_t size, void *data)
     {
-      bind();
+        bind();
         glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
         unbind();
     }
 
     void OGLVertexBuffer::reallocate(uint32_t size, void *data)
     {
-      bind();
+        bind();
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
         m_size = size;
         unbind();
@@ -63,14 +63,14 @@ namespace selyan
 
     void OGLIndexBuffer::subData(int64_t offset, int64_t size, void *data)
     {
-      bind();
+        bind();
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
         unbind();
     }
 
     void OGLIndexBuffer::reallocate(uint32_t size, void *data, uint32_t count)
     {
-      bind();
+        bind();
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_ELEMENT_ARRAY_BUFFER);
         if (count != 0)
             m_count = count;
@@ -106,14 +106,14 @@ namespace selyan
 
     void OGLShaderBuffer::subData(int64_t offset, int64_t size, void *data)
     {
-      bind();
+        bind();
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, size, data);
         unbind();
     }
 
     void OGLShaderBuffer::reallocate(uint32_t size, void *data)
     {
-      bind();
+        bind();
         glBufferData(GL_SHADER_STORAGE_BUFFER, size, data, GL_STATIC_DRAW);
         m_size = size;
         unbind();

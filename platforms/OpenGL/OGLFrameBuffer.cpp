@@ -9,7 +9,7 @@ namespace selyan
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxAttach);
         if (GLint(colorTextures.size()) > maxAttach)
         {
-            //RN_CORE_ERROR("FrameBuffer::Create - too much color textures");
+            // RN_CORE_ERROR("FrameBuffer::Create - too much color textures");
             std::cout << "FrameBuffer::Create - too much color textures" << std::endl;
             return nullptr;
         }
@@ -18,7 +18,7 @@ namespace selyan
         // need check equal texture size
         if (!equalTexturesSize)
         {
-            //RN_CORE_ERROR("FrameBuffer::Create - texture's size not equal");
+            // RN_CORE_ERROR("FrameBuffer::Create - texture's size not equal");
             std::cout << "FrameBuffer::Create - texture's size not equal" << std::endl;
             return nullptr;
         }
@@ -79,14 +79,14 @@ namespace selyan
 
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE)
-            //RN_CORE_ERROR("Framebuffer status - not complete");
+            // RN_CORE_ERROR("Framebuffer status - not complete");
             std::cout << "Framebuffer status - not complete" << std::endl;
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     OGLFrameBuffer::~OGLFrameBuffer()
     {
-      unbind();
+        unbind();
         glDeleteFramebuffers(1, &m_index);
     }
 
@@ -124,7 +124,7 @@ namespace selyan
         // reallocate color texture
         for (auto &texturePtr : m_colorTextures)
         {
-          texturePtr->bind();
+            texturePtr->bind();
             texturePtr->TextureData(m_width, m_height, nullptr);
             texturePtr->unbind();
         }

@@ -10,8 +10,7 @@ namespace selyan
     class FrameBuffer
     {
     public:
-        static FrameBuffer *
-      create(std::initializer_list<Texture2D *> colorTextures);
+        static FrameBuffer *create(std::initializer_list<Texture2D *> colorTextures);
 
         virtual void bind() = 0;
 

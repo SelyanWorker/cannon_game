@@ -2,11 +2,11 @@
 
 #include "core/key_codes.h"
 #include "core/time.h"
+#include "core/window.h"
 #include "event/event.h"
 #include "event/key_events.h"
 #include "event/mouse_event.h"
 #include "event/window_events.h"
-#include "core/window.h"
 #include "layers/layer_stack.h"
 
 namespace selyan

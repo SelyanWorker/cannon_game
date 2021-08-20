@@ -13,7 +13,8 @@ namespace selyan
 
     void OGLVertexArray::setVertexBuffers(std::initializer_list<VertexBuffer *> buffers)
     {
-        //RN_ASSERT(buffers.size() <= MAX_VERTEX_BUFFERS, "buffers.size() > m_vertexBuffers.size()");
+        // RN_ASSERT(buffers.size() <= MAX_VERTEX_BUFFERS, "buffers.size() >
+        // m_vertexBuffers.size()");
         assert(buffers.size() <= MAX_VERTEX_BUFFERS && "buffers.size() > m_vertexBuffers.size()");
         bind();
         GLuint index = 0;
@@ -41,10 +42,10 @@ namespace selyan
                         type = GL_FLOAT;
                         break;
                     case none:
-                        //RN_CORE_ERROR("SetVertexBuffer element no type");
+                        // RN_CORE_ERROR("SetVertexBuffer element no type");
                         std::cout << "SetVertexBuffer element no type" << std::endl;
                     default:
-                        //RN_CORE_ERROR("From setVertexBuffers -> default in type switch");
+                        // RN_CORE_ERROR("From setVertexBuffers -> default in type switch");
                         std::cout << "From setVertexBuffers -> default in type switch" << std::endl;
                 }
                 glVertexAttribPointer(index,

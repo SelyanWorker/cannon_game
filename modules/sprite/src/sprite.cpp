@@ -1,5 +1,5 @@
-#include "core/time.h"
 #include "sprite/sprite.h"
+#include "core/time.h"
 
 namespace selyan
 {
@@ -15,10 +15,10 @@ namespace selyan
         textureSize.x /= m_sheet->getWidth();
         textureSize.y /= m_sheet->getHeight();
 
-//        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
-//        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
-//        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
-//        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
+        //        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
+        //        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
+        //        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
+        //        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
 
         m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
         m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left

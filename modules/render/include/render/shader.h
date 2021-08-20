@@ -23,15 +23,19 @@ namespace selyan
 
         virtual void setUniform(const char *name, float value) = 0;
 
-        virtual void setUniform(const char *name, const glm::vec2& vector) = 0;
+        virtual void setUniform(const char *name, const glm::vec2 &vector) = 0;
 
-        virtual void setUniform(const char *name, const glm::vec3& vector) = 0;
+        virtual void setUniform(const char *name, const glm::vec3 &vector) = 0;
 
-        virtual void setUniform(const char *name, const glm::vec4& vector) = 0;
+        virtual void setUniform(const char *name, const glm::vec4 &vector) = 0;
 
-        virtual void setUniform(const char *name, const glm::mat3& matrix, bool transpose = true) = 0;
+        virtual void setUniform(const char *name,
+                                const glm::mat3 &matrix,
+                                bool transpose = true) = 0;
 
-        virtual void setUniform(const char *name, const glm::mat4& matrix, bool transpose = true) = 0;
+        virtual void setUniform(const char *name,
+                                const glm::mat4 &matrix,
+                                bool transpose = true) = 0;
 
         virtual glm::vec4 getUniformValue(const char *name) const = 0;
 

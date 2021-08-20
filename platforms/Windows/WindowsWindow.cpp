@@ -55,7 +55,7 @@ namespace selyan
     void WindowsWindow::Init()
     {
         // assertion
-        //RN_ASSERT(glfwInit(), "glfwInit() error");
+        // RN_ASSERT(glfwInit(), "glfwInit() error");
         assert(glfwInit() && "glfwInit() error");
 
         // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
@@ -81,14 +81,14 @@ namespace selyan
         {
             RN_CORE_INFO("OGL debug context was not created");
         }*/
-//
-//        RN_CORE_INFO("GPU {0} {1}", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
-//        RN_CORE_INFO("OGL {0} | GLSL {1}",
-//                     glGetString(GL_VERSION),
-//                     glGetString(GL_SHADING_LANGUAGE_VERSION));
+        //
+        //        RN_CORE_INFO("GPU {0} {1}", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
+        //        RN_CORE_INFO("OGL {0} | GLSL {1}",
+        //                     glGetString(GL_VERSION),
+        //                     glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-        std::cout << "GPU " << glGetString(GL_VENDOR) << " "
-                  << glGetString(GL_RENDERER) << std::endl;
+        std::cout << "GPU " << glGetString(GL_VENDOR) << " " << glGetString(GL_RENDERER)
+                  << std::endl;
         std::cout << "OGL " << glGetString(GL_VERSION) << " | GLSL "
                   << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 

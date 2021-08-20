@@ -9,8 +9,7 @@ namespace selyan
     public:
         static VertexArray *create();
 
-        virtual void
-        setVertexBuffers(std::initializer_list<VertexBuffer *> buffers) = 0;
+        virtual void setVertexBuffers(std::initializer_list<VertexBuffer *> buffers) = 0;
 
         virtual void setIndexBuffer(IndexBuffer *buffer) = 0;
 

@@ -25,15 +25,15 @@ namespace selyan
 
         void setUniform(const char *name, float value) override;
 
-        void setUniform(const char *name, const glm::vec2& vector) override;
+        void setUniform(const char *name, const glm::vec2 &vector) override;
 
-        void setUniform(const char *name, const glm::vec3& vector) override;
+        void setUniform(const char *name, const glm::vec3 &vector) override;
 
-        void setUniform(const char *name, const glm::vec4& vector) override;
+        void setUniform(const char *name, const glm::vec4 &vector) override;
 
-        void setUniform(const char *name, const glm::mat3& matrix, bool transpose = true) override;
+        void setUniform(const char *name, const glm::mat3 &matrix, bool transpose = true) override;
 
-        void setUniform(const char *name, const glm::mat4& matrix, bool transpose = true) override;
+        void setUniform(const char *name, const glm::mat4 &matrix, bool transpose = true) override;
 
         glm::vec4 getUniformValue(const char *name) const override;
 

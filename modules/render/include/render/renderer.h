@@ -37,11 +37,11 @@ namespace selyan
     uint32_t createVertexArray();
 
     void bufferAttach(uint32_t vertexArray,
-                                uint32_t buffer,
-                                uint32_t index = 0,
-                                uint32_t size = 3,
-                                uint32_t stride = 0,
-                                void *pointer = nullptr);
+                      uint32_t buffer,
+                      uint32_t index = 0,
+                      uint32_t size = 3,
+                      uint32_t stride = 0,
+                      void *pointer = nullptr);
 
     void indicesBufferAttach(uint32_t vertexArray, uint32_t buffer);
 

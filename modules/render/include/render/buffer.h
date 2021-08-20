@@ -59,7 +59,8 @@ namespace selyan
                         std::cout << "No data type specified!" << std::endl;
                         break;
                     default:
-                        std::cout << "From BufferLayout constructor -> default in type switch" << std::endl;
+                        std::cout << "From BufferLayout constructor -> default in type switch"
+                                  << std::endl;
                 }
             }
         }
