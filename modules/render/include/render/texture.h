@@ -4,10 +4,10 @@
 
 namespace selyan
 {
-    enum TextureDataType
+    enum class TextureDataType
     {
-        UNSIGNED_BYTE,
-        FLOAT
+        unsigned_byte,
+        floating_point
     };
 
     class Texture

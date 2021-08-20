@@ -33,8 +33,8 @@ namespace selyan
         for (auto texturePtr : colorTextures)
             m_colorTextures.push_back(static_cast<OGLTexture2D *>(texturePtr));
 
-        m_width = m_colorTextures[0]->GetWidth();
-        m_height = m_colorTextures[0]->GetHeight();
+        m_width = m_colorTextures[0]->getWidth();
+        m_height = m_colorTextures[0]->getHeight();
 
         glGenFramebuffers(1, &m_index);
         glBindFramebuffer(GL_FRAMEBUFFER, m_index);

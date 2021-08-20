@@ -6,14 +6,14 @@ namespace selyan
 {
     enum RenderMode
     {
-        RN_POINTS = 0x0000,
-        RN_LINES = 0x0001,
-        RN_LINE_LOOP = 0x0002,
-        RN_LINE_STRIP = 0x0003,
-        RN_TRIANGLES = 0x0004,
-        RN_TRIANGLE_STRIP = 0x0005,
-        RN_TRIANGLE_FAN = 0x0006,
-        RN_PATCHES = 0x000E
+        points = 0x0000,
+        lines = 0x0001,
+        line_loop = 0x0002,
+        line_strip = 0x0003,
+        triangles = 0x0004,
+        triangle_strip = 0x0005,
+        triangle_fan = 0x0006,
+        patches = 0x000E
     };
 
     void setup();

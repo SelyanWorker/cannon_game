@@ -34,13 +34,13 @@ namespace selyan
                 GLboolean normalize = element.Normalize ? GL_TRUE : GL_FALSE;
                 switch (element.Type)
                 {
-                    case FLOAT2:
+                    case float2:
                         type = GL_FLOAT;
                         break;
-                    case FLOAT3:
+                    case float3:
                         type = GL_FLOAT;
                         break;
-                    case NONE:
+                    case none:
                         //RN_CORE_ERROR("SetVertexBuffer element no type");
                         std::cout << "SetVertexBuffer element no type" << std::endl;
                     default:

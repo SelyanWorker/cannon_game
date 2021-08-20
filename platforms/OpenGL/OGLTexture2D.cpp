@@ -5,7 +5,7 @@ namespace selyan
 {
     GLuint textureBindIndex = 0;
 
-    Texture2D *Texture2D::Create() { return new OGLTexture2D(); }
+    Texture2D *Texture2D::create() { return new OGLTexture2D(); }
 
     OGLTexture2D::OGLTexture2D() : m_index(0), m_texUnit(0) { glGenTextures(1, &m_index); }
 
@@ -13,9 +13,9 @@ namespace selyan
 
     uint32_t OGLTexture2D::getNative() { return m_index; }
 
-    uint32_t OGLTexture2D::GetWidth() { return m_width; }
+    uint32_t OGLTexture2D::getWidth() { return m_width; }
 
-    uint32_t OGLTexture2D::GetHeight() { return m_height; }
+    uint32_t OGLTexture2D::getHeight() { return m_height; }
 
     void OGLTexture2D::TextureData(uint32_t width,
                                    uint32_t height,
@@ -31,7 +31,7 @@ namespace selyan
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        if (dataType == TextureDataType::UNSIGNED_BYTE)
+        if (dataType == TextureDataType::unsigned_byte)
             m_dataType = GL_UNSIGNED_BYTE;
         else
             m_dataType = GL_FLOAT;

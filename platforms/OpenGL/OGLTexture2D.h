@@ -17,9 +17,9 @@ namespace selyan
 
         uint32_t getNative() override;
 
-        uint32_t GetWidth() override;
+        uint32_t getWidth() override;
 
-        uint32_t GetHeight() override;
+        uint32_t getHeight() override;
 
         void TextureData(uint32_t width,
                          uint32_t height,

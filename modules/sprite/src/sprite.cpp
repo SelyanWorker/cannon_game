@@ -29,9 +29,9 @@ namespace selyan
         m_vertexArray = VertexArray::create();
 
         auto elements = {
-            BufferElement(FLOAT3, false),
-            BufferElement(FLOAT2, false),
-            BufferElement(FLOAT2, false),
+            BufferElement(float3, false),
+            BufferElement(float2, false),
+            BufferElement(float2, false),
         };
         m_vertexBuffer->setBufferLayout({ elements, 4 });
 
@@ -75,8 +75,8 @@ namespace selyan
 
         m_sheet->bind();
 
-        // DrawArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray, 4);
-        drawVertexArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray);
+        // DrawArray(RenderMode::triangle_strip, m_vertexArray, 4);
+        drawVertexArray(RenderMode::triangle_strip, m_vertexArray);
     }
 
 }

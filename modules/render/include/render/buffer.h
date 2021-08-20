@@ -9,9 +9,9 @@ namespace selyan
 {
     enum ShaderDataType : int32_t
     {
-        NONE = 0,
-        FLOAT2 = 1,
-        FLOAT3 = 2
+        none = 0,
+        float2 = 1,
+        float3 = 2
     };
 
     struct BufferElement
@@ -23,7 +23,7 @@ namespace selyan
         {
         }
 
-        ShaderDataType Type = ShaderDataType::NONE;
+        ShaderDataType Type = ShaderDataType::none;
         bool Normalize = false;
         uint32_t Divisor = 0;   //  rate at which generic vertex attributes advance during instanced
                                 //  rendering (from OGL doc)
@@ -45,17 +45,17 @@ namespace selyan
             {
                 switch (element.Type)
                 {
-                    case FLOAT2:
+                    case float2:
                         element.Size = 2;
                         element.Offset = m_stride;
                         m_stride += sizeof(float) * 2;
                         break;
-                    case FLOAT3:
+                    case float3:
                         element.Size = 3;
                         element.Offset = m_stride;
                         m_stride += sizeof(float) * 3;
                         break;
-                    case NONE:
+                    case none:
                         std::cout << "No data type specified!" << std::endl;
                         break;
                     default:
