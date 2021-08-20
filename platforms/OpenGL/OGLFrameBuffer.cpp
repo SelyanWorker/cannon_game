@@ -3,7 +3,7 @@
 
 namespace selyan
 {
-    FrameBuffer *FrameBuffer::Create(std::initializer_list<Texture2D *> colorTextures)
+    FrameBuffer *FrameBuffer::create(std::initializer_list<Texture2D *> colorTextures)
     {
         GLint maxAttach = 0;
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxAttach);
@@ -71,7 +71,7 @@ namespace selyan
             glFramebufferTexture2D(GL_FRAMEBUFFER,
                                    drawColorTextures.back(),
                                    GL_TEXTURE_2D,
-                                   m_colorTextures[i]->GetNative(),
+                                   m_colorTextures[i]->getNative(),
                                    0);
         }
 
@@ -86,24 +86,24 @@ namespace selyan
 
     OGLFrameBuffer::~OGLFrameBuffer()
     {
-        UnBind();
+      unbind();
         glDeleteFramebuffers(1, &m_index);
     }
 
-    void OGLFrameBuffer::Bind()
+    void OGLFrameBuffer::bind()
     {
         glGetIntegerv(GL_VIEWPORT, m_viewportData);
         glBindFramebuffer(GL_FRAMEBUFFER, m_index);
         glViewport(0, 0, m_width, m_height);
     }
 
-    void OGLFrameBuffer::UnBind()
+    void OGLFrameBuffer::unbind()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(m_viewportData[0], m_viewportData[1], m_viewportData[2], m_viewportData[3]);
     }
 
-    void OGLFrameBuffer::SetSize(float width, float height)
+    void OGLFrameBuffer::setSize(float width, float height)
     {
         m_width = width;
         m_height = height;
@@ -124,20 +124,20 @@ namespace selyan
         // reallocate color texture
         for (auto &texturePtr : m_colorTextures)
         {
-            texturePtr->Bind();
+          texturePtr->bind();
             texturePtr->TextureData(m_width, m_height, nullptr);
-            texturePtr->UnBind();
+            texturePtr->unbind();
         }
     }
 
-    std::pair<float, float> OGLFrameBuffer::GetSize() { return { m_width, m_height }; }
+    std::pair<float, float> OGLFrameBuffer::getSize() { return { m_width, m_height }; }
 
-    Texture2D *OGLFrameBuffer::GetAttachmentColorTexture(uint32_t number)
+    Texture2D *OGLFrameBuffer::getAttachmentColorTexture(uint32_t number)
     {
         return m_colorTextures.size() > number ? m_colorTextures[number] : nullptr;
     }
 
-    void *OGLFrameBuffer::GetColorData(uint32_t number)
+    void *OGLFrameBuffer::getColorData(uint32_t number)
     {
         number++;
         /*Vector4f* data = new Vector4f[m_width * m_height];

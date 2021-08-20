@@ -11,7 +11,7 @@ namespace selyan
     else                                                                                           \
         action
 
-    Shader *Shader::Create(std::vector<std::string> &src)
+    Shader *Shader::create(std::vector<std::string> &src)
     {
         OGLShader *oglShader = new OGLShader(src);
         if (!oglShader->GetLinkStatus())
@@ -105,7 +105,7 @@ namespace selyan
         glDeleteProgram(m_index);
     }
 
-    void OGLShader::Bind()
+    void OGLShader::bind()
     {
         glUseProgram(m_index);
         if (m_tcsIndex != GL_INVALID_INDEX)
@@ -116,7 +116,7 @@ namespace selyan
         }
     }
 
-    void OGLShader::UnBind() {}
+    void OGLShader::unbind() {}
 
     bool OGLShader::GetLinkStatus() const
     {
@@ -128,46 +128,46 @@ namespace selyan
             return false;
     }
 
-    void OGLShader::SetUniform(const char *name, bool value)
+    void OGLShader::setUniform(const char *name, bool value)
     {
         GET_UNIFORM_LOCATION(name, { glUniform1i(location, GLint(value)); })
     }
 
-    void OGLShader::SetUniform(const char *name, uint32_t value)
+    void OGLShader::setUniform(const char *name, uint32_t value)
     {
         GET_UNIFORM_LOCATION(name, { glUniform1ui(location, value); });
     }
 
-    void OGLShader::SetUniform(const char *name, int32_t value)
+    void OGLShader::setUniform(const char *name, int32_t value)
     {
         GET_UNIFORM_LOCATION(name, { glUniform1i(location, value); });
     }
 
-    void OGLShader::SetUniform(const char *name, float value)
+    void OGLShader::setUniform(const char *name, float value)
     {
         GET_UNIFORM_LOCATION(name, { glUniform1f(GetUniformLocation(name), value); });
     }
 
-    void OGLShader::SetUniform(const char *name, const glm::vec2& vector)
+    void OGLShader::setUniform(const char *name, const glm::vec2& vector)
     {
         GET_UNIFORM_LOCATION(name, { glUniform2f(GetUniformLocation(name), vector.x, vector.y); });
     }
 
-    void OGLShader::SetUniform(const char *name, const glm::vec3& vector)
+    void OGLShader::setUniform(const char *name, const glm::vec3& vector)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
         });
     }
 
-    void OGLShader::SetUniform(const char *name, const glm::vec4& vector)
+    void OGLShader::setUniform(const char *name, const glm::vec4& vector)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
         });
     }
 
-    void OGLShader::SetUniform(const char *name, const glm::mat3& matrix, bool transpose)
+    void OGLShader::setUniform(const char *name, const glm::mat3& matrix, bool transpose)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniformMatrix3fv(GetUniformLocation(name),
@@ -177,14 +177,14 @@ namespace selyan
         });
     }
 
-    void OGLShader::SetUniform(const char *name, const glm::mat4& matrix, bool transpose)
+    void OGLShader::setUniform(const char *name, const glm::mat4& matrix, bool transpose)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniformMatrix4fv(location, 1, transpose ? GL_TRUE : GL_FALSE, &matrix[0][0]);
         });
     }
 
-    glm::vec4 OGLShader::GetUniformValue(const char *name) const
+    glm::vec4 OGLShader::getUniformValue(const char *name) const
     {
         glm::vec4 val;
         GET_UNIFORM_LOCATION(name, {
@@ -193,12 +193,12 @@ namespace selyan
         return val;
     }
 
-    void OGLShader::AddStorageBlock(ShaderBuffer *buffer, const char *name)
+    void OGLShader::addStorageBlock(ShaderBuffer *buffer, const char *name)
     {
-        buffer->Bind();
+      buffer->bind();
         GLuint index = glGetProgramResourceIndex(m_index, GL_SHADER_STORAGE_BLOCK, name);
-        //RN_ASSERT(index != GL_INVALID_INDEX, "GetUniformValue: uniform with this name not found");
-        assert(index != GL_INVALID_INDEX && "GetUniformValue: uniform with this name not found");
+        //RN_ASSERT(index != GL_INVALID_INDEX, "getUniformValue: uniform with this name not found");
+        assert(index != GL_INVALID_INDEX && "getUniformValue: uniform with this name not found");
         glShaderStorageBlockBinding(m_index, index, 2);
     }
 

@@ -41,7 +41,7 @@ namespace selyan
 
     void Application::run()
     {
-        Setup();
+      setup();
 
         constexpr float BORDER_FRAME_TIME = 1.f / 120.f;
         TimeStep time = TimeStep::getTime();
@@ -49,7 +49,7 @@ namespace selyan
         {
             m_window->onUpdate();
 
-            Clear();
+            clear();
 
             for (auto layer : m_layerStack)
             {

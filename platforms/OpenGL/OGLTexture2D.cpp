@@ -11,7 +11,7 @@ namespace selyan
 
     OGLTexture2D::~OGLTexture2D() { glDeleteTextures(1, &m_index); }
 
-    uint32_t OGLTexture2D::GetNative() { return m_index; }
+    uint32_t OGLTexture2D::getNative() { return m_index; }
 
     uint32_t OGLTexture2D::GetWidth() { return m_width; }
 
@@ -26,7 +26,7 @@ namespace selyan
         m_width = width;
         m_height = height;
 
-        Bind();
+        bind();
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -81,12 +81,12 @@ namespace selyan
                      m_dataType,
                      data);
 
-        UnBind();
+        unbind();
     }
 
     void OGLTexture2D::TextureData(uint32_t width, uint32_t height, void *data)
     {
-        Bind();
+      bind();
 
         m_width = width;
         m_height = height;
@@ -117,7 +117,7 @@ namespace selyan
                      m_dataType,
                      data);
 
-        UnBind();
+        unbind();
     }
 
     void OGLTexture2D::TextureData(Image *image)
@@ -166,7 +166,7 @@ namespace selyan
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void OGLTexture2D::TextureSubData(uint32_t widthOffset,
+    void OGLTexture2D::textureSubData(uint32_t widthOffset,
                                       uint32_t heightOffset,
                                       uint32_t width,
                                       uint32_t height,
@@ -187,9 +187,9 @@ namespace selyan
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void *OGLTexture2D::GetTextureData()
+    void *OGLTexture2D::getTextureData()
     {
-        Bind();
+      bind();
 
         size_t channels = 4;
         GLint aligment = 4;
@@ -229,23 +229,23 @@ namespace selyan
             }
         }
 
-        UnBind();
+        unbind();
 
         return pixels;
     }
 
-    void OGLTexture2D::Bind()
+    void OGLTexture2D::bind()
     {
         glActiveTexture(GL_TEXTURE0 + m_texUnit);
         glBindTexture(GL_TEXTURE_2D, m_index);
     }
 
-    void OGLTexture2D::UnBind()
+    void OGLTexture2D::unbind()
     {
         glActiveTexture(GL_TEXTURE0 + m_texUnit);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void OGLTexture2D::SetTexUnit(uint32_t unit) { m_texUnit = unit; }
+    void OGLTexture2D::setTexUnit(uint32_t unit) { m_texUnit = unit; }
 
 }

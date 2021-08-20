@@ -14,7 +14,7 @@ namespace selyan
 
     SpriteSheet::~SpriteSheet() { delete m_texture; }
 
-    void SpriteSheet::Bind() { m_texture->Bind(); }
+    void SpriteSheet::Bind() { m_texture->bind(); }
 
     uint32_t SpriteSheet::GetWidth() const { return m_texture->getWidth(); }
 

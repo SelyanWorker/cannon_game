@@ -16,62 +16,62 @@ namespace selyan
         RN_PATCHES = 0x000E
     };
 
-    void Setup();
+    void setup();
 
-    void Clear();
+    void clear();
 
-    void DrawArray(RenderMode mode, uint32_t vertexArray, uint32_t count);
+    void drawArray(RenderMode mode, uint32_t vertexArray, uint32_t count);
 
-    void DrawElements(RenderMode mode, uint32_t vertexArray, uint32_t count);
+    void drawElements(RenderMode mode, uint32_t vertexArray, uint32_t count);
 
-    uint32_t CreateBuffer();
+    uint32_t createBuffer();
 
-    void BufferData(uint32_t buffer, void *dataPtr, size_t dataSize);
+    void bufferData(uint32_t buffer, void *dataPtr, size_t dataSize);
 
-    void BufferSubData(uint32_t buffer, int64_t offset, int64_t size, void *data);
+    void bufferSubData(uint32_t buffer, int64_t offset, int64_t size, void *data);
 
-    void IndicesBufferData(uint32_t buffer, void *dataPtr, size_t dataSize);
+    void indicesBufferData(uint32_t buffer, void *dataPtr, size_t dataSize);
 
-    void IndicesBufferSubData(uint32_t buffer, int64_t offset, int64_t size, void *data);
+    void indicesBufferSubData(uint32_t buffer, int64_t offset, int64_t size, void *data);
 
-    uint32_t CreateVertexArray();
+    uint32_t createVertexArray();
 
-    void BufferAttach(uint32_t vertexArray,
+    void bufferAttach(uint32_t vertexArray,
                                 uint32_t buffer,
                                 uint32_t index = 0,
                                 uint32_t size = 3,
                                 uint32_t stride = 0,
                                 void *pointer = nullptr);
 
-    void IndicesBufferAttach(uint32_t vertexArray, uint32_t buffer);
+    void indicesBufferAttach(uint32_t vertexArray, uint32_t buffer);
 
-    void EnableRestartIndex(uint32_t index);
+    void enableRestartIndex(uint32_t index);
 
-    void DisableRestartIndex();
+    void disableRestartIndex();
 
-    void EnablePolygonMode();
+    void enablePolygonMode();
 
-    void DisablePolygonMode();
+    void disablePolygonMode();
 
-    void EnableCullFace();
+    void enableCullFace();
 
-    void DisableCullFace();
+    void disableCullFace();
 
-    void SetPointSize(float size);
+    void setPointSize(float size);
 
-    void SetLineWidth(float width);
+    void setLineWidth(float width);
 
-    float GetPointSize();
+    float getPointSize();
 
-    float GetLineWidth();
+    float getLineWidth();
 
-    void DeleteBuffer(uint32_t buffer);
+    void deleteBuffer(uint32_t buffer);
 
-    void SetPathSize(uint32_t size);
+    void setPathSize(uint32_t size);
 
-    void RendererTest();
+    void rendererTest();
 
     // new
-    void DrawVertexArray(RenderMode mode, VertexArray *array);
+    void drawVertexArray(RenderMode mode, VertexArray *array);
 
 }

@@ -4,18 +4,18 @@
 
 namespace selyan
 {
-    VertexArray *VertexArray::Create() { return new OGLVertexArray(); }
+    VertexArray *VertexArray::create() { return new OGLVertexArray(); }
 
     OGLVertexArray::OGLVertexArray() : m_index(0), m_indexBuffer(nullptr), m_instanceCount(1)
     {
         glGenVertexArrays(1, &m_index);
     }
 
-    void OGLVertexArray::SetVertexBuffers(std::initializer_list<VertexBuffer *> buffers)
+    void OGLVertexArray::setVertexBuffers(std::initializer_list<VertexBuffer *> buffers)
     {
         //RN_ASSERT(buffers.size() <= MAX_VERTEX_BUFFERS, "buffers.size() > m_vertexBuffers.size()");
         assert(buffers.size() <= MAX_VERTEX_BUFFERS && "buffers.size() > m_vertexBuffers.size()");
-        Bind();
+        bind();
         GLuint index = 0;
         for (auto initBuffer : buffers)
         {
@@ -25,9 +25,9 @@ namespace selyan
             m_vertexBuffers.push_back(initBuffer);
 
             VertexBuffer *buffer = m_vertexBuffers.back();
-            buffer->Bind();
-            auto bufferLayout = buffer->GetBufferLayout();
-            GLuint stride = bufferLayout.GetStride();
+            buffer->bind();
+            auto bufferLayout = buffer->getBufferLayout();
+            GLuint stride = bufferLayout.getStride();
             for (auto const &element : bufferLayout)
             {
                 GLenum type;
@@ -44,8 +44,8 @@ namespace selyan
                         //RN_CORE_ERROR("SetVertexBuffer element no type");
                         std::cout << "SetVertexBuffer element no type" << std::endl;
                     default:
-                        //RN_CORE_ERROR("From SetVertexBuffers -> default in type switch");
-                        std::cout << "From SetVertexBuffers -> default in type switch" << std::endl;
+                        //RN_CORE_ERROR("From setVertexBuffers -> default in type switch");
+                        std::cout << "From setVertexBuffers -> default in type switch" << std::endl;
                 }
                 glVertexAttribPointer(index,
                                       element.Size,
@@ -57,25 +57,25 @@ namespace selyan
                 glVertexAttribDivisor(index, GLuint(element.Divisor));
                 index++;
             }
-            buffer->UnBind();
+            buffer->unbind();
         }
-        UnBind();
+        unbind();
     }
 
-    void OGLVertexArray::SetIndexBuffer(IndexBuffer *buffer)
+    void OGLVertexArray::setIndexBuffer(IndexBuffer *buffer)
     {
         m_indexBuffer = buffer;
-        Bind();
-        m_indexBuffer->Bind();
-        UnBind();
+        bind();
+        m_indexBuffer->bind();
+        unbind();
     }
 
-    std::vector<VertexBuffer *> OGLVertexArray::GetVertexBuffers() const { return m_vertexBuffers; }
+    std::vector<VertexBuffer *> OGLVertexArray::getVertexBuffers() const { return m_vertexBuffers; }
 
-    IndexBuffer *OGLVertexArray::GetIndexBuffer() const { return m_indexBuffer; }
+    IndexBuffer *OGLVertexArray::getIndexBuffer() const { return m_indexBuffer; }
 
-    void OGLVertexArray::Bind() { glBindVertexArray(m_index); }
+    void OGLVertexArray::bind() { glBindVertexArray(m_index); }
 
-    void OGLVertexArray::UnBind() { glBindVertexArray(0); }
+    void OGLVertexArray::unbind() { glBindVertexArray(0); }
 
 }

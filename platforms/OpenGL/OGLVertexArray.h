@@ -13,21 +13,21 @@ namespace selyan
     public:
         OGLVertexArray();
 
-        void SetVertexBuffers(std::initializer_list<VertexBuffer *> buffers) override;
+        void setVertexBuffers(std::initializer_list<VertexBuffer *> buffers) override;
 
-        void SetIndexBuffer(IndexBuffer *buffer) override;
+        void setIndexBuffer(IndexBuffer *buffer) override;
 
-        void SetInstanceCount(uint32_t primCount) override { m_instanceCount = primCount; }
+        void setInstanceCount(uint32_t primCount) override { m_instanceCount = primCount; }
 
-        std::vector<VertexBuffer *> GetVertexBuffers() const override;
+        std::vector<VertexBuffer *> getVertexBuffers() const override;
 
-        IndexBuffer *GetIndexBuffer() const override;
+        IndexBuffer *getIndexBuffer() const override;
 
-        uint32_t GetInstanceCount() const override { return m_instanceCount; }
+        uint32_t getInstanceCount() const override { return m_instanceCount; }
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
     private:
         GLuint m_index;

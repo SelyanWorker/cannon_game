@@ -18,17 +18,17 @@ namespace selyan
 
         ~OGLFrameBuffer();
 
-        void Bind() override;
+        void bind() override;
 
-        void UnBind() override;
+        void unbind() override;
 
-        void SetSize(float width, float height) override;
+        void setSize(float width, float height) override;
 
-        std::pair<float, float> GetSize() override;
+        std::pair<float, float> getSize() override;
 
-        Texture2D *GetAttachmentColorTexture(uint32_t number) override;
+        Texture2D *getAttachmentColorTexture(uint32_t number) override;
 
-        void *GetColorData(uint32_t number) override;
+        void *getColorData(uint32_t number) override;
 
     private:
         GLsizei m_width;

@@ -74,7 +74,7 @@ namespace selyan
             RN_CORE_INFO("OGL debug context created successfully");
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback(OGLDebugOutput, nullptr);
+            glDebugMessageCallback(oglDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
         else

@@ -29,12 +29,12 @@ namespace selyan
             BufferElement(FLOAT2, false),
             BufferElement(FLOAT2, false),
         };
-        m_vertexBuffer->SetBufferLayout({ elements, 4 });
+        m_vertexBuffer->setBufferLayout({elements, 4});
 
-        m_vertexArray->SetVertexBuffers({ m_vertexBuffer });
+        m_vertexArray->setVertexBuffers({m_vertexBuffer});
         /*BufferAttach(m_vertexArray, m_vertexBuffer, 0, 3, sizeof(Vertex2D), (void*)0);
         BufferAttach(m_vertexArray, m_vertexBuffer, 1, 2, sizeof(Vertex2D),
-        (void*)(offsetof(Vertex2D, textCoord))); BufferAttach(m_vertexArray, m_vertexBuffer, 2, 2,
+        (void*)(offsetof(Vertex2D, textCoord))); bufferAttach(m_vertexArray, m_vertexBuffer, 2, 2,
         sizeof(Vertex2D), (void*)(offsetof(Vertex2D, normal)));*/
     }
 
@@ -67,11 +67,11 @@ namespace selyan
 
         frameTime = currentTime - timeFromStart;
 
-        program->SetUniform("textureMatrix", m_textureMatrix);
+        program->setUniform("textureMatrix", m_textureMatrix);
 
-        m_sheet->Bind();
+        m_sheet->bind();
 
-        // DrawArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray, 4);
+        // drawArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray, 4);
         DrawVertexArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray);
     }
 

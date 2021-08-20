@@ -6,7 +6,7 @@
 
 namespace selyan
 {
-    GLenum CheckError_(int line)
+    GLenum checkError_(int line)
     {
         GLenum errorCode;
         while ((errorCode = glGetError()) != GL_NO_ERROR)

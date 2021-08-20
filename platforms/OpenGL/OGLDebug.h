@@ -4,8 +4,8 @@
 
 namespace selyan
 {
-    GLenum CheckError_(int line);
-#define CheckError() CheckError_(__LINE__)
+    GLenum checkError_(int line);
+#define checkError() checkError_(__LINE__)
 
     void APIENTRY OGLDebugOutput(GLenum source,
                                  GLenum type,
