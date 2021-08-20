@@ -7,14 +7,14 @@
 
 namespace selyan
 {
-    Image *Image::create(char const *name) { return ImageSTB::Create(file_name); }
+    Image *Image::create(char const *name) { return ImageSTB::create(name); }
 
     Image *Image::create(uint8_t const *pixels, uint32_t channels, uint32_t width, uint32_t height)
     {
-        return ImageSTB::Create(pixels, channels, width, height);
+        return ImageSTB::create(pixels, channels, width, height);
     }
 
-    ImageSTB *ImageSTB::Create(const char *name)
+    ImageSTB *ImageSTB::create(const char *name)
     {
         int width;
         int height;
@@ -35,7 +35,7 @@ namespace selyan
         return image;
     }
 
-    ImageSTB *ImageSTB::Create(uint8_t const *pixels,
+    ImageSTB *ImageSTB::create(uint8_t const *pixels,
                                uint32_t channels,
                                uint32_t width,
                                uint32_t height)

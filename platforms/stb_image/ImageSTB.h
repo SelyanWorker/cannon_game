@@ -7,9 +7,9 @@ namespace selyan
     class ImageSTB : public Image
     {
     public:
-        static ImageSTB *Create(const char *name);
+        static ImageSTB *create(const char *name);
 
-        static ImageSTB *Create(uint8_t const *pixels,
+        static ImageSTB *create(uint8_t const *pixels,
                                 uint32_t channels,
                                 uint32_t width,
                                 uint32_t height);
