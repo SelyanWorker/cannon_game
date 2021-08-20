@@ -1,8 +1,8 @@
 #pragma once
 
-#include "utils/image.h"
+#include "utility/image.h"
 
-namespace Rainy
+namespace selyan
 {
     class ImageSTB : public Image
     {

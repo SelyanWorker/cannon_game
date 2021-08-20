@@ -1,7 +1,7 @@
 #include "OGLFrameBuffer.h"
-#include "core/log.h"
+#include <iostream>
 
-namespace Rainy
+namespace selyan
 {
     FrameBuffer *FrameBuffer::Create(std::initializer_list<Texture2D *> colorTextures)
     {
@@ -9,7 +9,8 @@ namespace Rainy
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxAttach);
         if (GLint(colorTextures.size()) > maxAttach)
         {
-            RN_CORE_ERROR("FrameBuffer::Create - too much color textures");
+            //RN_CORE_ERROR("FrameBuffer::Create - too much color textures");
+            std::cout << "FrameBuffer::Create - too much color textures" << std::endl;
             return nullptr;
         }
 
@@ -17,7 +18,8 @@ namespace Rainy
         // need check equal texture size
         if (!equalTexturesSize)
         {
-            RN_CORE_ERROR("FrameBuffer::Create - texture's size not equal");
+            //RN_CORE_ERROR("FrameBuffer::Create - texture's size not equal");
+            std::cout << "FrameBuffer::Create - texture's size not equal" << std::endl;
             return nullptr;
         }
 
@@ -77,7 +79,8 @@ namespace Rainy
 
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE)
-            RN_CORE_ERROR("Framebuffer status - not complete");
+            //RN_CORE_ERROR("Framebuffer status - not complete");
+            std::cout << "Framebuffer status - not complete" << std::endl;
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 

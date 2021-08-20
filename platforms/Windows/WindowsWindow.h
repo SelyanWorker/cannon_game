@@ -4,7 +4,7 @@
 
 #include "core/window.h"
 
-namespace Rainy
+namespace selyan
 {
     class WindowsWindow : public Window
     {

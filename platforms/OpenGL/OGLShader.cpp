@@ -1,9 +1,8 @@
 
 #include "OGLShader.h"
-#include "core/log.h"
 #include "render/shader.h"
 
-namespace Rainy
+namespace selyan
 {
 #define GET_UNIFORM_LOCATION(name, action)                                                         \
     GLint location = glGetUniformLocation(m_index, name);                                          \
@@ -31,7 +30,8 @@ namespace Rainy
     {
         m_lastStorageIndex = 0;
         if (src.size() > 5)
-            RN_APP_WARN("Rainy supported only 5 Types of the shaders");
+            //RN_APP_WARN("Rainy supported only 5 Types of the shaders");
+            std::cout << "Rainy supported only 5 Types of the shaders" << std::endl;
 
         m_index = glCreateProgram();
 
@@ -60,7 +60,8 @@ namespace Rainy
                                           part.data() + secondLineStart,
                                           part.size() - secondLineStart);
             else
-                RN_APP_WARN("Unsupported shader Type");
+                //RN_APP_WARN("Unsupported shader Type");
+                std::cout << "Unsupported shader Type" << std::endl;
         }
 
         if (m_vsIndex != GL_INVALID_INDEX)
@@ -87,10 +88,14 @@ namespace Rainy
         GLint answer[2];
         glGetProgramiv(m_index, GL_ACTIVE_ATTRIBUTES, &answer[0]);
         glGetProgramiv(m_index, GL_ACTIVE_UNIFORMS, &answer[1]);
-        RN_CORE_INFO("Program index: {0}. Attibutes: {1}. Uniforms: {2}",
-                     m_index,
-                     answer[0],
-                     answer[1]);
+//        RN_CORE_INFO("Program index: {0}. Attibutes: {1}. Uniforms: {2}",
+//                     m_index,
+//                     answer[0],
+//                     answer[1]);
+        std::cout << "Program index: " << m_index
+                  << " Attibutes: " << answer[0]
+                  << "Uniforms: "
+                  << answer[1] << std::endl;
     }
 
     OGLShader::~OGLShader()
@@ -143,45 +148,45 @@ namespace Rainy
         GET_UNIFORM_LOCATION(name, { glUniform1f(GetUniformLocation(name), value); });
     }
 
-    void OGLShader::SetUniform(const char *name, Vector2f vector)
+    void OGLShader::SetUniform(const char *name, const glm::vec2& vector)
     {
         GET_UNIFORM_LOCATION(name, { glUniform2f(GetUniformLocation(name), vector.x, vector.y); });
     }
 
-    void OGLShader::SetUniform(const char *name, Vector3f vector)
+    void OGLShader::SetUniform(const char *name, const glm::vec3& vector)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
         });
     }
 
-    void OGLShader::SetUniform(const char *name, Vector4f vector)
+    void OGLShader::SetUniform(const char *name, const glm::vec4& vector)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
         });
     }
 
-    void OGLShader::SetUniform(const char *name, Matrix3f matrix, bool transpose)
+    void OGLShader::SetUniform(const char *name, const glm::mat3& matrix, bool transpose)
     {
         GET_UNIFORM_LOCATION(name, {
             glUniformMatrix3fv(GetUniformLocation(name),
                                1,
                                transpose ? GL_TRUE : GL_FALSE,
-                               matrix.getData());
+                               &matrix[0][0]);
         });
     }
 
-    void OGLShader::SetUniform(const char *name, Matrix4f matrix, bool transpose)
+    void OGLShader::SetUniform(const char *name, const glm::mat4& matrix, bool transpose)
     {
         GET_UNIFORM_LOCATION(name, {
-            glUniformMatrix4fv(location, 1, transpose ? GL_TRUE : GL_FALSE, matrix.getData());
+            glUniformMatrix4fv(location, 1, transpose ? GL_TRUE : GL_FALSE, &matrix[0][0]);
         });
     }
 
-    Vector4f OGLShader::GetUniformValue(const char *name) const
+    glm::vec4 OGLShader::GetUniformValue(const char *name) const
     {
-        Vector4f val;
+        glm::vec4 val;
         GET_UNIFORM_LOCATION(name, {
             glGetUniformfv(m_index, location, reinterpret_cast<float *>(&val));
         });
@@ -192,7 +197,8 @@ namespace Rainy
     {
         buffer->Bind();
         GLuint index = glGetProgramResourceIndex(m_index, GL_SHADER_STORAGE_BLOCK, name);
-        RN_ASSERT(index != GL_INVALID_INDEX, "GetUniformValue: uniform with this name not found");
+        //RN_ASSERT(index != GL_INVALID_INDEX, "GetUniformValue: uniform with this name not found");
+        assert(index != GL_INVALID_INDEX && "GetUniformValue: uniform with this name not found");
         glShaderStorageBlockBinding(m_index, index, 2);
     }
 
@@ -200,7 +206,9 @@ namespace Rainy
     {
         GLint location = glGetUniformLocation(m_index, name);
         if (location < 0)
-            RN_CORE_INFO("uniform {0} not found in shader program", name);
+            //RN_CORE_INFO("uniform {0} not found in shader program", name);
+            std::cout << "uniform" << name << "not found in shader program"
+                      << std::endl;
         return location;
     }
 
@@ -220,13 +228,16 @@ namespace Rainy
             switch (Type)
             {
                 case GL_VERTEX_SHADER:
-                    RN_APP_INFO("Error in vertex shader source: {0}", message);
+                    //RN_APP_INFO("Error in vertex shader source: {0}", message);
+                    std::cout << "Error in vertex shader source: " << message << std::endl;
                     break;
                 case GL_FRAGMENT_SHADER:
-                    RN_APP_INFO("Error in fragment shader source: {0}", message);
+                    //RN_APP_INFO("Error in fragment shader source: {0}", message);
+                    std::cout << "Error in fragment shader source: " << message << std::endl;
                     break;
                 case GL_GEOMETRY_SHADER:
-                    RN_APP_INFO("Error in geometry shader source: {0}", message);
+                    //RN_APP_INFO("Error in geometry shader source: {0}", message);
+                    std::cout << "Error in geometry shader source: " << message << std::endl;
                     break;
             }
             glDeleteShader(shaderIndex);

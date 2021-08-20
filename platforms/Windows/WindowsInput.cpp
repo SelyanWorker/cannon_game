@@ -3,7 +3,7 @@
 #include "application/application.h"
 #include "core/input.h"
 
-namespace Rainy
+namespace selyan
 {
     Input *Input::m_input = new WindowsInput();
 

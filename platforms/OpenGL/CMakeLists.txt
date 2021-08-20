@@ -1,4 +1,4 @@
-add_library(Rainy.Platform.OGL
+add_library(platform.ogl
         STATIC
         OGLBuffer.cpp
         OGLDebug.cpp
@@ -8,8 +8,8 @@ add_library(Rainy.Platform.OGL
         OGLTexture2D.cpp
         OGLVertexArray.cpp
         )
-target_link_libraries(Rainy.Platform.OGL
+target_link_libraries(platform.ogl
         PUBLIC
-        Rainy
+        render
         glad
         )

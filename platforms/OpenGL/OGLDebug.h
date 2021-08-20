@@ -2,7 +2,7 @@
 
 #include "glad/glad.h"
 
-namespace Rainy
+namespace selyan
 {
     GLenum CheckError_(int line);
 #define CheckError() CheckError_(__LINE__)

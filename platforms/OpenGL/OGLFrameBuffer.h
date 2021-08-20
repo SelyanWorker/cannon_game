@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/core.h"
 #include "render/frame_buffer.h"
 
 #include "OGLTexture2D.h"
@@ -10,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-namespace Rainy
+namespace selyan
 {
     class OGLFrameBuffer : public FrameBuffer
     {

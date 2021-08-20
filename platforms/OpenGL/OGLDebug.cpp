@@ -1,10 +1,10 @@
 
 #include "OGLDebug.h"
-#include "core/log.h"
 
+#include <iostream>
 #include <string>
 
-namespace Rainy
+namespace selyan
 {
     GLenum CheckError_(int line)
     {
@@ -37,7 +37,8 @@ namespace Rainy
                     break;
             }
             // std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-            RN_CORE_ERROR("{0} line: {1}", error, line);
+            //RN_CORE_ERROR("{0} line: {1}", error, line);
+            std::cout << error << " line:  " << line << std::endl;
         }
         return errorCode;
     }
@@ -124,13 +125,17 @@ namespace Rainy
                 severityLine += "notification";
                 break;
         }
+//
+//        RN_CORE_ERROR("OpenGL Debug message ({0}): {1} \n {2} \n {3} \n {4}",
+//                      id,
+//                      message,
+//                      srcLine,
+//                      typeLine,
+//                      severityLine);
 
-        RN_CORE_ERROR("OpenGL Debug message ({0}): {1} \n {2} \n {3} \n {4}",
-                      id,
-                      message,
-                      srcLine,
-                      typeLine,
-                      severityLine);
+        std::cout << "OpenGL Debug message (" << id << "): " << message << "\n "
+                  << srcLine << " \n " << typeLine << " \n " << severityLine
+                  << std::endl;
     }
 
 }

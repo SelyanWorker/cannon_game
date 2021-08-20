@@ -2,7 +2,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace Rainy
+namespace selyan
 {
     TimeStep TimeStep::getTime() { return TimeStep(glfwGetTime()); }
 

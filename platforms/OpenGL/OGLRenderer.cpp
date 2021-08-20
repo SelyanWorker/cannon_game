@@ -2,8 +2,9 @@
 #include "render/renderer.h"
 
 #include <glad/glad.h>
+#include <cassert>
 
-namespace Rainy
+namespace selyan
 {
     void Setup()
     {
@@ -62,8 +63,9 @@ namespace Rainy
                       uint32_t stride,
                       void *pointer)
     {
-        RN_ASSERT(vertexArray != 0 && buffer != 0,
-                  "VertexArray == 0 or Buffer == 0 in \"BufferAttach\"");
+//        RN_ASSERT(vertexArray != 0 && buffer != 0,
+//                  "VertexArray == 0 or Buffer == 0 in \"BufferAttach\"");
+        assert(vertexArray != 0 && buffer != 0 && "VertexArray == 0 or Buffer == 0 in \"BufferAttach\"");
         glBindVertexArray(vertexArray);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
         glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);

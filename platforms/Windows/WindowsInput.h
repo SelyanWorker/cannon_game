@@ -3,7 +3,7 @@
 #include "WindowsWindow.h"
 #include "core/input.h"
 
-namespace Rainy
+namespace selyan
 {
     class WindowsInput : public Input
     {
@@ -16,4 +16,4 @@ namespace Rainy
         // std::pair<float, float> GetMouseScrollImpl()  override;
     };
 
-}   // namespace Rainy
+}   // namespace selyan

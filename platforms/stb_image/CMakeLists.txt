@@ -1,9 +1,9 @@
-add_library(Rainy.Platform.stb_image
+add_library(platform.stb_image
         STATIC
         ImageSTB.cpp
         )
-target_link_libraries(Rainy.Platform.stb_image
+target_link_libraries(platform.stb_image
         PUBLIC
-        Rainy
+        utility
         stb_image
         )

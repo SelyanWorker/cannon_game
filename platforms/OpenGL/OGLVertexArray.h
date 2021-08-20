@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Rainy
+namespace selyan
 {
     constexpr size_t MAX_VERTEX_BUFFERS = 3;
 

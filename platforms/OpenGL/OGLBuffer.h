@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Rainy
+namespace selyan
 {
     class OGLVertexBuffer : public VertexBuffer
     {

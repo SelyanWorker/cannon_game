@@ -1,0 +1,7 @@
+add_subdirectory(core)
+add_subdirectory(event)
+add_subdirectory(application)
+add_subdirectory(render)
+add_subdirectory(utility)
+add_subdirectory(camera)
+add_subdirectory(2d)

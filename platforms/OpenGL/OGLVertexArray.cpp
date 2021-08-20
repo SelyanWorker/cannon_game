@@ -1,6 +1,8 @@
 #include "OGLVertexArray.h"
 
-namespace Rainy
+#include <cassert>
+
+namespace selyan
 {
     VertexArray *VertexArray::Create() { return new OGLVertexArray(); }
 
@@ -11,7 +13,8 @@ namespace Rainy
 
     void OGLVertexArray::SetVertexBuffers(std::initializer_list<VertexBuffer *> buffers)
     {
-        RN_ASSERT(buffers.size() <= MAX_VERTEX_BUFFERS, "buffers.size() > m_vertexBuffers.size()");
+        //RN_ASSERT(buffers.size() <= MAX_VERTEX_BUFFERS, "buffers.size() > m_vertexBuffers.size()");
+        assert(buffers.size() <= MAX_VERTEX_BUFFERS && "buffers.size() > m_vertexBuffers.size()");
         Bind();
         GLuint index = 0;
         for (auto initBuffer : buffers)
@@ -38,9 +41,11 @@ namespace Rainy
                         type = GL_FLOAT;
                         break;
                     case NONE:
-                        RN_CORE_ERROR("SetVertexBuffer element no type");
+                        //RN_CORE_ERROR("SetVertexBuffer element no type");
+                        std::cout << "SetVertexBuffer element no type" << std::endl;
                     default:
-                        RN_CORE_ERROR("From SetVertexBuffers -> default in type switch");
+                        //RN_CORE_ERROR("From SetVertexBuffers -> default in type switch");
+                        std::cout << "From SetVertexBuffers -> default in type switch" << std::endl;
                 }
                 glVertexAttribPointer(index,
                                       element.Size,

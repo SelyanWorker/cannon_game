@@ -1,11 +1,10 @@
 #pragma once
 
-#include "core/core.h"
 #include "render/shader.h"
 
 #include <glad/glad.h>
 
-namespace Rainy
+namespace selyan
 {
     class OGLShader : public Shader
     {
@@ -26,17 +25,17 @@ namespace Rainy
 
         void SetUniform(const char *name, float value) override;
 
-        void SetUniform(const char *name, Vector2f vector) override;
+        void SetUniform(const char *name, const glm::vec2& vector) override;
 
-        void SetUniform(const char *name, Vector3f vector) override;
+        void SetUniform(const char *name, const glm::vec3& vector) override;
 
-        void SetUniform(const char *name, Vector4f vector) override;
+        void SetUniform(const char *name, const glm::vec4& vector) override;
 
-        void SetUniform(const char *name, Matrix3f matrix, bool transpose = true) override;
+        void SetUniform(const char *name, const glm::mat3& matrix, bool transpose = true) override;
 
-        void SetUniform(const char *name, Matrix4f matrix, bool transpose = true) override;
+        void SetUniform(const char *name, const glm::mat4& matrix, bool transpose = true) override;
 
-        Vector4f GetUniformValue(const char *name) const override;
+        glm::vec4 GetUniformValue(const char *name) const override;
 
         void AddStorageBlock(ShaderBuffer *buffer, const char *name) override;
 

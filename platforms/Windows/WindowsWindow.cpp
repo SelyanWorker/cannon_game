@@ -1,17 +1,15 @@
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 #include "WindowsWindow.h"
-#include "core/log.h"
 #include "event/key_events.h"
 #include "event/mouse_event.h"
 #include "event/window_events.h"
 
-// extern "C" {
-//	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-// }
+#include <cassert>
+#include <iostream>
 
-namespace Rainy
+namespace selyan
 {
     Window *Window::create(WindowProperties properties) { return new WindowsWindow(properties); }
 
@@ -57,7 +55,8 @@ namespace Rainy
     void WindowsWindow::Init()
     {
         // assertion
-        RN_ASSERT(glfwInit(), "glfwInit() error");
+        //RN_ASSERT(glfwInit(), "glfwInit() error");
+        assert(glfwInit() && "glfwInit() error");
 
         // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -82,11 +81,16 @@ namespace Rainy
         {
             RN_CORE_INFO("OGL debug context was not created");
         }*/
+//
+//        RN_CORE_INFO("GPU {0} {1}", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
+//        RN_CORE_INFO("OGL {0} | GLSL {1}",
+//                     glGetString(GL_VERSION),
+//                     glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-        RN_CORE_INFO("GPU {0} {1}", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
-        RN_CORE_INFO("OGL {0} | GLSL {1}",
-                     glGetString(GL_VERSION),
-                     glGetString(GL_SHADING_LANGUAGE_VERSION));
+        std::cout << "GPU " << glGetString(GL_VENDOR) << " "
+                  << glGetString(GL_RENDERER) << std::endl;
+        std::cout << "OGL " << glGetString(GL_VERSION) << " | GLSL "
+                  << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
         GLint major, minor;
         glGetIntegerv(GL_MAJOR_VERSION, &major);

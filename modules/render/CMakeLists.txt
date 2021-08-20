@@ -1,0 +1,11 @@
+add_library(render
+        STATIC
+        src/shader_library.cpp)
+target_include_directories(render
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(render
+        PUBLIC
+        utility
+        glm
+        )

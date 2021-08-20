@@ -1,7 +1,7 @@
 
 #include "OGLTexture2D.h"
 
-namespace Rainy
+namespace selyan
 {
     GLuint textureBindIndex = 0;
 

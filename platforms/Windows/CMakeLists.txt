@@ -1,16 +1,14 @@
-add_library(Rainy.Platform.GLFW
+add_library(platform.glfw
         STATIC
         WindowsWindow.cpp
         WindowsInput.cpp
         WindowsTime.cpp
         )
-target_include_directories(Rainy.Platform.GLFW
+target_link_libraries(platform.glfw
         PUBLIC
-        .
-        )
-target_link_libraries(Rainy.Platform.GLFW
-        PUBLIC
-        Rainy
+        core
+        event
+        application
         glfw
         glad
         )

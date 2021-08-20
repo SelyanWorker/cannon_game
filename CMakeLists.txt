@@ -42,3 +42,18 @@ add_executable(glad_test vendor/glad/example/c++/hellowindow2.cpp)
 target_link_libraries(glad_test PRIVATE
         glfw
         glad)
+
+add_subdirectory(modules)
+add_subdirectory(platforms/OpenGL)
+add_subdirectory(platforms/Windows)
+add_subdirectory(platforms/stb_image)
+
+#add_library(platform OBJECT)
+#target_link_libraries(platform
+#        PUBLIC
+#        platform.ogl
+#        platform.glfw
+#        platform.stb_image
+#        )
+
+add_subdirectory(sandbox)

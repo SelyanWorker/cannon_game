@@ -1,0 +1,13 @@
+add_library(application
+        STATIC
+        src/application.cpp)
+target_include_directories(application
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(application
+        PUBLIC
+        core
+        event
+        render
+        glfw
+        )

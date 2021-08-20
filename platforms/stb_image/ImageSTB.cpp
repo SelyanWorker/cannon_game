@@ -5,7 +5,7 @@
 
 #include <cstring>
 
-namespace Rainy
+namespace selyan
 {
     Image *Image::Create(char const *name) { return ImageSTB::Create(name); }
 

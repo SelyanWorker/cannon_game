@@ -1,13 +1,12 @@
 #pragma once
 
-#include "core/core.h"
 #include "render/texture_2d.h"
 
 #include <glad/glad.h>
 
 #include <cstdint>
 
-namespace Rainy
+namespace selyan
 {
     class OGLTexture2D : public Texture2D
     {

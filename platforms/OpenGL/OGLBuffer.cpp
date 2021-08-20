@@ -1,6 +1,6 @@
 #include "OGLBuffer.h"
 
-namespace Rainy
+namespace selyan
 {
     // vertex buffer
     VertexBuffer *VertexBuffer::Create(uint32_t size, void *data)
