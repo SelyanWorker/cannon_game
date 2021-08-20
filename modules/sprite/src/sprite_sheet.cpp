@@ -1,5 +1,5 @@
 
-#include "2d/SpriteSheet.h"
+#include "sprite/sprite_sheet.h"
 
 namespace selyan
 {
@@ -14,21 +14,21 @@ namespace selyan
 
     SpriteSheet::~SpriteSheet() { delete m_texture; }
 
-    void SpriteSheet::Bind() { m_texture->Bind(); }
+    void SpriteSheet::bind() { m_texture->Bind(); }
 
-    uint32_t SpriteSheet::GetWidth() const { return m_texture->GetWidth(); }
+    uint32_t SpriteSheet::getWidth() const { return m_texture->GetWidth(); }
 
-    uint32_t SpriteSheet::GetHeight() const { return m_texture->GetHeight(); }
+    uint32_t SpriteSheet::getHeight() const { return m_texture->GetHeight(); }
 
-    uint32_t SpriteSheet::GetRowsNumber() const { return m_rowsNumber; }
+    uint32_t SpriteSheet::getRowsNumber() const { return m_rowsNumber; }
 
-    uint32_t SpriteSheet::GetColumnsNumber() const { return m_columnsNumber; }
+    uint32_t SpriteSheet::getColumnsNumber() const { return m_columnsNumber; }
 
-    Vector2f SpriteSheet::GetSpriteSize() const { return m_spriteSize; }
+    glm::vec2 SpriteSheet::getSpriteSize() const { return m_spriteSize; }
 
-    Matrix3f SpriteSheet::GetTranslationMatrix(uint32_t row, uint32_t column) const
+    glm::mat3 SpriteSheet::getTranslationMatrix(uint32_t row, uint32_t column) const
     {
-        Matrix3f matrix;
+        glm::mat3 matrix;
         matrix[0][2] = m_spriteSize.x * column / m_texture->GetWidth();
         matrix[1][2] = m_spriteSize.y * row / m_texture->GetHeight();
         return matrix;

@@ -1,6 +1,5 @@
-#include <GLFW/glfw3.h>
-
-#include "2d/Sprite.h"
+#include "core/time.h"
+#include "sprite/sprite.h"
 
 namespace selyan
 {
@@ -10,18 +9,23 @@ namespace selyan
     {
         m_frames.push_back(firstFrame);
         m_textureMatrix =
-            m_sheet->GetTranslationMatrix(m_frames.back().row, m_frames.back().column);
+            m_sheet->getTranslationMatrix(m_frames.back().row, m_frames.back().column);
 
-        Vector2f textureSize = m_sheet->GetSpriteSize();
-        textureSize.x /= m_sheet->GetWidth();
-        textureSize.y /= m_sheet->GetHeight();
+        glm::vec2 textureSize = m_sheet->getSpriteSize();
+        textureSize.x /= m_sheet->getWidth();
+        textureSize.y /= m_sheet->getHeight();
+
+//        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
+//        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
+//        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
+//        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
 
         m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
         m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
         m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
         m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
 
-        m_vertexBuffer = VertexBuffer::Create(sizeof(Vertex2D) * 4, m_vertices);
+        m_vertexBuffer = VertexBuffer::Create(sizeof(Vertex2d) * 4, m_vertices);
         m_vertexArray = VertexArray::Create();
 
         auto elements = {
@@ -40,15 +44,15 @@ namespace selyan
 
     Sprite::~Sprite() { delete m_sheet; }
 
-    void Sprite::AddSpriteFrame(uint32_t row, uint32_t column, float lifeTime)
+    void Sprite::addSpriteFrame(uint32_t row, uint32_t column, float lifeTime)
     {
         m_frames.push_back({ row, column, lifeTime });
     }
 
-    void Sprite::Draw(Shader *program)
+    void Sprite::draw(Shader *program)
     {
         // frame - sprite animation frame
-        float currentTime = float(glfwGetTime());
+        float currentTime = TimeStep::getTime().getSeconds();
 
         static float timeFromStart = currentTime;
         static float frameTime = currentTime - timeFromStart;
@@ -62,14 +66,14 @@ namespace selyan
                 m_currentFrame = 0;
             currentFrame = m_frames[m_currentFrame];
 
-            m_textureMatrix = m_sheet->GetTranslationMatrix(currentFrame.row, currentFrame.column);
+            m_textureMatrix = m_sheet->getTranslationMatrix(currentFrame.row, currentFrame.column);
         }
 
         frameTime = currentTime - timeFromStart;
 
         program->SetUniform("textureMatrix", m_textureMatrix);
 
-        m_sheet->Bind();
+        m_sheet->bind();
 
         // DrawArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray, 4);
         DrawVertexArray(RenderMode::RN_TRIANGLE_STRIP, m_vertexArray);
