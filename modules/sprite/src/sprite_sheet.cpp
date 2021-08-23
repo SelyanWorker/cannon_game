@@ -1,18 +1,19 @@
 
 #include "sprite/sprite_sheet.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <utility>
+
 namespace selyan
 {
-    SpriteSheet::SpriteSheet(Texture2D *texture, uint32_t rowsNumber, uint32_t columnsNumber)
-      : m_texture(texture),
+    SpriteSheet::SpriteSheet(std::shared_ptr<Texture2D> texture, uint32_t rowsNumber, uint32_t columnsNumber)
+      : m_texture(std::move(texture)),
         m_rowsNumber(rowsNumber),
         m_columnsNumber(columnsNumber)
     {
         m_spriteSize = { float(m_texture->getWidth()) / m_columnsNumber,
                          float(m_texture->getHeight()) / m_rowsNumber };
     }
-
-    SpriteSheet::~SpriteSheet() { delete m_texture; }
 
     void SpriteSheet::bind() { m_texture->bind(); }
 
@@ -28,7 +29,7 @@ namespace selyan
 
     glm::mat3 SpriteSheet::getTranslationMatrix(uint32_t row, uint32_t column) const
     {
-        glm::mat3 matrix;
+        glm::mat3 matrix = glm::identity<glm::mat3>();
         matrix[0][2] = m_spriteSize.x * column / m_texture->getWidth();
         matrix[1][2] = m_spriteSize.y * row / m_texture->getHeight();
         return matrix;

@@ -13,3 +13,6 @@ target_link_libraries(platform.ogl
         render
         glad
         )
+target_include_directories(platform.ogl
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR})

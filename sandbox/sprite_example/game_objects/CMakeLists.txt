@@ -1,0 +1,13 @@
+add_library(game_objects
+        STATIC
+        src/enemy.cpp
+        )
+target_include_directories(game_objects
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        )
+target_link_libraries(game_objects
+        PUBLIC
+        glm
+        sprite
+        )

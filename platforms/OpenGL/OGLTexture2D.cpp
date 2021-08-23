@@ -17,7 +17,7 @@ namespace selyan
 
     uint32_t OGLTexture2D::getHeight() { return m_height; }
 
-    void OGLTexture2D::TextureData(uint32_t width,
+    void OGLTexture2D::textureData(uint32_t width,
                                    uint32_t height,
                                    uint32_t channels,
                                    TextureDataType dataType,
@@ -84,7 +84,7 @@ namespace selyan
         unbind();
     }
 
-    void OGLTexture2D::TextureData(uint32_t width, uint32_t height, void *data)
+    void OGLTexture2D::textureData(uint32_t width, uint32_t height, void *data)
     {
         bind();
 
@@ -120,7 +120,7 @@ namespace selyan
         unbind();
     }
 
-    void OGLTexture2D::TextureData(Image *image)
+    void OGLTexture2D::textureData(Image *image)
     {
         m_width = image->getWidth();
         m_height = image->getHeight();

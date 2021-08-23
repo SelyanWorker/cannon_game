@@ -2,12 +2,11 @@
 
 namespace selyan
 {
-    class TimeStep
+    class   TimeStep
     {
-    private:
+    public:
         TimeStep(float seconds) : m_seconds(seconds) {}
 
-    public:
         TimeStep(const TimeStep &other) { m_seconds = other.m_seconds; }
 
         float getMilli() const { return m_seconds * 1000; }

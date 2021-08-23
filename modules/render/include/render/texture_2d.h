@@ -10,15 +10,15 @@ namespace selyan
     class Texture2D : public Texture
     {
     public:
-        virtual void TextureData(uint32_t width,
+        virtual void textureData(uint32_t width,
                                  uint32_t height,
                                  uint32_t channels,
                                  TextureDataType dataType,
                                  void *data) = 0;
 
-        virtual void TextureData(uint32_t width, uint32_t height, void *data) = 0;
+        virtual void textureData(uint32_t width, uint32_t height, void *data) = 0;
 
-        virtual void TextureData(Image *image) = 0;
+        virtual void textureData(Image *image) = 0;
 
         virtual void textureSubData(uint32_t widthOffset,
                                     uint32_t heightOffset,

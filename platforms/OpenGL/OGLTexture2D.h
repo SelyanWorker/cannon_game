@@ -21,15 +21,15 @@ namespace selyan
 
         uint32_t getHeight() override;
 
-        void TextureData(uint32_t width,
+        void textureData(uint32_t width,
                          uint32_t height,
                          uint32_t channels,
                          TextureDataType dataType,
                          void *data) override;
 
-        virtual void TextureData(uint32_t width, uint32_t height, void *data) override;
+        virtual void textureData(uint32_t width, uint32_t height, void *data) override;
 
-        void TextureData(Image *image) override;
+        void textureData(Image *image) override;
 
         void textureSubData(uint32_t widthOffset,
                             uint32_t heightOffset,

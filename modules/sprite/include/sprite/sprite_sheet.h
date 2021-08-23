@@ -3,15 +3,18 @@
 #include "render/texture_2d.h"
 
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace selyan
 {
     class SpriteSheet
     {
     public:
-        explicit SpriteSheet(Texture2D *texture, uint32_t rowsNumber, uint32_t columnsNumber);
+        explicit SpriteSheet(std::shared_ptr<Texture2D> texture,
+                             uint32_t rowsNumber,
+                             uint32_t columnsNumber);
 
-        ~SpriteSheet();
+        ~SpriteSheet() = default;
 
         void bind();
 
@@ -28,7 +31,7 @@ namespace selyan
         glm::mat3 getTranslationMatrix(uint32_t row, uint32_t column) const;
 
     private:
-        Texture2D *m_texture;
+        std::shared_ptr<Texture2D> m_texture;
 
         glm::vec2 m_spriteSize;
         uint32_t m_rowsNumber;

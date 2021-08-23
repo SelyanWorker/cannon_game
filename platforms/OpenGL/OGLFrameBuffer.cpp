@@ -125,7 +125,7 @@ namespace selyan
         for (auto &texturePtr : m_colorTextures)
         {
             texturePtr->bind();
-            texturePtr->TextureData(m_width, m_height, nullptr);
+            texturePtr->textureData(m_width, m_height, nullptr);
             texturePtr->unbind();
         }
     }

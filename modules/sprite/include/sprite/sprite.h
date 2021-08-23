@@ -27,9 +27,9 @@ namespace selyan
     class Sprite
     {
     public:
-        explicit Sprite(SpriteSheet *spriteSheet, SpriteFrame firstFrame = { 1, 1, 1 });
+        explicit Sprite(std::shared_ptr<SpriteSheet> spriteSheet, SpriteFrame firstFrame = { 1, 1, 1 });
 
-        ~Sprite();
+        ~Sprite() = default;
 
         void addSpriteFrame(uint32_t row, uint32_t column, float lifeTime);
 
@@ -42,7 +42,7 @@ namespace selyan
         VertexArray *m_vertexArray;
 
         glm::mat3 m_textureMatrix;
-        SpriteSheet *m_sheet;
+        std::shared_ptr<SpriteSheet> m_sheet;
 
         std::vector<SpriteFrame> m_frames;
         uint32_t m_currentFrame;

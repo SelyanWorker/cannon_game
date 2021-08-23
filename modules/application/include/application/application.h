@@ -44,7 +44,7 @@ namespace selyan
     private:
         bool m_run;
         Window *m_window;
-        float m_frameTime;
+        float m_lastFrameTime;
         LayerStack m_layerStack;
         static Application *m_application;
     };

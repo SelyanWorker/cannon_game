@@ -16,3 +16,5 @@ target_link_libraries(sb.imgui_example
         platform.glfw
         imgui
         )
+
+add_subdirectory(sprite_example)

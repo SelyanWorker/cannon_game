@@ -7,7 +7,7 @@ namespace selyan
 #define GET_UNIFORM_LOCATION(name, action)                                                         \
     GLint location = glGetUniformLocation(m_index, name);                                          \
     if (location < 0)                                                                              \
-        /*RN_CORE_INFO("uniform {0} not found in shader program", name);*/;                        \
+    /*std::cout << "uniform " <<  name << " not found in shader program" << std::endl*/;                \
     else                                                                                           \
         action
 

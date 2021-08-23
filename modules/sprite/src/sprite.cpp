@@ -3,8 +3,8 @@
 
 namespace selyan
 {
-    Sprite::Sprite(SpriteSheet *spriteSheet, SpriteFrame firstFrame)
-      : m_sheet(spriteSheet),
+    Sprite::Sprite(std::shared_ptr<SpriteSheet> spriteSheet, SpriteFrame firstFrame)
+      : m_sheet(std::move(spriteSheet)),
         m_currentFrame(0)
     {
         m_frames.push_back(firstFrame);
@@ -15,15 +15,14 @@ namespace selyan
         textureSize.x /= m_sheet->getWidth();
         textureSize.y /= m_sheet->getHeight();
 
-        //        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
-        //        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
-        //        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
-        //        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
+        const float aspectRation = m_sheet->getSpriteSize().x / m_sheet->getSpriteSize().y;
+        constexpr float halfOfSpriteSide = 0.5;
+        constexpr float z = -1;
 
-        m_vertices[0] = { { 0, 0, 0 }, { 0, 0 }, { 0, 0 } };               // bottom left
-        m_vertices[1] = { { 0, 1, 0 }, { 0, textureSize.y }, { 0, 0 } };   // top left
-        m_vertices[2] = { { 1, 0, 0 }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
-        m_vertices[3] = { { 1, 1, 0 }, textureSize, { 0, 0 } };            // top right
+        m_vertices[0] = { { -halfOfSpriteSide * aspectRation, -halfOfSpriteSide, z }, { 0, 0 }, { 0, 0 } };               // bottom left
+        m_vertices[1] = { { -halfOfSpriteSide * aspectRation, halfOfSpriteSide, z }, { 0, textureSize.y }, { 0, 0 } };   // top left
+        m_vertices[2] = { { halfOfSpriteSide * aspectRation, -halfOfSpriteSide, z }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
+        m_vertices[3] = { { halfOfSpriteSide * aspectRation, halfOfSpriteSide, z }, textureSize, { 0, 0 } };            // top right
 
         m_vertexBuffer = VertexBuffer::create(sizeof(Vertex2d) * 4, m_vertices);
         m_vertexArray = VertexArray::create();
@@ -36,13 +35,9 @@ namespace selyan
         m_vertexBuffer->setBufferLayout({ elements, 4 });
 
         m_vertexArray->setVertexBuffers({ m_vertexBuffer });
-        /*BufferAttach(m_vertexArray, m_vertexBuffer, 0, 3, sizeof(Vertex2D), (void*)0);
-        BufferAttach(m_vertexArray, m_vertexBuffer, 1, 2, sizeof(Vertex2D),
-        (void*)(offsetof(Vertex2D, textCoord))); BufferAttach(m_vertexArray, m_vertexBuffer, 2, 2,
-        sizeof(Vertex2D), (void*)(offsetof(Vertex2D, normal)));*/
     }
 
-    Sprite::~Sprite() { delete m_sheet; }
+    //Sprite::~Sprite() { delete m_sheet; }
 
     void Sprite::addSpriteFrame(uint32_t row, uint32_t column, float lifeTime)
     {
@@ -75,7 +70,6 @@ namespace selyan
 
         m_sheet->bind();
 
-        // DrawArray(RenderMode::triangle_strip, m_vertexArray, 4);
         drawVertexArray(RenderMode::triangle_strip, m_vertexArray);
     }
 

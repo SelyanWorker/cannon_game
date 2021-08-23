@@ -12,7 +12,7 @@ namespace selyan
     Application::Application()
     {
         m_application = this;
-        m_frameTime = 0;
+        m_lastFrameTime = 0;
         m_run = true;
 
         m_window = Window::create({ "Terrain Editor", 1024, 768 });
@@ -35,23 +35,29 @@ namespace selyan
 
     Window *Application::getWindow() { return m_window; }
 
-    float Application::getFrameTime() const { return m_frameTime; }
+    float Application::getFrameTime() const { return m_lastFrameTime; }
 
     void Application::run()
     {
         setup();
 
         constexpr float BORDER_FRAME_TIME = 1.f / 120.f;
-        TimeStep time = TimeStep::getTime();
+
+        //TimeStep time = TimeStep::getTime();
+
         for (; m_run;)
         {
+            float time_ = TimeStep::getTime().getSeconds();
+            TimeStep timeStep = time_ - m_lastFrameTime;
+            m_lastFrameTime = time_;
+
             m_window->onUpdate();
 
             clear();
 
             for (auto layer : m_layerStack)
             {
-                layer->onUpdate();
+                layer->onUpdate(timeStep);
             }
 
             for (auto layer : m_layerStack)
@@ -60,15 +66,15 @@ namespace selyan
             }
 
             m_window->swapBuffers();
-
-            TimeStep currentTime = TimeStep::getTime();
-            m_frameTime = currentTime.getSeconds() - time.getSeconds();
-            for (; m_frameTime <= BORDER_FRAME_TIME;)
-            {
-                currentTime = TimeStep::getTime();
-                m_frameTime = currentTime.getSeconds() - time.getSeconds();
-            }
-            time = currentTime;
+//
+//            TimeStep currentTime = TimeStep::getTime();
+//            m_lastFrameTime = currentTime.getSeconds() - time.getSeconds();
+//            for (; m_lastFrameTime <= BORDER_FRAME_TIME;)
+//            {
+//                currentTime = TimeStep::getTime();
+//                m_lastFrameTime = currentTime.getSeconds() - time.getSeconds();
+//            }
+//            time = currentTime;
         }
 
         shutDown();
