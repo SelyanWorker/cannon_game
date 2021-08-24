@@ -38,17 +38,17 @@ public:
         testTexture->textureData(image);
         delete image;
 
-        m_testSpriteSheet = std::make_shared<selyan::SpriteSheet>(testTexture, 1, 8);
+        m_enemySpriteSheet = std::make_shared<selyan::SpriteSheet>(testTexture, 1, 8);
         constexpr float spriteFrameLifeTime = 0.085f;
-        m_testSprite =
-            std::make_shared<selyan::Sprite>(m_testSpriteSheet,
+        m_enemySprite =
+            std::make_shared<selyan::Sprite>(m_enemySpriteSheet,
                                              selyan::SpriteFrame{ 0, 0, spriteFrameLifeTime });
-        //        m_testSprite->addSpriteFrame(0, 1, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 2, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 3, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 4, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 5, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 7, spriteFrameLifeTime);
+        //        m_enemySprite->addSpriteFrame(0, 1, spriteFrameLifeTime);
+        //        m_enemySprite->addSpriteFrame(0, 2, spriteFrameLifeTime);
+        //        m_enemySprite->addSpriteFrame(0, 3, spriteFrameLifeTime);
+        //        m_enemySprite->addSpriteFrame(0, 4, spriteFrameLifeTime);
+        //        m_enemySprite->addSpriteFrame(0, 5, spriteFrameLifeTime);
+        //        m_enemySprite->addSpriteFrame(0, 7, spriteFrameLifeTime);
 
         image = selyan::Image::create(
             "D:\\dev\\repos\\cannon_game\\sandbox\\sprite_example\\res\\player\\cannon2.png");
@@ -83,14 +83,14 @@ public:
             else
             {
                 m_projectiles.push_back(
-                    std::make_shared<cannon_game::Projectile>(m_testSprite,
+                    std::make_shared<cannon_game::Projectile>(m_enemySprite,
                                                               1,
                                                               projectileMovement,
                                                               projectileEntity));
             }
         };
 
-        m_enemies.push_back(std::make_shared<cannon_game::Enemy>(m_testSprite,
+        m_enemies.push_back(std::make_shared<cannon_game::Enemy>(m_enemySprite,
                                                                  enemyShootingFun,
                                                                  3,
                                                                  1,
@@ -100,9 +100,9 @@ public:
                                                                  50));
 
 
-        // m_gameObjects.push_back(std::make_unique<Enemy>(m_testSprite, 5., 90, 100));
-        // m_gameObjects.push_back(std::make_unique<Enemy>(m_testSprite, 5., 180, 50));
-        // m_gameObjects.push_back(std::make_unique<Enemy>(m_testSprite, 5., 270, 100));
+        // m_gameObjects.push_back(std::make_unique<Enemy>(m_enemySprite, 5., 90, 100));
+        // m_gameObjects.push_back(std::make_unique<Enemy>(m_enemySprite, 5., 180, 50));
+        // m_gameObjects.push_back(std::make_unique<Enemy>(m_enemySprite, 5., 270, 100));
 
         checkError();
 
@@ -208,8 +208,8 @@ private:
 
     std::vector<std::shared_ptr<cannon_game::Projectile>> m_projectiles;
 
-    std::shared_ptr<selyan::Sprite> m_testSprite;
-    std::shared_ptr<selyan::SpriteSheet> m_testSpriteSheet;
+    std::shared_ptr<selyan::Sprite> m_enemySprite;
+    std::shared_ptr<selyan::SpriteSheet> m_enemySpriteSheet;
 
     std::shared_ptr<selyan::Sprite> m_towerSprite;
     std::shared_ptr<selyan::SpriteSheet> m_towerSpriteSheet;

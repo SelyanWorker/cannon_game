@@ -43,17 +43,24 @@ public:
         testTexture->textureData(image);
         delete image;
 
-        m_testSpriteSheet = std::make_shared<selyan::SpriteSheet>(testTexture, 1, 8);
+        m_enemySpriteSheet = std::make_shared<selyan::SpriteSheet>(testTexture, 1, 8);
+        m_enemySpriteGeometry =
+            std::make_shared<selyan::SpriteGeometry>(
+            m_enemySpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
+            m_enemySpriteSheet->getRelativeSpriteSize(),
+                                                     -1);
         constexpr float spriteFrameLifeTime = 0.085f;
-        m_testSprite =
-            std::make_shared<selyan::Sprite>(m_testSpriteSheet,
+        auto enemySprite =
+            std::make_shared<selyan::Sprite>(m_enemySpriteGeometry,
+                                             m_enemySpriteSheet,
                                              selyan::SpriteFrame{ 0, 0, spriteFrameLifeTime });
-        //        m_testSprite->addSpriteFrame(0, 1, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 2, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 3, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 4, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 5, spriteFrameLifeTime);
-        //        m_testSprite->addSpriteFrame(0, 7, spriteFrameLifeTime);
+        enemySprite->addSpriteFrame(0, 1, spriteFrameLifeTime);
+        enemySprite->addSpriteFrame(0, 2, spriteFrameLifeTime);
+        enemySprite->addSpriteFrame(0, 3, spriteFrameLifeTime);
+        enemySprite->addSpriteFrame(0, 4, spriteFrameLifeTime);
+        enemySprite->addSpriteFrame(0, 5, spriteFrameLifeTime);
+        enemySprite->addSpriteFrame(0, 7, spriteFrameLifeTime);
+        m_sprites.push_back(enemySprite);
 
         image = selyan::Image::create(
             "D:\\dev\\repos\\cannon_game\\sandbox\\sprite_example\\res\\player\\cannon2.png");
@@ -62,13 +69,20 @@ public:
         delete image;
 
         m_towerSpriteSheet = std::make_shared<selyan::SpriteSheet>(towerTexture, 1, 1);
-        m_towerSprite = std::make_shared<selyan::Sprite>(m_towerSpriteSheet, selyan::SpriteFrame{});
+        m_towerSpriteGeometry = std::make_shared<selyan::SpriteGeometry>(
+            m_towerSpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
+            m_towerSpriteSheet->getRelativeSpriteSize(),
+                                                     -1);
+        auto towerSprite = std::make_shared<selyan::Sprite>(m_towerSpriteGeometry,
+                                                         m_towerSpriteSheet,
+                                                         selyan::SpriteFrame{});
 
         m_player = std::make_shared<cannon_game_::Player>(0);
         m_player->setPosition({ 0, 0 });
         m_player->setScale({ 1, 1 });
         m_player->setRotation(0);
-        m_player->setSprite(m_towerSprite);
+        m_player->setSprite(towerSprite);
+        m_sprites.push_back(towerSprite);
         //
         //        m_enemies.push_back(
         //            std::make_shared<cannon_game_::Enemy>(1, m_player->getPosition(), 0, 50, 5,
@@ -79,7 +93,7 @@ public:
 
         for (auto enemy : m_enemies)
         {
-            enemy->setSprite(m_testSprite);
+            enemy->setSprite(enemySprite);
             enemy->setScale({ 1, 1 });
             enemy->setShootingFunction(
                 [this](uint32_t parentId, const glm::vec2 &parentPosition, float parentRotation)
@@ -106,9 +120,11 @@ public:
                     }
                     else
                     {
+                        auto projectileSprite = std::make_shared<selyan::Sprite>(m_enemySpriteGeometry,
+                                                                                 m_enemySpriteSheet);
                         auto projectile =
                             std::make_shared<cannon_game_::Projectile>(10, parentId, direction, 1);
-                        projectile->setSprite(m_testSprite);
+                        projectile->setSprite(projectileSprite);
                         projectile->setPosition(parentPosition);
                         projectile->setRotation(parentRotation);
                         projectile->setScale({ 1, 1 });
@@ -125,6 +141,11 @@ public:
     {
         if (!m_player->isDie())
             m_player->update(timeStep.getSeconds());
+
+        for(auto & sprite : m_sprites)
+        {
+            sprite->update(timeStep.getSeconds());
+        }
 
         for (auto &enemy : m_enemies)
         {
@@ -177,7 +198,7 @@ public:
         }
         else
         {
-            if(!adjacentProjectile->isDie())
+            if (!adjacentProjectile->isDie())
             {
                 auto normalizeProjectilePosition =
                     glm::normalize(adjacentProjectile->getPosition());
@@ -266,7 +287,7 @@ private:
             glm::length2(playerPosition - adjacentProjectile->getPosition());
         for (auto i = std::next(m_projectiles.begin()); i != m_projectiles.end(); ++i)
         {
-            if((*i)->isDie())
+            if ((*i)->isDie())
                 continue;
 
             auto projectilePosition = (*i)->getPosition();
@@ -281,7 +302,7 @@ private:
             adjacentProjectileDistance = distance;
         }
 
-        if(adjacentProjectile->isDie())
+        if (adjacentProjectile->isDie())
             return nullptr;
 
         return adjacentProjectile;
@@ -320,11 +341,13 @@ private:
     std::vector<std::shared_ptr<cannon_game_::Enemy>> m_enemies;
     std::vector<std::shared_ptr<cannon_game_::Projectile>> m_projectiles;
 
-    std::shared_ptr<selyan::Sprite> m_testSprite;
-    std::shared_ptr<selyan::SpriteSheet> m_testSpriteSheet;
+    std::vector<std::shared_ptr<selyan::Sprite>> m_sprites;
 
-    std::shared_ptr<selyan::Sprite> m_towerSprite;
+    std::shared_ptr<selyan::SpriteSheet> m_enemySpriteSheet;
+    std::shared_ptr<selyan::SpriteGeometry> m_enemySpriteGeometry;
+
     std::shared_ptr<selyan::SpriteSheet> m_towerSpriteSheet;
+    std::shared_ptr<selyan::SpriteGeometry> m_towerSpriteGeometry;
 
     std::shared_ptr<selyan::Sprite> m_cannon;
     std::shared_ptr<selyan::SpriteSheet> m_cannonSpriteSheet;

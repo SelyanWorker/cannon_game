@@ -26,16 +26,20 @@ namespace selyan
 
         uint32_t getColumnsNumber() const;
 
-        glm::vec2 getSpriteSize() const;
+        glm::vec2 getAbsoluteSpriteSize() const;
 
-        glm::mat3 getTranslationMatrix(uint32_t row, uint32_t column) const;
+        glm::vec2 getRelativeSpriteSize() const;
+
+        glm::mat3 getTextureTranslationMatrix(uint32_t row, uint32_t column) const;
+
+        glm::vec2 applySpriteSizeAspectRation(const glm::vec2& value) const;
 
     private:
         std::shared_ptr<Texture2D> m_texture;
 
-        glm::vec2 m_spriteSize;
         uint32_t m_rowsNumber;
         uint32_t m_columnsNumber;
+        glm::vec2 m_spriteSize;
     };
 
 }
