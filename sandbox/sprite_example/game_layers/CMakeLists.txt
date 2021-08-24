@@ -1,6 +1,7 @@
 add_library(cannon_game.game_layers
         STATIC
-        src/main_layer.cpp)
+        src/main_layer.cpp
+        src/gui_layer.cpp)
 target_include_directories(cannon_game.game_layers
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -14,4 +15,5 @@ target_link_libraries(cannon_game.game_layers
         platform.ogl
         platform.glfw
         platform.stb_image
+        imgui
         )
