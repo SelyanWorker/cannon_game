@@ -13,8 +13,8 @@ namespace cannon_game_
     class GameObject
     {
     public:
-        GameObject(uint32_t uniqueId)
-        :   m_uniqueId(uniqueId),
+        GameObject(/*uint32_t uniqueId*/)
+        :   m_uniqueId(lastUniqueId++),
             m_position({ 0, 0 }),
             m_rotation(0),
             m_scale({ 1, 1 }),
@@ -34,6 +34,11 @@ namespace cannon_game_
             m_sprite->draw(shader);
         }
 
+        uint32_t getUniqueId() const
+        {
+            return m_uniqueId;
+        }
+
         void setCollision(const CollisionCircle& collision)
         {
             m_collision = collision;
@@ -47,11 +52,6 @@ namespace cannon_game_
         void setSprite(std::shared_ptr<selyan::Sprite> sprite)
         {
             m_sprite = std::move(sprite);
-        }
-
-        uint32_t getUniqueId() const
-        {
-            return m_uniqueId;
         }
 
         glm::mat4 getModelMatrix() const { return m_modelMatrix; }
@@ -131,5 +131,9 @@ namespace cannon_game_
         CollisionCircle m_collision;
 
         bool m_dead;
+
+        static uint32_t lastUniqueId;
     };
+
+    uint32_t GameObject::lastUniqueId = 0;
 }

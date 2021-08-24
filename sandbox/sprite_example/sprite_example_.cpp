@@ -44,11 +44,10 @@ public:
         delete image;
 
         m_enemySpriteSheet = std::make_shared<selyan::SpriteSheet>(testTexture, 1, 8);
-        m_enemySpriteGeometry =
-            std::make_shared<selyan::SpriteGeometry>(
+        m_enemySpriteGeometry = std::make_shared<selyan::SpriteGeometry>(
             m_enemySpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
             m_enemySpriteSheet->getRelativeSpriteSize(),
-                                                     -1);
+            -1);
         constexpr float spriteFrameLifeTime = 0.085f;
         auto enemySprite =
             std::make_shared<selyan::Sprite>(m_enemySpriteGeometry,
@@ -72,10 +71,10 @@ public:
         m_towerSpriteGeometry = std::make_shared<selyan::SpriteGeometry>(
             m_towerSpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
             m_towerSpriteSheet->getRelativeSpriteSize(),
-                                                     -1);
+            -1);
         auto towerSprite = std::make_shared<selyan::Sprite>(m_towerSpriteGeometry,
-                                                         m_towerSpriteSheet,
-                                                         selyan::SpriteFrame{});
+                                                            m_towerSpriteSheet,
+                                                            selyan::SpriteFrame{});
 
         m_player = std::make_shared<cannon_game_::Player>(0);
         m_player->setPosition({ 0, 0 });
@@ -103,34 +102,13 @@ public:
                     //                          glm::to_string(parentPosition) << std::endl;
 
                     glm::vec2 direction = glm::normalize(m_player->getPosition() - parentPosition);
-                    auto found =
-                        std::find_if(m_projectiles.begin(),
-                                     m_projectiles.end(),
-                                     [](const auto &projectile) { return projectile->isDie(); });
-
-                    if (found != m_projectiles.end())
-                    {
-                        (*found)->alive();
-                        (*found)->setParentId(parentId);
-                        (*found)->setPosition(parentPosition);
-                        (*found)->setRotation(parentRotation);
-                        (*found)->setDirection(direction);
-                        (*found)->setSpeed(1);
-                        (*found)->setCollision({ parentPosition, 1 });
-                    }
-                    else
-                    {
-                        auto projectileSprite = std::make_shared<selyan::Sprite>(m_enemySpriteGeometry,
-                                                                                 m_enemySpriteSheet);
-                        auto projectile =
-                            std::make_shared<cannon_game_::Projectile>(10, parentId, direction, 1);
-                        projectile->setSprite(projectileSprite);
-                        projectile->setPosition(parentPosition);
-                        projectile->setRotation(parentRotation);
-                        projectile->setScale({ 1, 1 });
-                        projectile->setCollision({ parentPosition, 1 });
-                        m_projectiles.push_back(projectile);
-                    }
+//
+//                    generateProjectile(parentId,
+//                                       parentPosition,
+//                                       parentRotation,
+//                                       direction,
+//                                       1.f,
+//                                       { 0.6f, 0.4f });
                 });
         }
     }
@@ -142,7 +120,7 @@ public:
         if (!m_player->isDie())
             m_player->update(timeStep.getSeconds());
 
-        for(auto & sprite : m_sprites)
+        for (auto &sprite : m_sprites)
         {
             sprite->update(timeStep.getSeconds());
         }
@@ -158,21 +136,34 @@ public:
         {
             if (projectile->isDie())
                 continue;
+
             projectile->update(timeStep.getSeconds());
-        }
 
-        for (auto &projectile : m_projectiles)
-        {
-            if (projectile->isDie())
-                continue;
-
-            if (!m_player->isDie())
+            if (!m_player->isDie() && m_player->getUniqueId() != projectile->getParentId())
             {
                 if (checkCollision(projectile->getCollision(), m_player->getCollision()))
                 {
                     // m_player->die();
                     projectile->die();
                 }
+            }
+
+            auto intersectingProjectile = std::find_if(
+                m_projectiles.begin(),
+                m_projectiles.end(),
+                [&projectile](const auto &other)
+                {
+                    if (other->isDie() || other->getUniqueId() == projectile->getUniqueId())
+                        return false;
+
+                    return cannon_game_::checkCollision(other->getCollision(),
+                                                        projectile->getCollision());
+                });
+
+            if(intersectingProjectile != m_projectiles.end())
+            {
+                (*intersectingProjectile)->die();
+                projectile->die();
             }
         }
 
@@ -186,7 +177,7 @@ public:
             // m_player->setMTargetObject(adjacentEnemy);
             if (!adjacentEnemy->isDie())
             {
-                auto normalizeEnemyPosition = glm::normalize(adjacentEnemy->getPosition());
+                auto normalizeEnemyPosition = glm::normalize(adjacentEnemy->getPosition() - m_player->getPosition());
                 float playerRotation =
                     glm::degrees(std::atan2(normalizeEnemyPosition.x, normalizeEnemyPosition.y));
                 playerRotation +=
@@ -194,6 +185,12 @@ public:
                 //                if (adjacentEnemy->getMAngularVelocity() >= 0)
                 //                    playerRotation *= -1;
                 m_player->setRotation(-playerRotation);
+                generateProjectile(m_player->getUniqueId(),
+                                   m_player->getPosition(),
+                                   m_player->getRotation(),
+                                   { glm::cos(playerRotation), glm::sin(playerRotation) },
+                                   10,
+                                   glm::vec2{ 0.5, 0.5 });
             }
         }
         else
@@ -201,12 +198,13 @@ public:
             if (!adjacentProjectile->isDie())
             {
                 auto normalizeProjectilePosition =
-                    glm::normalize(adjacentProjectile->getPosition());
+                    glm::normalize(adjacentProjectile->getPosition() - m_player->getPosition());
                 float playerRotation = glm::degrees(
                     std::atan2(normalizeProjectilePosition.x, normalizeProjectilePosition.y));
                 //                if (adjacentEnemy->getMAngularVelocity() >= 0)
                 //                    playerRotation *= -1;
                 m_player->setRotation(-playerRotation);
+
             }
         }
 
@@ -275,6 +273,43 @@ public:
     }
 
 private:
+    void generateProjectile(uint32_t parentId,
+                            const glm::vec2 &parentPosition,
+                            float parentRotation,
+                            const glm::vec2 &direction,
+                            float speed,
+                            const glm::vec2 &scale)
+    {
+        auto found = std::find_if(m_projectiles.begin(),
+                                  m_projectiles.end(),
+                                  [](const auto &projectile) { return projectile->isDie(); });
+
+        if (found != m_projectiles.end())
+        {
+            (*found)->alive();
+            (*found)->setParentId(parentId);
+            (*found)->setPosition(parentPosition);
+            (*found)->setRotation(parentRotation);
+            (*found)->setDirection(direction);
+            (*found)->setSpeed(1);
+            (*found)->setScale(scale);
+            (*found)->setCollision({ parentPosition, 1 });
+        }
+        else
+        {
+            auto projectileSprite =
+                std::make_shared<selyan::Sprite>(m_enemySpriteGeometry, m_enemySpriteSheet);
+            auto projectile =
+                std::make_shared<cannon_game_::Projectile>(10, parentId, direction, speed);
+            projectile->setSprite(projectileSprite);
+            projectile->setPosition(parentPosition);
+            projectile->setRotation(parentRotation);
+            projectile->setScale(scale);
+            projectile->setCollision({ parentPosition, 1 });
+            m_projectiles.push_back(projectile);
+        }
+    }
+
     std::shared_ptr<cannon_game_::Projectile> findAdjacentProjectile()
     {
         if (m_projectiles.empty())

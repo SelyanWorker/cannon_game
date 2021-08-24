@@ -55,8 +55,6 @@ namespace selyan
 
         m_lastFrameLiftTime += elapsedTime;
 
-        std::cout << m_frames[m_currentFrame].lifeTime << " " << m_lastFrameLiftTime << std::endl;
-
         if (m_frames[m_currentFrame].lifeTime <= m_lastFrameLiftTime)
         {
             m_lastFrameLiftTime = 0;

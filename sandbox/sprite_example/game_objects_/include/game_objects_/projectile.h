@@ -14,7 +14,7 @@ namespace cannon_game_
         Projectile(uint32_t uniqueId, uint32_t parentId,
                    const glm::vec2& direction,
                    float speed)
-       :    GameObject(uniqueId),
+       :    GameObject(/*uniqueId*/),
             m_parentId(parentId),
             m_direction(direction),
             m_speed(speed)

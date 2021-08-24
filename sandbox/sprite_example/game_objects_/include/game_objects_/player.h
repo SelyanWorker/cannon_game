@@ -16,7 +16,7 @@ namespace cannon_game_
     {
     public:
         Player(uint32_t uniqueId)
-        :   GameObject(uniqueId)
+        :   GameObject(/*uniqueId*/)
         {
         }
 

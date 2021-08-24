@@ -17,7 +17,7 @@ namespace cannon_game_
               float angularVelocity,
               float distanceToPlayer,
               float reloadTime)
-        :   GameObject(uniqueId),
+        :   GameObject(/*uniqueId*/),
             m_playerPosition(playerPosition),
             m_distanceToPlayer(distanceToPlayer),
             m_angularVelocity(angularVelocity),
