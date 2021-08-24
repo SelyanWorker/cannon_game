@@ -2,6 +2,8 @@
 
 #include "game_object.h"
 
+#include <functional>
+
 namespace cannon_game
 {
     class Enemy : public GameObject

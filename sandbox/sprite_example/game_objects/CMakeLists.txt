@@ -1,11 +1,11 @@
-add_library(game_objects
+add_library(cannon_game.game_objects
         INTERFACE
         )
-target_include_directories(game_objects
+target_include_directories(cannon_game.game_objects
         INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         )
-target_link_libraries(game_objects
+target_link_libraries(cannon_game.game_objects
         INTERFACE
         glm
         sprite
