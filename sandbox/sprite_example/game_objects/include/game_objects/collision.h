@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 
-namespace cannon_game_
+namespace cannon_game
 {
     struct CollisionRectangle
     {

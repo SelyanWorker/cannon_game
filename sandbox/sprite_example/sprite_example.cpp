@@ -10,10 +10,10 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "game_objects_/enemy.h"
-#include "game_objects_/game_object.h"
-#include "game_objects_/player.h"
-#include "game_objects_/projectile.h"
+#include "game_objects/enemy.h"
+#include "game_objects/game_object.h"
+#include "game_objects/player.h"
+#include "game_objects/projectile.h"
 
 #include <cmath>
 #include <memory>
@@ -76,7 +76,7 @@ public:
                                                             m_towerSpriteSheet,
                                                             selyan::SpriteFrame{});
 
-        m_player = std::make_shared<cannon_game_::Player>(0);
+        m_player = std::make_shared<cannon_game::Player>(0);
         m_player->setPosition({ 0, 0 });
         m_player->setScale({ 1, 1 });
         m_player->setRotation(0);
@@ -84,11 +84,11 @@ public:
         m_sprites.push_back(towerSprite);
         //
         //        m_enemies.push_back(
-        //            std::make_shared<cannon_game_::Enemy>(1, m_player->getPosition(), 0, 50, 5,
+        //            std::make_shared<cannon_game::Enemy>(1, m_player->getPosition(), 0, 50, 5,
         //            5));
 
         m_enemies.push_back(
-            std::make_shared<cannon_game_::Enemy>(2, m_player->getPosition(), 45, -50, 6, 2));
+            std::make_shared<cannon_game::Enemy>(2, m_player->getPosition(), 45, -50, 6, 2));
 
         for (auto enemy : m_enemies)
         {
@@ -156,7 +156,7 @@ public:
                     if (other->isDie() || other->getUniqueId() == projectile->getUniqueId())
                         return false;
 
-                    return cannon_game_::checkCollision(other->getCollision(),
+                    return cannon_game::checkCollision(other->getCollision(),
                                                         projectile->getCollision());
                 });
 
@@ -300,7 +300,7 @@ private:
             auto projectileSprite =
                 std::make_shared<selyan::Sprite>(m_enemySpriteGeometry, m_enemySpriteSheet);
             auto projectile =
-                std::make_shared<cannon_game_::Projectile>(10, parentId, direction, speed);
+                std::make_shared<cannon_game::Projectile>(10, parentId, direction, speed);
             projectile->setSprite(projectileSprite);
             projectile->setPosition(parentPosition);
             projectile->setRotation(parentRotation);
@@ -310,14 +310,14 @@ private:
         }
     }
 
-    std::shared_ptr<cannon_game_::Projectile> findAdjacentProjectile()
+    std::shared_ptr<cannon_game::Projectile> findAdjacentProjectile()
     {
         if (m_projectiles.empty())
             return nullptr;
 
         constexpr float minDistance = 0.1f;
         auto playerPosition = m_player->getPosition();
-        std::shared_ptr<cannon_game_::Projectile> adjacentProjectile = m_projectiles.front();
+        std::shared_ptr<cannon_game::Projectile> adjacentProjectile = m_projectiles.front();
         auto adjacentProjectileDistance =
             glm::length2(playerPosition - adjacentProjectile->getPosition());
         for (auto i = std::next(m_projectiles.begin()); i != m_projectiles.end(); ++i)
@@ -343,14 +343,14 @@ private:
         return adjacentProjectile;
     }
 
-    std::shared_ptr<cannon_game_::Enemy> findAdjacentEnemy()
+    std::shared_ptr<cannon_game::Enemy> findAdjacentEnemy()
     {
         if (m_enemies.empty())
             return nullptr;
 
         constexpr float minDistance = 0.1f;
         auto playerPosition = m_player->getPosition();
-        std::shared_ptr<cannon_game_::Enemy> adjacentEnemy = m_enemies.front();
+        std::shared_ptr<cannon_game::Enemy> adjacentEnemy = m_enemies.front();
         auto adjacentEnemyDistance = glm::length2(playerPosition - adjacentEnemy->getPosition());
         for (auto i = std::next(m_enemies.begin()); i != m_enemies.end(); ++i)
         {
@@ -372,9 +372,9 @@ private:
 private:
     bool m_spaceButtonReleased = true;
 
-    std::shared_ptr<cannon_game_::Player> m_player;
-    std::vector<std::shared_ptr<cannon_game_::Enemy>> m_enemies;
-    std::vector<std::shared_ptr<cannon_game_::Projectile>> m_projectiles;
+    std::shared_ptr<cannon_game::Player> m_player;
+    std::vector<std::shared_ptr<cannon_game::Enemy>> m_enemies;
+    std::vector<std::shared_ptr<cannon_game::Projectile>> m_projectiles;
 
     std::vector<std::shared_ptr<selyan::Sprite>> m_sprites;
 

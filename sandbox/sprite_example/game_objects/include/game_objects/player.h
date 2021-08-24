@@ -2,9 +2,9 @@
 
 #include "collision.h"
 
-#include "game_objects_/game_object.h"
+#include "game_objects/game_object.h"
 
-namespace cannon_game_
+namespace cannon_game
 {
     struct Movement
     {

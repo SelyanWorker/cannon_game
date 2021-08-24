@@ -2,7 +2,7 @@
 
 #include "game_object.h"
 
-namespace cannon_game_
+namespace cannon_game
 {
     class Enemy : public GameObject
     {

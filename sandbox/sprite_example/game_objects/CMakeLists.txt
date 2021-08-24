@@ -1,11 +1,11 @@
-add_library(game_objects_
+add_library(game_objects
         INTERFACE
         )
-target_include_directories(game_objects_
+target_include_directories(game_objects
         INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         )
-target_link_libraries(game_objects_
+target_link_libraries(game_objects
         INTERFACE
         glm
         sprite

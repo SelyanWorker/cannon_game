@@ -6,7 +6,7 @@
 #include <memory>
 #include <utility>
 
-namespace cannon_game_
+namespace cannon_game
 {
     class Projectile : public GameObject
     {
