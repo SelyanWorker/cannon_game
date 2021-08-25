@@ -15,7 +15,7 @@ namespace cannon_game
     public:
         Enemy(uint32_t uniqueId,
               const glm::vec2 &playerPosition,
-              float spawnRadius,
+              float spawnAngle,
               float angularVelocity,
               float distanceToPlayer,
               float reloadTime)
@@ -23,8 +23,9 @@ namespace cannon_game
             m_playerPosition(playerPosition),
             m_distanceToPlayer(distanceToPlayer),
             m_angularVelocity(angularVelocity),
-            m_lastAngle(spawnRadius),
-            m_reloadTime(reloadTime)
+            m_lastAngle(spawnAngle),
+            m_reloadTime(reloadTime),
+            m_lastShotTime(0)
         {
             move(0);
         }
@@ -50,6 +51,9 @@ namespace cannon_game
 
         void setMReloadTime(float mReloadTime) { m_reloadTime = mReloadTime; }
         float getMReloadTime() const { return m_reloadTime; }
+        float getMDistanceToPlayer() const { return m_distanceToPlayer; }
+
+        float getMLastAngle() const { return m_lastAngle; }
 
     private:
         void move(float elapsedTime)
@@ -78,7 +82,6 @@ namespace cannon_game
         float m_angularVelocity;
         float m_lastAngle;
 
-    private:
         ShootingFunctionType m_shootingFun;
         float m_reloadTime;
         float m_lastShotTime;
