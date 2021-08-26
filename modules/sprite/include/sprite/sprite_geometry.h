@@ -19,15 +19,16 @@ namespace selyan
     public:
         SpriteGeometry(const glm::vec2 &geometrySize = { 1, 1 },
                        const glm::vec2 &textureSize = { 1, 1 },
-                       float z = -1)
+                       float z = -1,
+                       const glm::vec2 &offset = { 0, 0 })
         {
-            const float halfWidth = geometrySize.x / 2.f;
+            const float halfWidth = geometrySize.x / 2.f ;
             const float halfHeight = geometrySize.y / 2.f;
 
-            m_vertices[0] = { { -halfWidth, -halfHeight, z }, { 0, 0 }, { 0, 0 } };               // bottom left
-            m_vertices[1] = { { -halfWidth, halfHeight, z }, { 0, textureSize.y }, { 0, 0 } };   // top left
-            m_vertices[2] = { { halfWidth, -halfHeight, z }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
-            m_vertices[3] = { { halfWidth, halfHeight, z }, textureSize, { 0, 0 } };            // top right
+            m_vertices[0] = { { -halfWidth + offset.x, -halfHeight + offset.y, z }, { 0, 0 }, { 0, 0 } };               // bottom left
+            m_vertices[1] = { { -halfWidth + offset.x, halfHeight + offset.y, z }, { 0, textureSize.y }, { 0, 0 } };   // top left
+            m_vertices[2] = { { halfWidth + offset.x, -halfHeight + offset.y, z }, { textureSize.x, 0 }, { 0, 0 } };   // bottom right
+            m_vertices[3] = { { halfWidth + offset.x, halfHeight + offset.y, z }, textureSize, { 0, 0 } };            // top right
 
             m_vertexBuffer = VertexBuffer::create(sizeof(Vertex2d) * 4, m_vertices);
             m_vertexArray = VertexArray::create();

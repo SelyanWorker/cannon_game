@@ -15,14 +15,30 @@ namespace cannon_game
     class Player : public GameObject
     {
     public:
-        Player(uint32_t uniqueId)
-        :   GameObject(/*uniqueId*/)
+        Player(const selyan::Sprite& bodySprite,
+               const selyan::Sprite& headSprite)
+        :   GameObject(),
+            m_bodySprite(bodySprite),
+            m_headSprite(headSprite)
         {
         }
 
         void update(float elapsedTime)
         {
+            m_headSprite.update(elapsedTime);
+            m_bodySprite.update(elapsedTime);
+
             moveToTarget(elapsedTime);
+        }
+
+        void draw(selyan::Shader* shader) override
+        {
+            assert(shader != nullptr);
+
+            shader->setUniform("modelMatrix", glm::identity<glm::mat4>());
+            m_bodySprite.draw(shader);
+            shader->setUniform("modelMatrix", glm::transpose(getModelMatrix()));
+            m_headSprite.draw(shader);
         }
 
         const Movement &getMovement() const { return m_movement; }
@@ -50,6 +66,9 @@ namespace cannon_game
         }
 
     private:
+        selyan::Sprite m_bodySprite;
+        selyan::Sprite m_headSprite;
+
         Movement m_movement;
 
         std::shared_ptr<GameObject> m_targetObject;

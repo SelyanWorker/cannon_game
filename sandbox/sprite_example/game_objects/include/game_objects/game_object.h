@@ -13,7 +13,7 @@ namespace cannon_game
     class GameObject
     {
     public:
-        GameObject(/*uint32_t uniqueId*/)
+        GameObject()
         :   m_uniqueId(lastUniqueId++),
             m_position({ 0, 0 }),
             m_rotation(0),
@@ -26,13 +26,13 @@ namespace cannon_game
 
         virtual ~GameObject() = default;
 
-        virtual void draw(selyan::Shader *shader)
-        {
-            assert(shader != nullptr && m_sprite != nullptr);
-
-            shader->setUniform("modelMatrix", glm::transpose(m_modelMatrix));
-            m_sprite->draw(shader);
-        }
+        virtual void draw(selyan::Shader *shader) = 0;
+//        {
+//            assert(shader != nullptr && m_sprite != nullptr);
+//
+//            shader->setUniform("modelMatrix", glm::transpose(m_modelMatrix));
+//            m_sprite->draw(shader);
+//        }
 
         uint32_t getUniqueId() const
         {
@@ -49,10 +49,10 @@ namespace cannon_game
             return m_collision;
         }
 
-        void setSprite(std::shared_ptr<selyan::Sprite> sprite)
-        {
-            m_sprite = std::move(sprite);
-        }
+//        void setSprite(std::shared_ptr<selyan::Sprite> sprite)
+//        {
+//            m_sprite = std::move(sprite);
+//        }
 
         glm::mat4 getModelMatrix() const { return m_modelMatrix; }
 
@@ -120,7 +120,7 @@ namespace cannon_game
     private:
         uint32_t m_uniqueId;
 
-        std::shared_ptr<selyan::Sprite> m_sprite;
+        //std::shared_ptr<selyan::Sprite> m_sprite;
 
         glm::vec2 m_position;
         float m_rotation;

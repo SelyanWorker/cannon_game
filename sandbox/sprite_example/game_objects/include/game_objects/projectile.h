@@ -11,14 +11,24 @@ namespace cannon_game
     class Projectile : public GameObject
     {
     public:
-        Projectile(uint32_t uniqueId, uint32_t parentId,
-                   const glm::vec2& direction,
+        Projectile(const selyan::Sprite &sprite,
+                   uint32_t parentId,
+                   const glm::vec2 &direction,
                    float speed)
-       :    GameObject(/*uniqueId*/),
+          : GameObject(),
+            m_sprite(sprite),
             m_parentId(parentId),
             m_direction(direction),
             m_speed(speed)
         {
+        }
+
+        void draw(selyan::Shader* shader) override
+        {
+            assert(shader != nullptr);
+
+            shader->setUniform("modelMatrix", glm::transpose(getModelMatrix()));
+            m_sprite.draw(shader);
         }
 
         void update(float elapsedTime)
@@ -47,6 +57,8 @@ namespace cannon_game
         void setSpeed(float mSpeed) { m_speed = mSpeed; }
 
     private:
+        selyan::Sprite m_sprite;
+
         uint32_t m_parentId;
 
         glm::vec2 m_direction;

@@ -13,13 +13,16 @@ namespace cannon_game
             std::function<void(uint32_t parentId, const glm::vec2 &position, float parentRotation)>;
 
     public:
-        Enemy(uint32_t uniqueId,
+        Enemy(const selyan::Sprite& bodySprite,
+              const selyan::Sprite& headSprite,
               const glm::vec2 &playerPosition,
               float spawnAngle,
               float angularVelocity,
               float distanceToPlayer,
               float reloadTime)
-        :   GameObject(/*uniqueId*/),
+        :   GameObject(),
+            m_bodySprite(bodySprite),
+            m_headSprite(headSprite),
             m_playerPosition(playerPosition),
             m_distanceToPlayer(distanceToPlayer),
             m_angularVelocity(angularVelocity),
@@ -30,9 +33,30 @@ namespace cannon_game
             move(0);
         }
 
+        void draw(selyan::Shader* shader) override
+        {
+            assert(shader != nullptr);
+
+
+            auto modelMatrix = getModelMatrix();
+
+            constexpr float absoluteHeadRotation = 90.f;
+            float headRotation = m_angularVelocity <= 0 ? -absoluteHeadRotation : absoluteHeadRotation;
+            auto headModelMatrix = glm::rotate(modelMatrix, glm::radians(headRotation), glm::vec3(0.0f, 0.0f, 1.0f));
+
+            shader->setUniform("modelMatrix", glm::transpose(modelMatrix));
+            m_bodySprite.draw(shader);
+
+            shader->setUniform("modelMatrix", glm::transpose(headModelMatrix));
+            m_headSprite.draw(shader);
+        }
+
         void update(float elapsedTime)
         {
-            move(elapsedTime);
+            //move(elapsedTime);
+
+            m_bodySprite.update(elapsedTime);
+            m_headSprite.update(elapsedTime);
 
             m_lastShotTime += elapsedTime;
             if (m_lastShotTime >= m_reloadTime)
@@ -77,6 +101,9 @@ namespace cannon_game
         }
 
     private:
+        selyan::Sprite m_bodySprite;
+        selyan::Sprite m_headSprite;
+
         glm::vec2 m_playerPosition;
         float m_distanceToPlayer;
         float m_angularVelocity;
