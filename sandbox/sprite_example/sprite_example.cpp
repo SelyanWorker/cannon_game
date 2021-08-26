@@ -11,7 +11,7 @@ int main()
     app.pushLayer(&mainLayer);
 
     cannon_game::ImGuiLayer guiLayer;
-    app.pushLayer(&guiLayer);
+    //app.pushLayer(&guiLayer);
 
     app.run();
 
