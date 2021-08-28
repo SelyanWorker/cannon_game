@@ -33,6 +33,10 @@ namespace selyan
 
         void draw(Shader *program);
 
+        bool animationDone() const;
+
+        void reset();
+
     private:
         std::shared_ptr<SpriteGeometry> m_geometry;
 
@@ -42,6 +46,8 @@ namespace selyan
         std::vector<SpriteFrame> m_frames;
         uint32_t m_currentFrame;
         float m_lastFrameLiftTime;
+
+        bool m_animationDone;
     };
 
 }

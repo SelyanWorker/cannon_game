@@ -53,7 +53,7 @@ namespace cannon_game
 
         void update(float elapsedTime)
         {
-            //move(elapsedTime);
+            move(elapsedTime);
 
             m_bodySprite.update(elapsedTime);
             m_headSprite.update(elapsedTime);
