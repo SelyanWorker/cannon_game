@@ -23,7 +23,7 @@ namespace cannon_game
         {
         }
 
-        void draw(selyan::Shader* shader) override
+        void draw(selyan::Shader *shader) override
         {
             assert(shader != nullptr);
 
@@ -38,15 +38,9 @@ namespace cannon_game
             setPosition(position);
         }
 
-        uint32_t getParentId() const
-        {
-            return m_parentId;
-        }
+        uint32_t getParentId() const { return m_parentId; }
 
-        void setParentId(uint32_t parentId)
-        {
-            m_parentId = parentId;
-        }
+        void setParentId(uint32_t parentId) { m_parentId = parentId; }
 
         const glm::vec2 &getDirection() const { return m_direction; }
 
@@ -63,5 +57,78 @@ namespace cannon_game
 
         glm::vec2 m_direction;
         float m_speed;
+    };
+
+    class ProjectileManager
+    {
+        using ProjectilePtrType = std::shared_ptr<Projectile>;
+
+    public:
+        explicit ProjectileManager(std::shared_ptr<selyan::SpriteGeometry> spriteGeometry,
+                                   std::shared_ptr<selyan::SpriteSheet> spriteSheet)
+          : m_spriteGeometry(std::move(spriteGeometry)),
+            m_spriteSheet(std::move(spriteSheet))
+        {
+        }
+
+        void createProjectile(uint32_t parentId,
+                              const glm::vec2 &position,
+                              float rotation,
+                              const glm::vec2 &direction,
+                              float speed,
+                              const glm::vec2 &scale,
+                              float collisionScale)
+        {
+            if (!m_dead.empty())
+            {
+                auto dead = m_dead.top();
+                m_dead.pop();
+                dead->alive();
+                dead->setParentId(parentId);
+                dead->setPosition(position);
+                dead->setRotation(rotation);
+                dead->setDirection(direction);
+                dead->setSpeed(speed);
+                dead->setScale(scale);
+                dead->setCollision({ position, collisionScale });
+                m_alive.insert(std::make_pair(dead->getUniqueId(), dead));
+                return;
+            }
+
+            selyan::Sprite projectileSprite(m_spriteGeometry,
+                                            m_spriteSheet);
+            auto projectile = std::make_shared<cannon_game::Projectile>(projectileSprite,
+                                                                        parentId,
+                                                                        direction,
+                                                                        speed);
+            projectile->setPosition(position);
+            projectile->setRotation(rotation);
+            projectile->setScale(scale);
+            projectile->setCollision({ position, collisionScale });
+            m_alive.insert(std::make_pair(projectile->getUniqueId(), projectile));
+        }
+
+        void kill(uint32_t id)
+        {
+            auto found = m_alive.find(id);
+
+            if (found == m_alive.end())
+                return;
+
+            found->second->die();
+            m_dead.push(found->second);
+            m_alive.erase(found);
+        }
+
+        std::map<uint32_t, ProjectilePtrType>::iterator begin() { return m_alive.begin(); }
+
+        std::map<uint32_t, ProjectilePtrType>::iterator end() { return m_alive.end(); }
+
+    private:
+        std::shared_ptr<selyan::SpriteGeometry> m_spriteGeometry;
+        std::shared_ptr<selyan::SpriteSheet> m_spriteSheet;
+
+        std::stack<ProjectilePtrType> m_dead;
+        std::map<uint32_t, ProjectilePtrType> m_alive;
     };
 }
