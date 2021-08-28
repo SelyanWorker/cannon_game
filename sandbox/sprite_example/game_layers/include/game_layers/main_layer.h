@@ -155,11 +155,12 @@ namespace cannon_game
             delete image;
             std::shared_ptr<selyan::SpriteSheet> projectileSpriteSheet =
                 std::make_shared<selyan::SpriteSheet>(projectileTexture, 1, 1);
-            std::shared_ptr<selyan::SpriteGeometry> projectileSpriteGeometry = std::make_shared<selyan::SpriteGeometry>(
-                projectileSpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
-                projectileSpriteSheet->getRelativeSpriteSize(),
-                -1,
-                glm::vec2(-0.1f, -0.1f));
+            std::shared_ptr<selyan::SpriteGeometry> projectileSpriteGeometry =
+                std::make_shared<selyan::SpriteGeometry>(
+                    projectileSpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
+                    projectileSpriteSheet->getRelativeSpriteSize(),
+                    -1,
+                    glm::vec2(-0.1f, -0.1f));
             m_projectileManager =
                 std::make_shared<cannon_game::ProjectileManager>(projectileSpriteGeometry,
                                                                  projectileSpriteSheet);
@@ -172,10 +173,11 @@ namespace cannon_game
             delete image;
             std::shared_ptr<selyan::SpriteSheet> playerBodySpriteSheet =
                 std::make_shared<selyan::SpriteSheet>(playerBodyTexture, 1, 1);
-            std::shared_ptr<selyan::SpriteGeometry> playerBodySpriteGeometry = std::make_shared<selyan::SpriteGeometry>(
-                playerBodySpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
-                playerBodySpriteSheet->getRelativeSpriteSize(),
-                -2);
+            std::shared_ptr<selyan::SpriteGeometry> playerBodySpriteGeometry =
+                std::make_shared<selyan::SpriteGeometry>(
+                    playerBodySpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
+                    playerBodySpriteSheet->getRelativeSpriteSize(),
+                    -2);
             selyan::Sprite playerBodySprite(playerBodySpriteGeometry,
                                             playerBodySpriteSheet,
                                             selyan::SpriteFrame{});
@@ -187,11 +189,12 @@ namespace cannon_game
             delete image;
             std::shared_ptr<selyan::SpriteSheet> playerHeadSpriteSheet =
                 std::make_shared<selyan::SpriteSheet>(playerHeadTexture, 1, 1);
-            std::shared_ptr<selyan::SpriteGeometry> playerHeadSpriteGeometry = std::make_shared<selyan::SpriteGeometry>(
-                playerHeadSpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
-                playerHeadSpriteSheet->getRelativeSpriteSize(),
-                -1,
-                glm::vec2(0.0, 0.25));
+            std::shared_ptr<selyan::SpriteGeometry> playerHeadSpriteGeometry =
+                std::make_shared<selyan::SpriteGeometry>(
+                    playerHeadSpriteSheet->applySpriteSizeAspectRation(glm::vec2{ 1, 1 }),
+                    playerHeadSpriteSheet->getRelativeSpriteSize(),
+                    -1,
+                    glm::vec2(0.0, 0.25));
             selyan::Sprite playerHeadSprite(playerHeadSpriteGeometry,
                                             playerHeadSpriteSheet,
                                             selyan::SpriteFrame{});
@@ -200,8 +203,6 @@ namespace cannon_game
             m_player->setPosition({ 0, 0 });
             m_player->setScale({ 1, 1 });
             m_player->setRotation(0);
-            // m_player->setSprite(playerHeadSprite);
-            // m_sprites.push_back(playerHeadSprite);
 
             image = selyan::Image::create("D:\\dev\\repos\\cannon_game\\sandbox\\sprite_"
                                           "example\\res\\explosion\\explosion-sprite-sheet.png");
@@ -218,7 +219,6 @@ namespace cannon_game
             m_explosionManager =
                 std::make_shared<ExplosionManager>(explosionSpriteGeometry, explosionSpriteSheet);
 
-            // generateEnemy(config::initialEnemyCount);
             for (size_t i = 0; i < config::initialEnemyCount; ++i)
             {
                 m_enemiesManager->createEnemy(
@@ -229,12 +229,6 @@ namespace cannon_game
                         glm::vec2 direction =
                             glm::normalize(m_player->getPosition() - parentPosition);
 
-                        //                        generateProjectile(parentId,
-                        //                                           parentPosition,
-                        //                                           parentRotation + 90,
-                        //                                           direction,
-                        //                                           config::enemyProjectileSpeed,
-                        //                                           { 1.f, 1.f });
                         m_projectileManager->createProjectile(parentId,
                                                               parentPosition,
                                                               parentRotation + 90,
@@ -288,15 +282,11 @@ namespace cannon_game
 
             for (auto &enemy : *m_enemiesManager)
             {
-                //                if (enemy->isDie())
-                //                    continue;
                 enemy.second->update(elapsedTimeInSeconds);
             }
 
             for (auto &projectilePair : *m_projectileManager)
             {
-                //                if (projectile->isDie())
-                //                    continue;
                 auto &projectile = projectilePair.second;
                 projectile->update(elapsedTimeInSeconds);
 
@@ -304,13 +294,6 @@ namespace cannon_game
                 {
                     if (checkCollision(projectile->getCollision(), m_player->getCollision()))
                     {
-                        //                        m_player->die();
-                        //                        m_explosionManager->createExplosion(
-                        //                            m_player->getPosition(),
-                        //                            m_player->getRotation(),
-                        //                            glm::vec2(1, 1)
-                        //                            /*(*intersectingEnemy)->getScale()*/);
-                        // projectile->die();
                         m_projectileManager->kill(projectile->getUniqueId());
                         m_explosionManager->createExplosion(
                             projectile->getPosition(),
@@ -319,36 +302,28 @@ namespace cannon_game
                     }
                 }
 
-                auto intersectingProjectilePair =
-                    std::find_if(m_projectileManager->begin(),
-                                 m_projectileManager->end(),
-                                 [&projectile](const auto &other)
-                                 {
-                                     //                        if (other->isDie() ||
-                                     //                        other->getUniqueId() ==
-                                     //                        projectile->getUniqueId())
-                                     //                            return false;
-                                     if (other.second->getUniqueId() == projectile->getUniqueId())
-                                         return false;
-                                     return cannon_game::checkCollision(other.second->getCollision(),
-                                                                        projectile->getCollision());
-                                 });
+                auto intersectingProjectilePair = std::find_if(
+                    m_projectileManager->begin(),
+                    m_projectileManager->end(),
+                    [&projectile](const auto &other)
+                    {
+                        if (other.second->getUniqueId() == projectile->getUniqueId())
+                            return false;
+                        return cannon_game::checkCollision(other.second->getCollision(),
+                                                           projectile->getCollision());
+                    });
 
                 if (intersectingProjectilePair != m_projectileManager->end())
                 {
-                    auto& intersectingProjectile = intersectingProjectilePair->second;
-                    //(*intersectingProjectile)->die();
-                    m_explosionManager->createExplosion(
-                        intersectingProjectile->getPosition(),
-                        intersectingProjectile->getRotation(),
-                        glm::vec2(1, 1) /*(*intersectingEnemy)->getScale()*/);
+                    auto &intersectingProjectile = intersectingProjectilePair->second;
+                    m_explosionManager->createExplosion(intersectingProjectile->getPosition(),
+                                                        intersectingProjectile->getRotation(),
+                                                        glm::vec2(1, 1));
                     m_projectileManager->kill(intersectingProjectile->getUniqueId());
 
-                    //projectile->die();
-                    m_explosionManager->createExplosion(
-                        projectile->getPosition(),
-                        projectile->getRotation(),
-                        glm::vec2(1, 1) /*(*intersectingEnemy)->getScale()*/);
+                    m_explosionManager->createExplosion(projectile->getPosition(),
+                                                        projectile->getRotation(),
+                                                        glm::vec2(1, 1));
                     m_projectileManager->kill(projectile->getUniqueId());
                 }
 
@@ -366,16 +341,14 @@ namespace cannon_game
 
                 if (intersectingEnemy != m_enemiesManager->end())
                 {
-                    m_explosionManager->createExplosion(
-                        intersectingEnemy->second->getPosition(),
-                        intersectingEnemy->second->getRotation(),
-                        glm::vec2(1, 1) /*(*intersectingEnemy)->getScale()*/);
+                    m_explosionManager->createExplosion(intersectingEnemy->second->getPosition(),
+                                                        intersectingEnemy->second->getRotation(),
+                                                        glm::vec2(1, 1));
                     m_enemiesManager->kill(intersectingEnemy->second->getUniqueId());
 
-                    m_explosionManager->createExplosion(
-                        projectile->getPosition(),
-                        projectile->getRotation(),
-                        glm::vec2(1, 1) /*(*intersectingEnemy)->getScale()*/);
+                    m_explosionManager->createExplosion(projectile->getPosition(),
+                                                        projectile->getRotation(),
+                                                        glm::vec2(1, 1));
                     m_enemiesManager->kill(projectile->getUniqueId());
                 }
             }
@@ -385,7 +358,6 @@ namespace cannon_game
 
         void onRender() override
         {
-            // std::cout << "OnRender" << std::endl;
             m_shader->bind();
 
             const float aspectRatio = utility::get_current_window_aspect_ratio();
@@ -407,16 +379,11 @@ namespace cannon_game
 
             for (auto &enemy : *m_enemiesManager)
             {
-                //                if (enemy->isDie())
-                //                    continue;
                 enemy.second->draw(m_shader);
             }
 
             for (auto &projectile : *m_projectileManager)
             {
-                //                if (projectile->isDie())
-                //                    continue;
-                assert(!projectile.second->isDie());
                 projectile.second->draw(m_shader);
             }
 
@@ -427,51 +394,8 @@ namespace cannon_game
         }
 
     private:
-        //        void generateProjectile(uint32_t parentId,
-        //                                const glm::vec2 &position,
-        //                                float rotation,
-        //                                const glm::vec2 &direction,
-        //                                float speed,
-        //                                const glm::vec2 &scale)
-        //        {
-        //            auto found = std::find_if(m_projectiles.begin(),
-        //                                      m_projectiles.end(),
-        //                                      [](const auto &projectile) { return
-        //                                      projectile->isDie(); });
-        //
-        //            if (found != m_projectiles.end())
-        //            {
-        //                (*found)->alive();
-        //                (*found)->setParentId(parentId);
-        //                (*found)->setPosition(position);
-        //                (*found)->setRotation(rotation);
-        //                (*found)->setDirection(direction);
-        //                (*found)->setSpeed(speed);
-        //                (*found)->setScale(scale);
-        //                (*found)->setCollision({ position, 0.1f /*glm::min(scale.x, scale.y)*/ });
-        //            }
-        //            else
-        //            {
-        //                selyan::Sprite projectileSprite(m_projectileSpriteGeometry,
-        //                                                m_projectileSpriteSheet);
-        //                auto projectile =
-        //                std::make_shared<cannon_game::Projectile>(projectileSprite,
-        //                                                                            parentId,
-        //                                                                            direction,
-        //                                                                            speed);
-        //                // projectile->setSprite(projectileSprite);
-        //                projectile->setPosition(position);
-        //                projectile->setRotation(rotation);
-        //                projectile->setScale(scale);
-        //                projectile->setCollision({ position, 0.1f /*glm::min(scale.x, scale.y)*/
-        //                }); m_projectiles.push_back(projectile);
-        //            }
-        //        }
-
         std::shared_ptr<cannon_game::Projectile> findAdjacentProjectile()
         {
-            //            if (m_projectiles.empty())
-            //                return nullptr;
             if (m_projectileManager->begin() == m_projectileManager->end())
                 return nullptr;
 
@@ -507,8 +431,6 @@ namespace cannon_game
 
         std::shared_ptr<cannon_game::Enemy> findAdjacentEnemy()
         {
-            //            if (m_enemies.empty())
-            //                return nullptr;
             if (m_enemiesManager->begin() == m_enemiesManager->end())
                 return nullptr;
 
@@ -542,7 +464,6 @@ namespace cannon_game
                 {
                     auto adjacentProjectile = findAdjacentProjectile();
                     auto adjacentEnemy = findAdjacentEnemy();
-                    //
                     constexpr float angleOffset = 30;
 
                     if (adjacentEnemy != nullptr &&
@@ -550,7 +471,6 @@ namespace cannon_game
                          glm::length2(adjacentEnemy->getPosition()) <
                              glm::length2(adjacentProjectile->getPosition())))
                     {
-                        // m_player->setMTargetObject(adjacentEnemy);
                         if (!adjacentEnemy->isDie())
                         {
                             auto normalizeEnemyPosition = glm::normalize(
@@ -560,22 +480,10 @@ namespace cannon_game
                             playerRotation += adjacentEnemy->getAngularVelocity() >= 0 ?
                                                   -angleOffset :
                                                   angleOffset;
-                            //                            if (adjacentEnemy->getAngularVelocity()
-                            //                            >= 0)
-                            //                                playerRotation *= -1;
                             m_player->setRotation(-playerRotation);
                             std::cout << "player roation: " << m_player->getRotation()
                                       << ", enemy position: "
                                       << glm::to_string(adjacentEnemy->getPosition()) << std::endl;
-                            //                            generateProjectile(m_player->getUniqueId(),
-                            //                                               m_player->getPosition(),
-                            //                                               m_player->getRotation(),
-                            //                                               {
-                            //                                               glm::sin(glm::radians(playerRotation)),
-                            //                                                 glm::cos(glm::radians(playerRotation))
-                            //                                                 },
-                            //                                               config::playersProjectileSpeed,
-                            //                                               glm::vec2{ 1.f, 1.f });
                             m_projectileManager->createProjectile(
                                 m_player->getUniqueId(),
                                 m_player->getPosition(),
@@ -597,16 +505,7 @@ namespace cannon_game
                             float playerRotation =
                                 glm::degrees(std::atan2(normalizeProjectilePosition.x,
                                                         normalizeProjectilePosition.y));
-                            //                            if (adjacentEnemy->getAngularVelocity()
-                            //                            >= 0)
-                            //                                playerRotation *= -1;
                             m_player->setRotation(-playerRotation);
-                            //                            generateProjectile(m_player->getUniqueId(),
-                            //                                               m_player->getPosition(),
-                            //                                               m_player->getRotation(),
-                            //                                               normalizeProjectilePosition,
-                            //                                               config::playersProjectileSpeed,
-                            //                                               glm::vec2{ 1.f, 1.f });
                             m_projectileManager->createProjectile(m_player->getUniqueId(),
                                                                   m_player->getPosition(),
                                                                   m_player->getRotation(),

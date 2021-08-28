@@ -95,8 +95,7 @@ namespace cannon_game
                 return;
             }
 
-            selyan::Sprite projectileSprite(m_spriteGeometry,
-                                            m_spriteSheet);
+            selyan::Sprite projectileSprite(m_spriteGeometry, m_spriteSheet);
             auto projectile = std::make_shared<cannon_game::Projectile>(projectileSprite,
                                                                         parentId,
                                                                         direction,

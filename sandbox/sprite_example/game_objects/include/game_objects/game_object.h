@@ -14,7 +14,7 @@ namespace cannon_game
     {
     public:
         GameObject()
-        :   m_uniqueId(lastUniqueId++),
+          : m_uniqueId(lastUniqueId++),
             m_position({ 0, 0 }),
             m_rotation(0),
             m_scale({ 1, 1 }),
@@ -27,32 +27,23 @@ namespace cannon_game
         virtual ~GameObject() = default;
 
         virtual void draw(selyan::Shader *shader) = 0;
-//        {
-//            assert(shader != nullptr && m_sprite != nullptr);
-//
-//            shader->setUniform("modelMatrix", glm::transpose(m_modelMatrix));
-//            m_sprite->draw(shader);
-//        }
+        //        {
+        //            assert(shader != nullptr && m_sprite != nullptr);
+        //
+        //            shader->setUniform("modelMatrix", glm::transpose(m_modelMatrix));
+        //            m_sprite->draw(shader);
+        //        }
 
-        uint32_t getUniqueId() const
-        {
-            return m_uniqueId;
-        }
+        uint32_t getUniqueId() const { return m_uniqueId; }
 
-        void setCollision(const CollisionCircle& collision)
-        {
-            m_collision = collision;
-        }
+        void setCollision(const CollisionCircle &collision) { m_collision = collision; }
 
-        CollisionCircle getCollision() const
-        {
-            return m_collision;
-        }
+        CollisionCircle getCollision() const { return m_collision; }
 
-//        void setSprite(std::shared_ptr<selyan::Sprite> sprite)
-//        {
-//            m_sprite = std::move(sprite);
-//        }
+        //        void setSprite(std::shared_ptr<selyan::Sprite> sprite)
+        //        {
+        //            m_sprite = std::move(sprite);
+        //        }
 
         glm::mat4 getModelMatrix() const { return m_modelMatrix; }
 
@@ -61,7 +52,7 @@ namespace cannon_game
             if (m_position == position)
                 return;
 
-            //m_collision.center += m_position - position;
+            // m_collision.center += m_position - position;
             m_collision.center = position;
             m_position = position;
             update_model_matrix();
@@ -69,7 +60,7 @@ namespace cannon_game
 
         glm::vec2 getPosition() const { return m_position; }
 
-        void setScale(const glm::vec2& scale)
+        void setScale(const glm::vec2 &scale)
         {
             if (m_scale == scale)
                 return;
@@ -97,15 +88,9 @@ namespace cannon_game
             m_dead = true;
         }
 
-        void alive()
-        {
-            m_dead = false;
-        }
+        void alive() { m_dead = false; }
 
-        bool isDie() const
-        {
-            return m_dead;
-        }
+        bool isDie() const { return m_dead; }
 
     private:
         void update_model_matrix()
@@ -120,7 +105,7 @@ namespace cannon_game
     private:
         uint32_t m_uniqueId;
 
-        //std::shared_ptr<selyan::Sprite> m_sprite;
+        // std::shared_ptr<selyan::Sprite> m_sprite;
 
         glm::vec2 m_position;
         float m_rotation;

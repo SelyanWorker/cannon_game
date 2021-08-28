@@ -15,9 +15,8 @@ namespace cannon_game
     class Player : public GameObject
     {
     public:
-        Player(const selyan::Sprite& bodySprite,
-               const selyan::Sprite& headSprite)
-        :   GameObject(),
+        Player(const selyan::Sprite &bodySprite, const selyan::Sprite &headSprite)
+          : GameObject(),
             m_bodySprite(bodySprite),
             m_headSprite(headSprite)
         {
@@ -31,7 +30,7 @@ namespace cannon_game
             moveToTarget(elapsedTime);
         }
 
-        void draw(selyan::Shader* shader) override
+        void draw(selyan::Shader *shader) override
         {
             assert(shader != nullptr);
 
@@ -61,7 +60,6 @@ namespace cannon_game
             {
                 rotation += elapsedTime * m_movement.speed;
                 setRotation(rotation);
-
             }
         }
 
