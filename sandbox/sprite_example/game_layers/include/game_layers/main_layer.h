@@ -97,6 +97,73 @@ namespace utility
     }
 }
 
+namespace detail
+{
+    std::shared_ptr<cannon_game::Projectile> findNearestProjectile(
+        std::shared_ptr<cannon_game::ProjectileManager> projectileManager,
+        std::shared_ptr<cannon_game::GameObject> gameObject)
+    {
+        if (projectileManager->begin() == projectileManager->end())
+            return nullptr;
+
+        constexpr float minDistance = 0.1f;
+        auto playerPosition = gameObject->getPosition();
+        std::shared_ptr<cannon_game::Projectile> adjacentProjectile =
+            projectileManager->begin()->second;
+        auto adjacentProjectileDistance =
+            glm::length2(playerPosition - adjacentProjectile->getPosition());
+        for (auto i = std::next(projectileManager->begin()); i != projectileManager->end(); ++i)
+        {
+            if (i->second->getParentId() == gameObject->getUniqueId())
+                continue;
+
+            auto projectilePosition = i->second->getPosition();
+            auto distance = glm::length2(playerPosition - projectilePosition);
+            if (distance < minDistance)
+                continue;   // return?
+
+            if (distance > adjacentProjectileDistance)
+                continue;
+
+            adjacentProjectile = i->second;
+            adjacentProjectileDistance = distance;
+        }
+
+        if (adjacentProjectile->isDie())
+            return nullptr;
+
+        return adjacentProjectile;
+    }
+
+    std::shared_ptr<cannon_game::Enemy> findNearestEnemy(
+        std::shared_ptr<cannon_game::EnemiesManager> enemiesManager,
+        std::shared_ptr<cannon_game::GameObject> gameObject)
+    {
+        if (enemiesManager->begin() == enemiesManager->end())
+            return nullptr;
+
+        constexpr float minDistance = 0.1f;
+        auto playerPosition = gameObject->getPosition();
+        std::shared_ptr<cannon_game::Enemy> adjacentEnemy = enemiesManager->begin()->second;
+        auto adjacentEnemyDistance = glm::length2(playerPosition - adjacentEnemy->getPosition());
+        for (auto i = std::next(enemiesManager->begin()); i != enemiesManager->end(); ++i)
+        {
+            auto projectilePosition = i->second->getPosition();
+            auto distance = glm::length2(playerPosition - projectilePosition);
+            if (distance < minDistance)
+                continue;   // return?
+
+            if (distance > adjacentEnemyDistance)
+                continue;
+
+            adjacentEnemy = i->second;
+            adjacentEnemyDistance = distance;
+        }
+
+        return adjacentEnemy;
+    }
+}
+
 namespace cannon_game
 {
     class SpriteLayer : public selyan::Layer
@@ -394,76 +461,15 @@ namespace cannon_game
         }
 
     private:
-        std::shared_ptr<cannon_game::Projectile> findAdjacentProjectile()
-        {
-            if (m_projectileManager->begin() == m_projectileManager->end())
-                return nullptr;
-
-            constexpr float minDistance = 0.1f;
-            auto playerPosition = m_player->getPosition();
-            std::shared_ptr<cannon_game::Projectile> adjacentProjectile =
-                m_projectileManager->begin()->second;
-            auto adjacentProjectileDistance =
-                glm::length2(playerPosition - adjacentProjectile->getPosition());
-            for (auto i = std::next(m_projectileManager->begin()); i != m_projectileManager->end();
-                 ++i)
-            {
-                if (i->second->getParentId() == m_player->getUniqueId())
-                    continue;
-
-                auto projectilePosition = i->second->getPosition();
-                auto distance = glm::length2(playerPosition - projectilePosition);
-                if (distance < minDistance)
-                    continue;   // return?
-
-                if (distance > adjacentProjectileDistance)
-                    continue;
-
-                adjacentProjectile = i->second;
-                adjacentProjectileDistance = distance;
-            }
-
-            if (adjacentProjectile->isDie())
-                return nullptr;
-
-            return adjacentProjectile;
-        }
-
-        std::shared_ptr<cannon_game::Enemy> findAdjacentEnemy()
-        {
-            if (m_enemiesManager->begin() == m_enemiesManager->end())
-                return nullptr;
-
-            constexpr float minDistance = 0.1f;
-            auto playerPosition = m_player->getPosition();
-            std::shared_ptr<cannon_game::Enemy> adjacentEnemy = m_enemiesManager->begin()->second;
-            auto adjacentEnemyDistance =
-                glm::length2(playerPosition - adjacentEnemy->getPosition());
-            for (auto i = std::next(m_enemiesManager->begin()); i != m_enemiesManager->end(); ++i)
-            {
-                auto projectilePosition = i->second->getPosition();
-                auto distance = glm::length2(playerPosition - projectilePosition);
-                if (distance < minDistance)
-                    continue;   // return?
-
-                if (distance > adjacentEnemyDistance)
-                    continue;
-
-                adjacentEnemy = i->second;
-                adjacentEnemyDistance = distance;
-            }
-
-            return adjacentEnemy;
-        }
-
         void updatePlayer()
         {
             if (selyan::Input::isKeyPressed(selyan::RN_KEY_SPACE))
             {
                 if (m_spaceButtonReleased)
                 {
-                    auto adjacentProjectile = findAdjacentProjectile();
-                    auto adjacentEnemy = findAdjacentEnemy();
+                    auto adjacentProjectile =
+                        detail::findNearestProjectile(m_projectileManager, m_player);
+                    auto adjacentEnemy = detail::findNearestEnemy(m_enemiesManager, m_player);
                     constexpr float angleOffset = 30;
 
                     if (adjacentEnemy != nullptr &&
