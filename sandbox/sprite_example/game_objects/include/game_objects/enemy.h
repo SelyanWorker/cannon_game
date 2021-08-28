@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/time.h"
 #include "game_object.h"
 
 #include <functional>
@@ -26,9 +27,9 @@ namespace cannon_game
             m_bodySprite(bodySprite),
             m_headSprite(headSprite),
             m_playerPosition(playerPosition),
-            m_distanceToPlayer(distanceToPlayer),
+            m_radius(distanceToPlayer),
             m_angularVelocity(angularVelocity),
-            m_lastAngle(spawnAngle),
+            m_angle(spawnAngle),
             m_reloadTime(reloadTime),
             m_lastShotTime(0)
         {
@@ -74,27 +75,43 @@ namespace cannon_game
             m_shootingFun = shootingFun;
         }
 
-        float getMAngularVelocity() const { return m_angularVelocity; }
+        float getAngularVelocity() const { return m_angularVelocity; }
 
-        void setMReloadTime(float mReloadTime) { m_reloadTime = mReloadTime; }
-        float getMReloadTime() const { return m_reloadTime; }
-        float getMDistanceToPlayer() const { return m_distanceToPlayer; }
+        void setAngularVelocity(float angularVelocity) { m_angularVelocity = angularVelocity; }
 
-        float getMLastAngle() const { return m_lastAngle; }
+        void setReloadTime(float mReloadTime) { m_reloadTime = mReloadTime; }
+
+        float getReloadTime() const { return m_reloadTime; }
+
+        float getRadius() const { return m_radius; }
+
+        void setRadius(float radius)
+        {
+            m_radius = radius;
+            move(0);
+        }
+
+        float getAngle() const { return m_angle; }
+
+        void setAngle(float angle)
+        {
+            m_angle = angle;
+            move(0);
+        }
 
     private:
         void move(float elapsedTime)
         {
-            float phi = glm::radians(m_lastAngle) - elapsedTime;
+            float phi = glm::radians(m_angle) - elapsedTime;
 
-            m_lastAngle += m_angularVelocity * elapsedTime;
-            if (m_lastAngle >= 360.)
-                m_lastAngle -= 360.;
-            auto newPosition = m_playerPosition + glm::vec2(m_distanceToPlayer * glm::cos(phi),
-                                                            m_distanceToPlayer * glm::sin(phi));
+            m_angle += m_angularVelocity * elapsedTime;
+            if (m_angle >= 360.)
+                m_angle -= 360.;
+            auto newPosition =
+                m_playerPosition + glm::vec2(m_radius * glm::cos(phi), m_radius * glm::sin(phi));
 
             setPosition(newPosition);
-            setRotation(m_lastAngle);
+            setRotation(m_angle);
             // std::cout << "Enemy rotation: " << getRotation() << std::endl;
             //             auto collision = getCollision
             //             .center = newPosition;
@@ -108,13 +125,30 @@ namespace cannon_game
         selyan::Sprite m_headSprite;
 
         glm::vec2 m_playerPosition;
-        float m_distanceToPlayer;
+        float m_radius;
         float m_angularVelocity;
-        float m_lastAngle;
+        float m_angle;
 
         ShootingFunctionType m_shootingFun;
         float m_reloadTime;
         float m_lastShotTime;
+    };
+
+    struct EnemyGeneratorParams
+    {
+        float orbitHeight;
+        float spawnRadiusMin;
+        float spawnRadiusMax;
+        float angularVelocityStep;
+        float angularVelocityMin;
+        float angularVelocityMax;
+    };
+
+    struct EnemyData
+    {
+        float radius;
+        float angle;
+        float angularVelocity;
     };
 
     class EnemiesManager
@@ -122,15 +156,16 @@ namespace cannon_game
         using EnemyPtrType = std::shared_ptr<Enemy>;
 
     public:
-        using ShootCallbackType = std::function<void(uint32_t shooterId,
-                                                     const glm::vec2 &shooterPosition,
-                                                     float shooterRotation)>;
+        using ShootCallbackType = std::function<
+            void(uint32_t shooterId, const glm::vec2 &shooterPosition, float shooterRotation)>;
 
-        explicit EnemiesManager(std::shared_ptr<selyan::SpriteGeometry> bodySpriteGeometry,
+        explicit EnemiesManager(const EnemyGeneratorParams &enemyGeneratorParams,
+                                std::shared_ptr<selyan::SpriteGeometry> bodySpriteGeometry,
                                 std::shared_ptr<selyan::SpriteSheet> bodySpriteSheet,
                                 std::shared_ptr<selyan::SpriteGeometry> headSpriteGeometry,
                                 std::shared_ptr<selyan::SpriteSheet> headSpriteSheet)
-          : m_bodySpriteGeometry(std::move(bodySpriteGeometry)),
+          : m_enemyGeneratorParams(enemyGeneratorParams),
+            m_bodySpriteGeometry(std::move(bodySpriteGeometry)),
             m_bodySpriteSheet(std::move(bodySpriteSheet)),
             m_headSpriteGeometry(std::move(headSpriteGeometry)),
             m_headSpriteSheet(std::move(headSpriteSheet))
@@ -146,6 +181,7 @@ namespace cannon_game
 
             found->second->die();
             m_dead.push(found->second);
+            m_alive.erase(found);
         }
 
         void createEnemy(const glm::vec2 &center,
@@ -155,12 +191,26 @@ namespace cannon_game
                          float reloadTime,
                          ShootCallbackType shootCallback)
         {
+            if (!m_dead.empty())
+            {
+                auto deadEnemy = m_dead.top();
+                m_dead.pop();
+                deadEnemy->alive();
+                deadEnemy->setAngle(spawnAngle);
+                deadEnemy->setAngularVelocity(angularVelocity);
+                deadEnemy->setRadius(radius);
+                deadEnemy->setReloadTime(reloadTime);
+                deadEnemy->setShootingFunction(shootCallback);
+                m_alive.insert(std::make_pair(deadEnemy->getUniqueId(), deadEnemy));
+            }
+
             selyan::Sprite enemyBodySprite(m_bodySpriteGeometry,
                                            m_bodySpriteSheet,
                                            selyan::SpriteFrame{ 0, 0, 0.085 });
             selyan::Sprite enemyHeadSprite(m_headSpriteGeometry,
                                            m_headSpriteSheet,
                                            selyan::SpriteFrame{ 0, 0, 0.085 });
+
             auto enemy = std::make_shared<cannon_game::Enemy>(enemyBodySprite,
                                                               enemyHeadSprite,
                                                               center,
@@ -174,17 +224,66 @@ namespace cannon_game
             m_alive.insert(std::make_pair(enemy->getUniqueId(), enemy));
         }
 
-        std::map<uint32_t, EnemyPtrType>::iterator begin()
+        void createEnemy(const glm::vec2 &center, float reloadTime, ShootCallbackType shootCallback)
         {
-            return m_alive.begin();
+            auto enemyParams = generateRandomEnemyData();
+            createEnemy(center,
+                        enemyParams.angle,
+                        enemyParams.angularVelocity,
+                        enemyParams.radius,
+                        reloadTime,
+                        shootCallback);
         }
 
-        std::map<uint32_t, EnemyPtrType>::iterator end()
+        void setEnemyGeneratorParams(const EnemyGeneratorParams &enemyGeneratorParams) {}
+
+        std::map<uint32_t, EnemyPtrType>::iterator begin() { return m_alive.begin(); }
+
+        std::map<uint32_t, EnemyPtrType>::iterator end() { return m_alive.end(); }
+
+    private:
+        EnemyData generateRandomEnemyData()
         {
-            return m_alive.end();
+            assert(m_enemyGeneratorParams.angularVelocityMax -
+                       m_enemyGeneratorParams.angularVelocityMin >
+                   m_enemyGeneratorParams.angularVelocityStep);
+
+            auto seed = selyan::TimeStep::getTime().getMicro();
+            std::srand(seed);
+
+            uint32_t maxOrbitCount =
+                (m_enemyGeneratorParams.spawnRadiusMax - m_enemyGeneratorParams.spawnRadiusMin) /
+                m_enemyGeneratorParams.orbitHeight;
+            uint32_t orbit = 1 + std::rand() / ((RAND_MAX + 1u) / maxOrbitCount);
+
+            uint32_t angle = 0 + std::rand() / ((RAND_MAX + 1u) / 360);
+
+            uint32_t angularVelocityStepCount = (m_enemyGeneratorParams.angularVelocityMax -
+                                                 m_enemyGeneratorParams.angularVelocityMin) /
+                                                m_enemyGeneratorParams.angularVelocityStep;
+            int32_t rawAngularVelocity =
+                1 + std::rand() / ((RAND_MAX + 1u) / angularVelocityStepCount);
+            auto angularVelocitySign = std::rand() / ((RAND_MAX + 1u));
+
+            float angularVelocity =
+                rawAngularVelocity * m_enemyGeneratorParams.angularVelocityStep +
+                m_enemyGeneratorParams.angularVelocityMin;
+            if (angularVelocitySign)
+                angularVelocity *= -1;
+
+            std::cout << rawAngularVelocity << " " << angularVelocitySign << " "
+                      << rawAngularVelocity * m_enemyGeneratorParams.angularVelocityStep
+                      << std::endl;
+
+            return { orbit * m_enemyGeneratorParams.orbitHeight +
+                         m_enemyGeneratorParams.spawnRadiusMin,
+                     float(angle),
+                     angularVelocity };
         }
 
     private:
+        EnemyGeneratorParams m_enemyGeneratorParams;
+
         std::shared_ptr<selyan::SpriteSheet> m_bodySpriteSheet;
         std::shared_ptr<selyan::SpriteGeometry> m_bodySpriteGeometry;
         std::shared_ptr<selyan::SpriteSheet> m_headSpriteSheet;

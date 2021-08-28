@@ -36,7 +36,7 @@
 //                      [&](const std::shared_ptr<cannon_game::Enemy> &enemy)
 //                      {
 //                          uint32_t enemyOrbit =
-//                              (enemy->getMDistanceToPlayer() - m_spawnRadiusMin) / m_orbitSize;
+//                              (enemy->getRadius() - m_spawnRadiusMin) / m_orbitSize;
 //                          if (enemyOrbit == orbit)
 //                              enemiesOnOrbit.push_back(enemy);
 //                      });
@@ -48,7 +48,7 @@
 //                  enemiesOnOrbit.end(),
 //                  [](const auto &left, const auto &right)
 //                  {
-//                      return left->getMDistanceToPlayer() < right->getMDistanceToPlayer();
+//                      return left->getMDistanceToPlayer() < right->getRadius();
 //                  });
 //
 //        for (auto begin = enemiesOnOrbit.begin(); begin != std::prev(enemiesOnOrbit.end());
