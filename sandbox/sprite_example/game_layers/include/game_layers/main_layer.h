@@ -137,6 +137,12 @@ namespace cannon_game
                 -1,
                 glm::vec2{ -0.1, 0.3 });
 
+            m_enemiesManager =
+                std::make_shared<cannon_game::EnemiesManager>(m_enemyBodySpriteGeometry,
+                                                              m_enemyBodySpriteSheet,
+                                                              m_enemyHeadSpriteGeometry,
+                                                              m_enemyHeadSpriteSheet);
+
             image = selyan::Image::create("D:\\dev\\repos\\cannon_game\\sandbox\\sprite_"
                                           "example\\res\\projectiles\\Medium_Shell.png");
             auto projectileTexture =
@@ -208,12 +214,13 @@ namespace cannon_game
 
         void onEvent(selyan::Event &e) override {}
 
-        void onUpdate(const selyan::TimeStep &timeStep) override
+        void onUpdate(const selyan::TimeStep &elapsedTime) override
         {
+            auto elapsedTimeInSeconds = elapsedTime.getSeconds();
 
-            m_explosionManager->update(timeStep.getSeconds());
+            m_explosionManager->update(elapsedTimeInSeconds);
 
-            m_createEnemyElapsedTime += timeStep.getSeconds();
+            m_createEnemyElapsedTime += elapsedTimeInSeconds;
             if (m_createEnemyElapsedTime >= config::enemyRespawnDelay)
             {
                 generateEnemy();
@@ -222,13 +229,13 @@ namespace cannon_game
             }
 
             if (!m_player->isDie())
-                m_player->update(timeStep.getSeconds());
+                m_player->update(elapsedTimeInSeconds);
 
-            for (auto &enemy : m_enemies)
+            for (auto &enemy : *m_enemiesManager)
             {
-                if (enemy->isDie())
-                    continue;
-                enemy->update(timeStep.getSeconds());
+//                if (enemy->isDie())
+//                    continue;
+                enemy.second->update(elapsedTimeInSeconds);
             }
 
             for (auto &projectile : m_projectiles)
@@ -236,7 +243,7 @@ namespace cannon_game
                 if (projectile->isDie())
                     continue;
 
-                projectile->update(timeStep.getSeconds());
+                projectile->update(elapsedTimeInSeconds);
 
                 if (!m_player->isDie() && m_player->getUniqueId() != projectile->getParentId())
                 {
@@ -280,8 +287,8 @@ namespace cannon_game
                 }
 
                 auto intersectingEnemy = std::find_if(
-                    m_enemies.begin(),
-                    m_enemies.end(),
+                    m_explosionManager->begin(),
+                    m_explosionManager->end(),
                     [&projectile](const auto &enemy)
                     {
                         if (enemy->isDie() || enemy->getUniqueId() == projectile->getParentId())
@@ -291,7 +298,7 @@ namespace cannon_game
                                                            projectile->getCollision());
                     });
 
-                if (intersectingEnemy != m_enemies.end())
+                if (intersectingEnemy != m_explosionManager->end())
                 {
                     (*intersectingEnemy)->die();
                     m_explosionManager->createExplosion((*intersectingEnemy)->getPosition(),
@@ -329,11 +336,11 @@ namespace cannon_game
             if (!m_player->isDie())
                 m_player->draw(m_shader);
 
-            for (auto &enemy : m_enemies)
+            for (auto &enemy : *m_enemiesManager)
             {
-                if (enemy->isDie())
-                    continue;
-                enemy->draw(m_shader);
+//                if (enemy->isDie())
+//                    continue;
+                enemy.second->draw(m_shader);
             }
 
             for (auto &projectile : m_projectiles)
@@ -400,25 +407,44 @@ namespace cannon_game
                                                          1,
                                                          config::enemyAngularVelocityMin,
                                                          config::enemyAngularVelocityMax);
-                selyan::Sprite enemyBodySprite(m_enemyBodySpriteGeometry,
-                                               m_enemyBodySpriteSheet,
-                                               selyan::SpriteFrame{ 0, 0, 0.085 });
-                selyan::Sprite enemyHeadSprite(m_enemyHeadSpriteGeometry,
-                                               m_enemyHeadSpriteSheet,
-                                               selyan::SpriteFrame{ 0, 0, 0.085 });
-                auto enemy = std::make_shared<cannon_game::Enemy>(enemyBodySprite,
-                                                                  enemyHeadSprite,
-                                                                  m_player->getPosition(),
-                                                                  enemyData.angle,
-                                                                  enemyData.angularVelocity,
-                                                                  enemyData.radius,
-                                                                  config::enemyReloadTime);
-
-                //                m_sprites.push_back(enemySprite);
-                //                enemy->setSprite(enemySprite);
-                enemy->setScale({ 1, 1 });
-                enemy->setCollision({ enemy->getPosition(), 0.5f });
-                enemy->setShootingFunction(
+//                selyan::Sprite enemyBodySprite(m_enemyBodySpriteGeometry,
+//                                               m_enemyBodySpriteSheet,
+//                                               selyan::SpriteFrame{ 0, 0, 0.085 });
+//                selyan::Sprite enemyHeadSprite(m_enemyHeadSpriteGeometry,
+//                                               m_enemyHeadSpriteSheet,
+//                                               selyan::SpriteFrame{ 0, 0, 0.085 });
+//                auto enemy = std::make_shared<cannon_game::Enemy>(enemyBodySprite,
+//                                                                  enemyHeadSprite,
+//                                                                  m_player->getPosition(),
+//                                                                  enemyData.angle,
+//                                                                  enemyData.angularVelocity,
+//                                                                  enemyData.radius,
+//                                                                  config::enemyReloadTime);
+//
+//                //                m_sprites.push_back(enemySprite);
+//                //                enemy->setSprite(enemySprite);
+//                enemy->setScale({ 1, 1 });
+//                enemy->setCollision({ enemy->getPosition(), 0.5f });
+//                enemy->setShootingFunction(
+//                    [this](uint32_t parentId, const glm::vec2 &parentPosition, float parentRotation)
+//                    {
+//                        glm::vec2 direction =
+//                            glm::normalize(m_player->getPosition() - parentPosition);
+//
+//                        generateProjectile(parentId,
+//                                           parentPosition,
+//                                           parentRotation + 90,
+//                                           direction,
+//                                           config::enemyProjectileSpeed,
+//                                           { 1.f, 1.f });
+//                    });
+                //m_enemies.push_back(enemy);
+                m_enemiesManager->createEnemy(
+                    m_player->getPosition(),
+                    enemyData.angle,
+                    enemyData.angularVelocity,
+                    enemyData.radius,
+                    config::enemyReloadTime,
                     [this](uint32_t parentId, const glm::vec2 &parentPosition, float parentRotation)
                     {
                         glm::vec2 direction =
@@ -431,7 +457,6 @@ namespace cannon_game
                                            config::enemyProjectileSpeed,
                                            { 1.f, 1.f });
                     });
-                m_enemies.push_back(enemy);
             }
         }
 
@@ -470,17 +495,19 @@ namespace cannon_game
 
         std::shared_ptr<cannon_game::Enemy> findAdjacentEnemy()
         {
-            if (m_enemies.empty())
+//            if (m_enemies.empty())
+//                return nullptr;
+            if (m_enemiesManager->begin() == m_enemiesManager->end())
                 return nullptr;
 
             constexpr float minDistance = 0.1f;
             auto playerPosition = m_player->getPosition();
-            std::shared_ptr<cannon_game::Enemy> adjacentEnemy = m_enemies.front();
+            std::shared_ptr<cannon_game::Enemy> adjacentEnemy = m_enemiesManager->begin()->second;
             auto adjacentEnemyDistance =
                 glm::length2(playerPosition - adjacentEnemy->getPosition());
-            for (auto i = std::next(m_enemies.begin()); i != m_enemies.end(); ++i)
+            for (auto i = std::next(m_enemiesManager->begin()); i != m_enemiesManager->end(); ++i)
             {
-                auto projectilePosition = (*i)->getPosition();
+                auto projectilePosition = i->second->getPosition();
                 auto distance = glm::length2(playerPosition - projectilePosition);
                 if (distance < minDistance)
                     continue;   // return?
@@ -488,7 +515,7 @@ namespace cannon_game
                 if (distance > adjacentEnemyDistance)
                     continue;
 
-                adjacentEnemy = (*i);
+                adjacentEnemy = i->second;
                 adjacentEnemyDistance = distance;
             }
 
@@ -581,11 +608,8 @@ namespace cannon_game
         std::shared_ptr<selyan::SpriteGeometry> m_explosionSpriteGeometry;
 
         std::shared_ptr<cannon_game::Player> m_player;
-        std::vector<std::shared_ptr<cannon_game::Enemy>> m_enemies;
+        //std::vector<std::shared_ptr<cannon_game::Enemy>> m_enemies;
         std::vector<std::shared_ptr<cannon_game::Projectile>> m_projectiles;
-
-        std::vector<std::shared_ptr<cannon_game::Enemy>> m_freeEnemies;
-        std::vector<std::shared_ptr<cannon_game::Projectile>> m_freeProjectiles;
 
         std::shared_ptr<selyan::SpriteSheet> m_projectileSpriteSheet;
         std::shared_ptr<selyan::SpriteGeometry> m_projectileSpriteGeometry;
@@ -594,6 +618,7 @@ namespace cannon_game
         std::shared_ptr<selyan::SpriteGeometry> m_enemyBodySpriteGeometry;
         std::shared_ptr<selyan::SpriteSheet> m_enemyHeadSpriteSheet;
         std::shared_ptr<selyan::SpriteGeometry> m_enemyHeadSpriteGeometry;
+        std::shared_ptr<cannon_game::EnemiesManager> m_enemiesManager;
 
         std::shared_ptr<selyan::SpriteSheet> m_playerBodySpriteSheet;
         std::shared_ptr<selyan::SpriteGeometry> m_playerBodySpriteGeometry;
