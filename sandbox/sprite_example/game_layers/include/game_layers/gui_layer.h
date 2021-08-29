@@ -1,13 +1,17 @@
 #pragma once
 
+#include "game_params.h"
+
 #include "application/application.h"
 #include "event/event.h"
 #include "layers/layer.h"
+
 #include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <imgui_internal.h>
 #include <iostream>
 
 namespace cannon_game
@@ -15,11 +19,25 @@ namespace cannon_game
     class ImGuiLayer : public selyan::Layer
     {
     public:
-        ImGuiLayer()
-        {
-            auto nativeWindow = reinterpret_cast<GLFWwindow *>(
-                selyan::Application::get()->getWindow()->getNativeWindow());
+        using GameParamsCallbackType = std::function<void(const GameParams &)>;
+        using GameRestartCallbackType = std::function<void()>;
+        using GameStopCallbackType = std::function<void(bool)>;
+        using GameSpeedUpModeCallbackType = std::function<void(bool)>;
+        //        using HealthChangedCallbackType = std::function<void(uint32_t health)>;
+        //        using AmmoChangedCallbackType = std::function<void(uint32_t ammo)>;
 
+    public:
+        ImGuiLayer(const GameParams &gameParams,
+                   GameParamsCallbackType gameParamsCallback,
+                   bool showSettings = false)
+          : m_gameParamsCallback(std::move(gameParamsCallback)),
+            m_gameParams(gameParams),
+            m_playerAmmo(gameParams.initialPlayerAmmo),
+            m_playerHealth(3),
+            m_gameStop(false),
+            m_gameSpeedUp(false),
+            m_showSettings(showSettings)
+        {
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
 
@@ -33,6 +51,8 @@ namespace cannon_game
 
             // Setup Platform/Renderer bindings
 
+            auto nativeWindow = reinterpret_cast<GLFWwindow *>(
+                selyan::Application::get()->getWindow()->getNativeWindow());
             ImGui_ImplGlfw_InitForOpenGL(nativeWindow, true);
             ImGui_ImplOpenGL3_Init("#version 430");
         }
@@ -57,94 +77,42 @@ namespace cannon_game
 
             // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()!
             // You can browse its code to learn more about Dear ImGui!).
-            if (show_demo_window)
-                ImGui::ShowDemoWindow(&show_demo_window);
+            showGameGui();
 
-            // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created
-            // a named window.
-            {
-                static float f = 0.0f;
-                static int counter = 0;
+            if (m_showSettings)
+                showSettings();
 
-                ImGui::Begin("Hello, world!");   // Create a window called "Hello, world!" and
-                                                 // append into it.
+            if (m_showWinMessage)
+                showWinMessageWindow();
 
-                ImGui::Text(
-                    "This is some useful text.");   // Display some text (you can use a format
-                // strings too)
-                ImGui::Checkbox(
-                    "Demo Window",
-                    &show_demo_window);   // Edit bools storing our window open/close state
-                ImGui::Checkbox("Another Window", &show_another_window);
+            if (m_showLoseMessage)
+                showLoseMessageWindow();
 
-                ImGui::SliderFloat("float",
-                                   &f,
-                                   0.0f,
-                                   1.0f);   // Edit 1 float using a slider from 0.0f to 1.0f
-                ImGui::ColorEdit3("clear color",
-                                  (float *)&clear_color);   // Edit 3 floats representing a color
-
-                if (ImGui::Button(
-                        "Button"))   // Buttons return true when clicked (most widgets return
-                    // true when edited/activated)
-                    counter++;
-                ImGui::SameLine();
-                ImGui::Text("counter = %d", counter);
-
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-                            1000.0f / ImGui::GetIO().Framerate,
-                            ImGui::GetIO().Framerate);
-                ImGui::End();
-            }
-
-            // 3. Show another simple window.
-            if (show_another_window)
-            {
-                ImGui::Begin(
-                    "Another Window",
-                    &show_another_window);   // Pass a pointer to our bool variable (the window
-                // will have a closing button that will clear the
-                // bool when clicked)
-                ImGui::Text("Hello from another window!");
-                if (ImGui::Button("Close Me"))
-                    show_another_window = false;
-                ImGui::End();
-            }
-
-            // Rendering
-            ImGui::Render();
-            int display_w, display_h;
-
-            // glfwGetFramebufferSize(selyan::Application::get()->getWindow()->, &display_w,
-            // &display_h);
-
-            glViewport(0, 0, display_w, display_h);
-            //            glClearColor(clear_color.x * clear_color.w,
-            //                         clear_color.y * clear_color.w,
-            //                         clear_color.z * clear_color.w,
-            //                         clear_color.w);
-            //            glClear(GL_COLOR_BUFFER_BIT);
-
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-            // Update and Render additional Platform Windows
-            // (Platform functions m.y change the current OpenGL context, so we save/restore it to
-            // make it easier to paste this code elsewhere.
-            //  For this specific demo app we could also call glfwMakeContextCurrent(window)
-            //  direct.y)
-            //    ImGuiIO &io = ImGui::GetIO();
-            //    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-            //    {
-            //      GLFWwindow *backup_current_context = glfwGetCurrentContext();
-            //      ImGui::UpdatePlatformWindows();
-            //      ImGui::RenderPlatformWindowsDefault();
-            //      glfwMakeContextCurrent(backup_current_context);
-            //    }
+            //            if (show_demo_window)
+            //                ImGui::ShowDemoWindow(&show_demo_window);
 
             imguiEnd();
+        }
+
+        void showWinMessage() { m_showWinMessage = true; }
+
+        void showLoseMessage() { m_showLoseMessage = true; }
+
+        void setPlayerHealth(uint32_t health) { m_playerHealth = health; }
+
+        void setPlayerAmmo(uint32_t ammo) { m_playerAmmo = ammo; }
+
+        void setGameRestartCallback(const GameRestartCallbackType &gameRestartCallback)
+        {
+            m_gameRestartCallback = gameRestartCallback;
+        }
+        void setGameStopCallback(const GameStopCallbackType &mGameStopCallback)
+        {
+            m_gameStopCallback = mGameStopCallback;
+        }
+        void setGameSpeedUpModeCallback(const GameSpeedUpModeCallbackType &mGameSpeedUpModeCallback)
+        {
+            m_gameSpeedUpModeCallback = mGameSpeedUpModeCallback;
         }
 
     private:
@@ -159,25 +127,133 @@ namespace cannon_game
         {
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
 
-            // Update and Render additional Platform Windows
-            // (Platform functions m.y change the current OpenGL context, so we save/restore it to
-            // make it easier to paste this code elsewhere.
-            //  For this specific demo app we could also call glfwMakeContextCurrent(window)
-            //  direct.y)
-            //    ImGuiIO &io = ImGui::GetIO();
-            //    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-            //    {
-            //      GLFWwindow *backup_current_context = glfwGetCurrentContext();
-            //      ImGui::UpdatePlatformWindows();
-            //      ImGui::RenderPlatformWindowsDefault();
-            //      glfwMakeContextCurrent(backup_current_context);
-            //    }
+        void showGameGui()
+        {
+            auto io = ImGui::GetIO();
+            ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 200, 0));
+            bool open = true;
+            ImGui::Begin("game_gui",
+                         &open,
+                         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+                             ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove |
+                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBackground |
+                             ImGuiWindowFlags_NoBringToFrontOnFocus);
+            if (ImGui::Button("restart"))
+            {
+                m_showLoseMessage = false;
+                m_showWinMessage = false;
+                m_gameRestartCallback();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("stop"))
+            {
+                m_gameStop = !m_gameStop;
+                m_gameStopCallback(m_gameStop);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("speed up"))
+            {
+                m_gameSpeedUp = !m_gameSpeedUp;
+                m_gameSpeedUpModeCallback(m_gameSpeedUp);
+            }
+            ImGui::Text("Ammo: %i", m_playerAmmo);
+            ImGui::SameLine();
+            ImGui::Text("Health: %i", m_playerHealth);
+            ImGui::End();
+        }
+
+        void showSettings()
+        {
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+            ImGui::Begin("game_params",
+                         &m_showSettings,
+                         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+                             ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove |
+                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBackground |
+                             ImGuiWindowFlags_NoBringToFrontOnFocus);
+
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputInt("initialEnemyCount", &m_gameParams.initialEnemyCount);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("enemyAngularVelocityMin", &m_gameParams.enemyAngularVelocityMin);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("enemyAngularVelocityMax", &m_gameParams.enemyAngularVelocityMax);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("enemyRespawnDelay", &m_gameParams.enemyRespawnDelay);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("enemyReloadTime", &m_gameParams.enemyReloadTime);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("enemyProjectileSpeed", &m_gameParams.enemyProjectileSpeed);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputInt("initialPlayerAmmo", &m_gameParams.initialPlayerAmmo);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("playerAmmoRecoveryTime", &m_gameParams.playerAmmoRecoveryTime);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputFloat("playersProjectileSpeed", &m_gameParams.playersProjectileSpeed);
+            ImGui::SetNextItemWidth(100);
+            ImGui::InputInt("initialPlayerHealth", &m_gameParams.initialPlayerHealth);
+
+            if (ImGui::Button("Apply"))
+                m_gameParamsCallback(m_gameParams);
+
+            ImGui::End();
+        }
+
+        void showWinMessageWindow()
+        {
+            auto io = ImGui::GetIO();
+            ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f),
+                                    ImGuiCond_Always,
+                                    ImVec2(0.5f, 0.5f));
+            ImGui::Begin("win_message",
+                         &m_showSettings,
+                         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+                             ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove |
+                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBringToFrontOnFocus);
+            ImGui::Text("You win!");
+            ImGui::End();
+        }
+
+        void showLoseMessageWindow()
+        {
+            auto io = ImGui::GetIO();
+            ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f),
+                                    ImGuiCond_Always,
+                                    ImVec2(0.5f, 0.5f));
+            ImGui::Begin("lose_message",
+                         &m_showSettings,
+                         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
+                             ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove |
+                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBringToFrontOnFocus);
+            ImGui::Text("You lose!");
+            ImGui::End();
         }
 
     private:
+        GameParamsCallbackType m_gameParamsCallback;
+
+        GameParams m_gameParams;
+
+        GameRestartCallbackType m_gameRestartCallback;
+        GameStopCallbackType m_gameStopCallback;
+        GameSpeedUpModeCallbackType m_gameSpeedUpModeCallback;
+
+        bool m_gameStop;
+        bool m_gameSpeedUp;
+
+        uint32_t m_playerAmmo;
+        uint32_t m_playerHealth;
+
         bool show_demo_window = true;
-        bool show_another_window = false;
+        bool m_showSettings = true;
+        bool m_showWinMessage = false;
+        bool m_showLoseMessage = false;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     };
 }

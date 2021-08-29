@@ -91,6 +91,11 @@ public:
         }
     }
 
+    void removeAll()
+    {
+        m_alive.clear();
+    }
+
     ExplosionPtrType &operator[](size_t i) { return m_alive[i]; }
 
     std::vector<ExplosionPtrType>::iterator begin() { return m_alive.begin(); }

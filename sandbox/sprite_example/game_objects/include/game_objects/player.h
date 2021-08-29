@@ -6,19 +6,26 @@
 
 namespace cannon_game
 {
-    struct Movement
-    {
-        float angleOffset;
-        float speed;
-    };
+//    struct Movement
+//    {
+//        float angleOffset;
+//        float speed;
+//    };
 
     class Player : public GameObject
     {
     public:
-        Player(const selyan::Sprite &bodySprite, const selyan::Sprite &headSprite)
+        Player(const selyan::Sprite &bodySprite,
+               const selyan::Sprite &headSprite,
+               float ammoRecoveryTime,
+               uint32_t maxAmmo)
           : GameObject(),
             m_bodySprite(bodySprite),
-            m_headSprite(headSprite)
+            m_headSprite(headSprite),
+            m_ammoRecoveryTime(ammoRecoveryTime),
+            m_maxAmmo(maxAmmo),
+            m_currentAmmo(maxAmmo),
+            m_elapsedAmmoRecoveryTime(0)
         {
         }
 
@@ -27,7 +34,34 @@ namespace cannon_game
             m_headSprite.update(elapsedTime);
             m_bodySprite.update(elapsedTime);
 
-            moveToTarget(elapsedTime);
+            if (m_currentAmmo != m_maxAmmo)
+            {
+                m_elapsedAmmoRecoveryTime += elapsedTime;
+                if (m_elapsedAmmoRecoveryTime >= m_ammoRecoveryTime)
+                {
+                    ++m_currentAmmo;
+                    m_elapsedAmmoRecoveryTime = 0;
+                }
+            }
+            //moveToTarget(elapsedTime);
+        }
+
+        bool hasAmmo() const
+        {
+            return m_currentAmmo != 0;
+        }
+
+        void decreaseAmmo()
+        {
+            if(m_currentAmmo == 0)
+                return;
+
+            --m_currentAmmo;
+        }
+
+        uint32_t ammo() const
+        {
+            return m_currentAmmo;
         }
 
         void draw(selyan::Shader *shader) override
@@ -40,35 +74,26 @@ namespace cannon_game
             m_headSprite.draw(shader);
         }
 
-        const Movement &getMovement() const { return m_movement; }
-
-        void setMovement(const Movement &mMovement) { m_movement = mMovement; }
-
-        void setMTargetObject(const std::shared_ptr<GameObject> &mTargetObject)
+        void reset()
         {
-            m_targetObject = mTargetObject;
+            alive();
+            m_currentAmmo = m_maxAmmo;
+            m_elapsedAmmoRecoveryTime = 0;
+            setRotation(0);
         }
 
-    private:
-        void moveToTarget(float elapsedTime)
+        void setMaxAmmo(uint32_t maxAmmo)
         {
-            if (m_targetObject == nullptr || m_targetObject->isDie())
-                return;
-
-            auto rotation = getRotation();
-            if (rotation <= (m_targetObject->getRotation() + m_movement.angleOffset))
-            {
-                rotation += elapsedTime * m_movement.speed;
-                setRotation(rotation);
-            }
+            m_maxAmmo = maxAmmo;
         }
 
     private:
         selyan::Sprite m_bodySprite;
         selyan::Sprite m_headSprite;
 
-        Movement m_movement;
-
-        std::shared_ptr<GameObject> m_targetObject;
+        float m_ammoRecoveryTime;
+        uint32_t m_maxAmmo;
+        uint32_t m_currentAmmo;
+        float m_elapsedAmmoRecoveryTime;
     };
 }

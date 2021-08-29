@@ -106,37 +106,26 @@ namespace cannon_game
             projectile->setRotation(rotation);
             projectile->setScale(scale);
             projectile->setCollision({ position, collisionScale });
-            //m_alive.insert(std::make_pair(projectile->getUniqueId(), projectile));
             m_alive.push_back(projectile);
         }
 
-        //        void kill(uint32_t id)
-        //        {
-        //            auto found = m_alive.find(id);
-        //
-        //            if (found == m_alive.end())
-        //                return;
-        //
-        //            found->second->die();
-        //            m_dead.push(found->second);
-        //            m_alive.erase(found);
-        //        }
-
         AliveProjectileContainerType::iterator kill(AliveProjectileContainerType::iterator iter)
         {
-//            auto found = m_alive.find(id);
-//
-//            if (found == m_alive.end())
-//                return;
-
             (*iter)->die();
             m_dead.push(*iter);
             return m_alive.erase(iter);
         }
 
+        void removeAll()
+        {
+            m_alive.clear();
+        }
+
         AliveProjectileContainerType::iterator begin() { return m_alive.begin(); }
 
         AliveProjectileContainerType::iterator end() { return m_alive.end(); }
+
+        auto& back() { return m_alive.back(); }
 
     private:
         std::shared_ptr<selyan::SpriteGeometry> m_spriteGeometry;

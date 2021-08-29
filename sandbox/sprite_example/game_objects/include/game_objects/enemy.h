@@ -249,7 +249,21 @@ namespace cannon_game
             m_enemiesLocation[lastEnemyOrbit].push_back(lastEnemy.first->second->getUniqueId());
         }
 
-        void setEnemyGeneratorParams(const EnemyGeneratorParams &enemyGeneratorParams) {}
+        void setEnemyGeneratorParams(const EnemyGeneratorParams &enemyGeneratorParams)
+        {
+            m_enemyGeneratorParams = enemyGeneratorParams;
+        }
+
+        void removeAll()
+        {
+            m_alive.clear();
+            m_enemiesLocation.clear();
+        }
+
+        size_t countOfAlive() const
+        {
+            return m_alive.size();
+        }
 
         std::map<uint32_t, EnemyPtrType>::iterator begin() { return m_alive.begin(); }
 
