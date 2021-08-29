@@ -137,6 +137,7 @@ namespace cannon_game
     struct EnemyGeneratorParams
     {
         float orbitHeight;
+        float minAngleDifferenceBetweenTwoEnemies;
         float spawnRadiusMin;
         float spawnRadiusMax;
         float angularVelocityStep;
@@ -154,6 +155,7 @@ namespace cannon_game
     class EnemiesManager
     {
         using EnemyPtrType = std::shared_ptr<Enemy>;
+        using AliveEnemyContainerType = std::map<uint32_t, EnemyPtrType>;
 
     public:
         using ShootCallbackType = std::function<
@@ -172,19 +174,29 @@ namespace cannon_game
         {
         }
 
-        void kill(uint32_t id)
+        AliveEnemyContainerType::iterator kill(AliveEnemyContainerType::iterator toEraseIter)
         {
-            auto found = m_alive.find(id);
+            if (toEraseIter == m_alive.end())
+                return m_alive.end();
 
-            if (found == m_alive.end())
-                return;
+            toEraseIter->second->die();
+            m_dead.push(toEraseIter->second);
 
-            found->second->die();
-            m_dead.push(found->second);
-            m_alive.erase(found);
+            auto &enemiesOnThisOrbit = m_enemiesLocation.at(
+                (toEraseIter->second->getRadius() - m_enemyGeneratorParams.spawnRadiusMin) /
+                m_enemyGeneratorParams.orbitHeight);
+
+            auto toRemove = std::find_if(enemiesOnThisOrbit.begin(),
+                                         enemiesOnThisOrbit.end(),
+                                         [&](const auto &item)
+                                         { return toEraseIter->second->getUniqueId() == item; });
+            if (toRemove != enemiesOnThisOrbit.end())
+                enemiesOnThisOrbit.erase(toRemove);
+
+            return m_alive.erase(toEraseIter);
         }
 
-        void createEnemy(const glm::vec2 &center,
+        auto createEnemy(const glm::vec2 &center,
                          float spawnAngle,
                          float angularVelocity,
                          float radius,
@@ -204,12 +216,8 @@ namespace cannon_game
                 m_alive.insert(std::make_pair(deadEnemy->getUniqueId(), deadEnemy));
             }
 
-            selyan::Sprite enemyBodySprite(m_bodySpriteGeometry,
-                                           m_bodySpriteSheet,
-                                           selyan::SpriteFrame{ 0, 0, 0.085 });
-            selyan::Sprite enemyHeadSprite(m_headSpriteGeometry,
-                                           m_headSpriteSheet,
-                                           selyan::SpriteFrame{ 0, 0, 0.085 });
+            selyan::Sprite enemyBodySprite(m_bodySpriteGeometry, m_bodySpriteSheet);
+            selyan::Sprite enemyHeadSprite(m_headSpriteGeometry, m_headSpriteSheet);
 
             auto enemy = std::make_shared<cannon_game::Enemy>(enemyBodySprite,
                                                               enemyHeadSprite,
@@ -221,18 +229,24 @@ namespace cannon_game
             enemy->setScale({ 1, 1 });
             enemy->setCollision({ enemy->getPosition(), 0.5f });
             enemy->setShootingFunction(shootCallback);
-            m_alive.insert(std::make_pair(enemy->getUniqueId(), enemy));
+            return m_alive.insert(std::make_pair(enemy->getUniqueId(), enemy));
         }
 
         void createEnemy(const glm::vec2 &center, float reloadTime, ShootCallbackType shootCallback)
         {
-            auto enemyParams = generateRandomEnemyData();
-            createEnemy(center,
-                        enemyParams.angle,
-                        enemyParams.angularVelocity,
-                        enemyParams.radius,
-                        reloadTime,
-                        shootCallback);
+            EnemyData enemyParams;
+            if (!generateEnemyData_(enemyParams))
+                return;
+
+            auto lastEnemy = createEnemy(center,
+                                         enemyParams.angle,
+                                         enemyParams.angularVelocity,
+                                         enemyParams.radius,
+                                         reloadTime,
+                                         shootCallback);
+            uint32_t lastEnemyOrbit =
+                calcOrbit(lastEnemy.first->second->getRadius());
+            m_enemiesLocation[lastEnemyOrbit].push_back(lastEnemy.first->second->getUniqueId());
         }
 
         void setEnemyGeneratorParams(const EnemyGeneratorParams &enemyGeneratorParams) {}
@@ -242,6 +256,12 @@ namespace cannon_game
         std::map<uint32_t, EnemyPtrType>::iterator end() { return m_alive.end(); }
 
     private:
+        uint32_t calcOrbit(float radius) const
+        {
+            return (radius - m_enemyGeneratorParams.spawnRadiusMin) /
+                   m_enemyGeneratorParams.orbitHeight;
+        }
+
         EnemyData generateRandomEnemyData()
         {
             assert(m_enemyGeneratorParams.angularVelocityMax -
@@ -281,7 +301,133 @@ namespace cannon_game
                      angularVelocity };
         }
 
+        bool generateEnemyData_(EnemyData &dest)
+        {
+            auto seed = selyan::TimeStep::getTime().getMicro();
+            std::srand(seed);
+
+            uint32_t maxOrbitCount = calcOrbit(m_enemyGeneratorParams.spawnRadiusMax);
+            uint32_t orbit = 1 + std::rand() / ((RAND_MAX + 1u) / maxOrbitCount);
+
+            if (tryToCreateEnemyData(orbit, dest))
+                return true;
+
+            for (auto i = orbit + 1; i <= maxOrbitCount; ++i)
+            {
+                if (tryToCreateEnemyData(i, dest))
+                    return true;
+            }
+
+            for (auto i = 0; i < orbit; ++i)
+            {
+                if (tryToCreateEnemyData(i, dest))
+                    return true;
+            }
+
+            return false;
+        }
+
+        bool tryToCreateEnemyData(uint32_t orbit, EnemyData &enemyData)
+        {
+            auto &enemiesOnOrbit = m_enemiesLocation[orbit];
+            if (enemiesOnOrbit.empty())
+            {
+                uint32_t angle = 0 + std::rand() / ((RAND_MAX + 1u) / 360);
+
+                float angularVelocity =
+                    calcRandAngularVelocity(m_enemyGeneratorParams.angularVelocityMin,
+                                            m_enemyGeneratorParams.angularVelocityMax,
+                                            m_enemyGeneratorParams.angularVelocityStep);
+
+                //                std::cout << rawAngularVelocity << " " << angularVelocitySign << "
+                //                "
+                //                          << rawAngularVelocity *
+                //                          m_enemyGeneratorParams.angularVelocityStep
+                //                          << std::endl;
+
+                enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
+                                  m_enemyGeneratorParams.spawnRadiusMin,
+                              float(angle),
+                              angularVelocity };
+                return true;
+            }
+
+            if (enemiesOnOrbit.size() == 1)
+            {
+                auto adjacent = m_alive.at(enemiesOnOrbit.front());
+                enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
+                                  m_enemyGeneratorParams.spawnRadiusMin,
+                              360 - adjacent->getAngle(),
+                              calcRandAngularVelocity(adjacent->getAngularVelocity(),
+                                                      m_enemyGeneratorParams.angularVelocityMax,
+                                                      m_enemyGeneratorParams.angularVelocityStep) };
+                return true;
+            }
+
+            auto left = enemiesOnOrbit.front();
+            auto right = enemiesOnOrbit.back();
+            //            float distance =
+            //                glm::distance2(m_alive.at(right)->getPosition(),
+            //                m_alive.at(left)->getPosition());
+            float angleDifference =
+                glm::abs(m_alive.at(right)->getAngle() - m_alive.at(left)->getAngle());
+            for (auto iter = enemiesOnOrbit.begin(); iter != std::prev(enemiesOnOrbit.end());
+                 ++iter)
+            {
+                auto &leftAdjacent = m_alive.at(*iter);
+                auto &rightAdjacent = m_alive.at(*std::next(iter));
+                auto adjacentAngleDifference =
+                    glm::abs(leftAdjacent->getAngle() - rightAdjacent->getAngle());
+                if (adjacentAngleDifference > angleDifference)
+                {
+                    angleDifference = adjacentAngleDifference;
+                    left = *iter;
+                    right = *std::next(iter);
+                }
+            }
+
+            if (angleDifference < m_enemyGeneratorParams.minAngleDifferenceBetweenTwoEnemies * 2)
+            {
+                return false;
+            }
+
+            auto &leftAdjacent = m_alive.at(left);
+            auto &rightAdjacent = m_alive.at(right);
+            enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
+                              m_enemyGeneratorParams.spawnRadiusMin,
+                          leftAdjacent->getAngle() +
+                              (leftAdjacent->getAngle() - rightAdjacent->getAngle()) / 2,
+                          calcRandAngularVelocity(leftAdjacent->getAngularVelocity(),
+                                                  rightAdjacent->getAngularVelocity(),
+                                                  m_enemyGeneratorParams.angularVelocityStep) };
+            return true;
+        }
+
+        float calcRandAngularVelocity(float min, float max, float step)
+        {
+            assert(min <= max && "Invalid min more than max");
+
+            if (min == max)
+                return min;
+
+            uint32_t angularVelocityStepCount = (max - min) / step;
+            int32_t rawAngularVelocity =
+                1 + std::rand() / ((RAND_MAX + 1u) / angularVelocityStepCount);
+            auto angularVelocitySign = std::rand() / ((RAND_MAX + 1u));
+
+            float angularVelocity = rawAngularVelocity * step + min;
+            if (angularVelocitySign)
+                angularVelocity *= -1;
+
+            std::cout << "min: " << min << " max: " << max << " step: " << step
+                      << " angularVelocity: " << angularVelocity << std::endl;
+
+            return angularVelocity;
+        }
+
     private:
+        std::map<uint32_t, std::vector<uint32_t>> m_enemiesLocation;
+
         EnemyGeneratorParams m_enemyGeneratorParams;
 
         std::shared_ptr<selyan::SpriteSheet> m_bodySpriteSheet;

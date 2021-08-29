@@ -84,7 +84,7 @@ namespace cannon_game
 
         void die()
         {
-            std::cout << "I'm die" << std::endl;
+            //std::cout << "I'm die" << std::endl;
             m_dead = true;
         }
 
