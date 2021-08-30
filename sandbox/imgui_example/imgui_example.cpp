@@ -45,7 +45,7 @@ public:
         // std::cout << "OnEvent" << std::endl;
     }
 
-    void onUpdate() override {}
+    void onUpdate(const selyan::TimeStep& timeStep) override {}
 
     void onRender() override
     {
