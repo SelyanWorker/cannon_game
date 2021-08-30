@@ -1,5 +1,7 @@
 #include "game_layers/gui_layer.h"
 
+#include <utility>
+
 namespace cannon_game
 {
     struct ImGuiLayer::impl
@@ -15,18 +17,14 @@ namespace cannon_game
              bool showSettings = false)
           : m_gameParamsCallback(std::move(gameParamsCallback)),
             m_gameParams(gameParams),
-            m_playerAmmo(gameParams.initialPlayerAmmo),
-            m_playerHealth(3),
             m_gameStop(false),
             m_gameSpeedUp(false),
+            m_playerAmmo(gameParams.initialPlayerAmmo),
+            m_playerHealth(3),
             m_showSettings(showSettings)
         {
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
-
-            ImGuiIO &io = ImGui::GetIO();
-
-            ImGuiStyle &Style = ImGui::GetStyle();
 
             // Setup Dear ImGui Style
             ImGui::StyleColorsDark();
@@ -58,9 +56,6 @@ namespace cannon_game
 
             if (m_showLoseMessage)
                 showLoseMessageWindow();
-
-            //            if (show_demo_window)
-            //                ImGui::ShowDemoWindow(&show_demo_window);
 
             imguiEnd();
         }
@@ -221,7 +216,6 @@ namespace cannon_game
         uint32_t m_playerAmmo;
         uint32_t m_playerHealth;
 
-        bool show_demo_window = true;
         bool m_showSettings = true;
         bool m_showWinMessage = false;
         bool m_showLoseMessage = false;
@@ -231,13 +225,13 @@ namespace cannon_game
     ImGuiLayer::ImGuiLayer(const GameParams &gameParams,
                            ImGuiLayer::GameParamsCallbackType gameParamsCallback,
                            bool showSettings)
-      : pImpl(new impl(gameParams, gameParamsCallback, showSettings))
+      : pImpl(new impl(gameParams, std::move(gameParamsCallback), showSettings))
     {
     }
 
-    void ImGuiLayer::onEvent(selyan::Event &e) {}
+    void ImGuiLayer::onEvent(selyan::Event &) {}
 
-    void ImGuiLayer::onUpdate(const selyan::TimeStep &timeStep) {}
+    void ImGuiLayer::onUpdate(const selyan::TimeStep &) {}
 
     void ImGuiLayer::onRender() { pImpl->onRender(); }
 

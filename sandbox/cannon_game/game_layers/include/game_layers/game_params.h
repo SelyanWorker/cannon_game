@@ -95,20 +95,20 @@ namespace cannon_game
         void write(const GameParams &gameParams)
         {
             std::ofstream file(m_fileName);
-            file << initialEnemyCount << " " << m_gameParams.initialEnemyCount << std::endl;
-            file << enemyAngularVelocityMin << " " << m_gameParams.enemyAngularVelocityMin
+            file << initialEnemyCount << " " << gameParams.initialEnemyCount << std::endl;
+            file << enemyAngularVelocityMin << " " << gameParams.enemyAngularVelocityMin
                  << std::endl;
-            file << enemyAngularVelocityMax << " " << m_gameParams.enemyAngularVelocityMax
+            file << enemyAngularVelocityMax << " " << gameParams.enemyAngularVelocityMax
                  << std::endl;
-            file << enemyRespawnDelay << " " << m_gameParams.enemyRespawnDelay << std::endl;
-            file << enemyReloadTime << " " << m_gameParams.enemyReloadTime << std::endl;
-            file << enemyProjectileSpeed << " " << m_gameParams.enemyProjectileSpeed << std::endl;
-            file << initialPlayerAmmo << " " << m_gameParams.initialPlayerAmmo << std::endl;
-            file << playerAmmoRecoveryTime << " " << m_gameParams.playerAmmoRecoveryTime
+            file << enemyRespawnDelay << " " << gameParams.enemyRespawnDelay << std::endl;
+            file << enemyReloadTime << " " << gameParams.enemyReloadTime << std::endl;
+            file << enemyProjectileSpeed << " " << gameParams.enemyProjectileSpeed << std::endl;
+            file << initialPlayerAmmo << " " << gameParams.initialPlayerAmmo << std::endl;
+            file << playerAmmoRecoveryTime << " " << gameParams.playerAmmoRecoveryTime
                  << std::endl;
-            file << playersProjectileSpeed << " " << m_gameParams.playersProjectileSpeed
+            file << playersProjectileSpeed << " " << gameParams.playersProjectileSpeed
                  << std::endl;
-            file << initialPlayerHealth << " " << m_gameParams.initialPlayerHealth << std::endl;
+            file << initialPlayerHealth << " " << gameParams.initialPlayerHealth << std::endl;
         }
 
     private:
