@@ -111,7 +111,7 @@ namespace cannon_game
                 "C:\\dev\\repos\\cannon_game\\shaders\\Sprite.glsl");
 
             auto image = selyan::Image::create(
-                "C:\\dev\\repos\\cannon_game\\sandbox\\sprite_example\\res\\enemy\\Hull_02.png");
+                "C:\\dev\\repos\\cannon_game\\sandbox\\cannon_game\\res\\enemy\\Hull_02.png");
             auto enemyBodyTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             enemyBodyTexture->textureData(image);
             delete image;
@@ -124,7 +124,7 @@ namespace cannon_game
                     -2);
 
             image = selyan::Image::create(
-                "C:\\dev\\repos\\cannon_game\\sandbox\\sprite_example\\res\\enemy\\Gun_01.png");
+                "C:\\dev\\repos\\cannon_game\\sandbox\\cannon_game\\res\\enemy\\Gun_01.png");
             auto enemyHeadTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             enemyHeadTexture->textureData(image);
             delete image;
@@ -169,7 +169,7 @@ namespace cannon_game
                                                                  projectileSpriteSheet);
 
             image = selyan::Image::create(
-                "C:\\dev\\repos\\cannon_game\\sandbox\\sprite_example\\res\\player\\tower2.png");
+                "C:\\dev\\repos\\cannon_game\\sandbox\\cannon_game\\res\\player\\tower2.png");
             auto playerBodyTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             playerBodyTexture->textureData(image);
@@ -185,7 +185,7 @@ namespace cannon_game
                                             playerBodySpriteSheet,
                                             selyan::SpriteFrame{});
             image = selyan::Image::create(
-                "C:\\dev\\repos\\cannon_game\\sandbox\\sprite_example\\res\\player\\cannon2.png");
+                "C:\\dev\\repos\\cannon_game\\sandbox\\cannon_game\\res\\player\\cannon2.png");
             auto playerHeadTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             playerHeadTexture->textureData(image);

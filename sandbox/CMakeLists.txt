@@ -17,4 +17,4 @@ target_link_libraries(sb.imgui_example
         imgui
         )
 
-add_subdirectory(sprite_example)
+add_subdirectory(cannon_game)
