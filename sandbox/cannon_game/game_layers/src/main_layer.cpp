@@ -545,14 +545,16 @@ namespace cannon_game
                             std::atan2(nearestEnemyPositionAfterSecond.x, nearestEnemyPositionAfterSecond.y));
 
                         float projectileFlyTimeInSeconds =
-                            nearestEnemy->getRadius() / m_params.playersProjectileSpeed;
+                            (nearestEnemy->getRadius() - 1) / m_params.playersProjectileSpeed;
 
                         float playerAngleDifference = playerRotationAfterSecond - playerRotation;
 
                         float angleOffset = playerAngleDifference * projectileFlyTimeInSeconds;
 
+                        std::cout << "angleOffset: " << angleOffset << std::endl;
+
                         playerRotation +=
-                            nearestEnemy->getAngularVelocity() >= 0 ? -angleOffset : angleOffset;
+                            nearestEnemy->getAngularVelocity() >= 0 ? angleOffset : -angleOffset;
                         m_player->setRotation(-playerRotation);
 
                         glm::vec2 direction{ glm::sin(glm::radians(playerRotation)),
