@@ -3,9 +3,9 @@
 namespace cannon_game
 {
     Player::Player(const selyan::Sprite &bodySprite,
-           const selyan::Sprite &headSprite,
-           float ammoRecoveryTime,
-           uint32_t maxAmmo)
+                   const selyan::Sprite &headSprite,
+                   float ammoRecoveryTime,
+                   uint32_t maxAmmo)
       : GameObject(),
         m_bodySprite(bodySprite),
         m_headSprite(headSprite),
@@ -45,7 +45,7 @@ namespace cannon_game
 
     uint32_t Player::ammo() const { return m_currentAmmo; }
 
-    void Player::draw(selyan::Shader *shader)
+    void Player::draw(std::shared_ptr<selyan::Shader> shader)
     {
         assert(shader != nullptr);
 

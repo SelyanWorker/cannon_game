@@ -46,9 +46,9 @@ namespace selyan
 
     }
 
-    void Sprite::draw(Shader *program)
+    void Sprite::draw(std::shared_ptr<selyan::Shader> shader)
     {
-        program->setUniform("textureMatrix", m_textureMatrix);
+        shader->setUniform("textureMatrix", m_textureMatrix);
 
         m_sheet->bind();
 

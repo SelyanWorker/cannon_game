@@ -31,7 +31,7 @@ namespace selyan
 
         void update(float elapsedTime);
 
-        void draw(Shader *program);
+        void draw(std::shared_ptr<selyan::Shader> shader);
 
         bool animationDone() const;
 

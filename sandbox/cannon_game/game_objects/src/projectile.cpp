@@ -14,7 +14,7 @@ namespace cannon_game
     {
     }
 
-    void Projectile::draw(selyan::Shader *shader)
+    void Projectile::draw(std::shared_ptr<selyan::Shader> shader)
     {
         assert(shader != nullptr);
 

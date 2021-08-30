@@ -3,10 +3,10 @@
 #include "game_object.h"
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <memory>
-#include <utility>
 #include <list>
+#include <memory>
 #include <stack>
+#include <utility>
 
 namespace cannon_game
 {
@@ -18,7 +18,7 @@ namespace cannon_game
                    const glm::vec2 &direction,
                    float speed);
 
-        void draw(selyan::Shader *shader) override;
+        void draw(std::shared_ptr<selyan::Shader> shader) override;
 
         void update(float elapsedTime);
 
@@ -68,7 +68,7 @@ namespace cannon_game
 
         AliveProjectileContainerType::iterator end();
 
-        ProjectilePtrType& back();
+        ProjectilePtrType &back();
 
     private:
         std::shared_ptr<selyan::SpriteGeometry> m_spriteGeometry;

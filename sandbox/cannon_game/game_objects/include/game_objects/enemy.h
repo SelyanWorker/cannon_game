@@ -24,7 +24,7 @@ namespace cannon_game
               float distanceToPlayer,
               float reloadTime);
 
-        void draw(selyan::Shader *shader) override;
+        void draw(std::shared_ptr<selyan::Shader> shader) override;
 
         void update(float elapsedTime);
 
@@ -103,9 +103,11 @@ namespace cannon_game
                          float angularVelocity,
                          float radius,
                          float reloadTime,
-                         ShootCallbackType shootCallback);
+                         const ShootCallbackType& shootCallback);
 
-        void createEnemy(const glm::vec2 &center, float reloadTime, ShootCallbackType shootCallback);
+        void createEnemy(const glm::vec2 &center,
+                         float reloadTime,
+                         const ShootCallbackType& shootCallback);
 
         void setEnemyGeneratorParams(const EnemyGeneratorParams &enemyGeneratorParams);
 
@@ -122,7 +124,7 @@ namespace cannon_game
 
         EnemyData generateRandomEnemyData();
 
-        bool generateEnemyData_(EnemyData &dest);
+        bool generateEnemyData(EnemyData &dest);
 
         bool tryToCreateEnemyData(uint32_t orbit, EnemyData &enemyData);
 

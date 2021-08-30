@@ -63,6 +63,6 @@ namespace cannon_game
 
     private:
         struct impl;
-        impl* pImpl;
+        impl *pImpl;
     };
 }

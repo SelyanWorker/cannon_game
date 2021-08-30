@@ -22,7 +22,7 @@ namespace cannon_game
         move(0);
     }
 
-    void Enemy::draw(selyan::Shader *shader)
+    void Enemy::draw(std::shared_ptr<selyan::Shader> shader)
     {
         assert(shader != nullptr);
 
@@ -110,10 +110,10 @@ namespace cannon_game
                                    std::shared_ptr<selyan::SpriteGeometry> headSpriteGeometry,
                                    std::shared_ptr<selyan::SpriteSheet> headSpriteSheet)
       : m_enemyGeneratorParams(enemyGeneratorParams),
-        m_bodySpriteGeometry(std::move(bodySpriteGeometry)),
         m_bodySpriteSheet(std::move(bodySpriteSheet)),
-        m_headSpriteGeometry(std::move(headSpriteGeometry)),
-        m_headSpriteSheet(std::move(headSpriteSheet))
+        m_bodySpriteGeometry(std::move(bodySpriteGeometry)),
+        m_headSpriteSheet(std::move(headSpriteSheet)),
+        m_headSpriteGeometry(std::move(headSpriteGeometry))
     {
     }
 
@@ -127,8 +127,8 @@ namespace cannon_game
         m_dead.push(toEraseIter->second);
 
         auto &enemiesOnThisOrbit = m_enemiesLocation.at(
-            (toEraseIter->second->getRadius() - m_enemyGeneratorParams.spawnRadiusMin) /
-            m_enemyGeneratorParams.orbitHeight);
+            uint32_t(float(toEraseIter->second->getRadius() - m_enemyGeneratorParams.spawnRadiusMin) /
+            m_enemyGeneratorParams.orbitHeight));
 
         auto toRemove = std::find_if(enemiesOnThisOrbit.begin(),
                                      enemiesOnThisOrbit.end(),
@@ -145,7 +145,7 @@ namespace cannon_game
                                      float angularVelocity,
                                      float radius,
                                      float reloadTime,
-                                     ShootCallbackType shootCallback)
+                                     const ShootCallbackType& shootCallback)
     {
         if (!m_dead.empty())
         {
@@ -178,10 +178,10 @@ namespace cannon_game
 
     void EnemiesManager::createEnemy(const glm::vec2 &center,
                                      float reloadTime,
-                                     ShootCallbackType shootCallback)
+                                     const ShootCallbackType& shootCallback)
     {
-        EnemyData enemyParams;
-        if (!generateEnemyData_(enemyParams))
+        EnemyData enemyParams{};
+        if (!generateEnemyData(enemyParams))
             return;
 
         auto lastEnemy = createEnemy(center,
@@ -219,46 +219,14 @@ namespace cannon_game
 
     uint32_t EnemiesManager::calcOrbit(float radius) const
     {
-        return (radius - m_enemyGeneratorParams.spawnRadiusMin) /
+        return float(radius - m_enemyGeneratorParams.spawnRadiusMin) /
                m_enemyGeneratorParams.orbitHeight;
     }
 
-    EnemyData EnemiesManager::generateRandomEnemyData()
-    {
-        assert(m_enemyGeneratorParams.angularVelocityMax -
-                   m_enemyGeneratorParams.angularVelocityMin >
-               m_enemyGeneratorParams.angularVelocityStep);
-
-        auto seed = selyan::TimeStep::getTime().getMicro();
-        std::srand(seed);
-
-        uint32_t maxOrbitCount =
-            (m_enemyGeneratorParams.spawnRadiusMax - m_enemyGeneratorParams.spawnRadiusMin) /
-            m_enemyGeneratorParams.orbitHeight;
-        uint32_t orbit = 1 + std::rand() / ((RAND_MAX + 1u) / maxOrbitCount);
-
-        uint32_t angle = 0 + std::rand() / ((RAND_MAX + 1u) / 360);
-
-        uint32_t angularVelocityStepCount = (m_enemyGeneratorParams.angularVelocityMax -
-                                             m_enemyGeneratorParams.angularVelocityMin) /
-                                            m_enemyGeneratorParams.angularVelocityStep;
-        int32_t rawAngularVelocity = 1 + std::rand() / ((RAND_MAX + 1u) / angularVelocityStepCount);
-        auto angularVelocitySign = std::rand() / ((RAND_MAX + 1u));
-
-        float angularVelocity = rawAngularVelocity * m_enemyGeneratorParams.angularVelocityStep +
-                                m_enemyGeneratorParams.angularVelocityMin;
-        if (angularVelocitySign)
-            angularVelocity *= -1;
-
-        return { orbit * m_enemyGeneratorParams.orbitHeight + m_enemyGeneratorParams.spawnRadiusMin,
-                 float(angle),
-                 angularVelocity };
-    }
-
-    bool EnemiesManager::generateEnemyData_(EnemyData &dest)
+    bool EnemiesManager::generateEnemyData(EnemyData &dest)
     {
         auto seed = selyan::TimeStep::getTime().getMicro();
-        std::srand(seed);
+        std::srand(uint32_t(seed));
 
         uint32_t maxOrbitCount = calcOrbit(m_enemyGeneratorParams.spawnRadiusMax);
         uint32_t orbit = 1 + std::rand() / ((RAND_MAX + 1u) / maxOrbitCount);
@@ -293,8 +261,7 @@ namespace cannon_game
                                         m_enemyGeneratorParams.angularVelocityMax,
                                         m_enemyGeneratorParams.angularVelocityStep);
 
-
-            enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
+            enemyData = { float(orbit) * m_enemyGeneratorParams.orbitHeight +
                               m_enemyGeneratorParams.spawnRadiusMin,
                           float(angle),
                           angularVelocity };
@@ -304,7 +271,7 @@ namespace cannon_game
         if (enemiesOnOrbit.size() == 1)
         {
             auto adjacent = m_alive.at(enemiesOnOrbit.front());
-            enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
+            enemyData = { float(orbit) * m_enemyGeneratorParams.orbitHeight +
                               m_enemyGeneratorParams.spawnRadiusMin,
                           360 - adjacent->getAngle(),
                           calcRandAngularVelocity(adjacent->getAngularVelocity(),
@@ -358,11 +325,11 @@ namespace cannon_game
         if (min == max)
             return min;
 
-        uint32_t angularVelocityStepCount = (max - min) / step;
+        uint32_t angularVelocityStepCount = uint32_t((max - min) / step);
         int32_t rawAngularVelocity = 1 + std::rand() / ((RAND_MAX + 1u) / angularVelocityStepCount);
         auto angularVelocitySign = std::rand() / ((RAND_MAX + 1u));
 
-        float angularVelocity = rawAngularVelocity * step + min;
+        float angularVelocity = float(rawAngularVelocity) * step + min;
         if (angularVelocitySign)
             angularVelocity *= -1;
 

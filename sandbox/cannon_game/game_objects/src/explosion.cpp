@@ -14,7 +14,7 @@ namespace cannon_game
         setScale(scale);
     }
 
-    void Explosion::draw(selyan::Shader *shader)
+    void Explosion::draw(std::shared_ptr<selyan::Shader> shader)
     {
         assert(shader != nullptr);
 
@@ -68,7 +68,7 @@ namespace cannon_game
         }
     }
 
-    void ExplosionManager::draw(selyan::Shader *shader)
+    void ExplosionManager::draw(std::shared_ptr<selyan::Shader> shader)
     {
         for (auto &explosion : m_alive)
         {
@@ -94,9 +94,9 @@ namespace cannon_game
     }
 
     void ExplosionManager::reset(ExplosionPtrType &explosionPtr,
-                                        const glm::vec2 &position,
-                                        float rotation,
-                                        const glm::vec2 &scale)
+                                 const glm::vec2 &position,
+                                 float rotation,
+                                 const glm::vec2 &scale)
     {
         explosionPtr->setPosition(position);
         explosionPtr->setRotation(rotation);
