@@ -7,9 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 add_compile_options(-Wall -Wextra -pedantic)
 
-if (${CLEAN_BUILD})
-    #add_compile_options(-Werror)
-endif()
 
 # vendors
 add_subdirectory(vendor/glad)

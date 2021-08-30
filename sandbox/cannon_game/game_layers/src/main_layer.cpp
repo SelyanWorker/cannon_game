@@ -535,12 +535,6 @@ namespace cannon_game
                         playerRotation +=
                             nearestEnemy->getAngularVelocity() >= 0 ? -angleOffset : angleOffset;
                         m_player->setRotation(-playerRotation);
-                        //                        std::cout << "player roation: " <<
-                        //                        m_player->getRotation()
-                        //                                  << ", enemy position: "
-                        //                                  <<
-                        //                                  glm::to_string(nearestEnemy->getPosition())
-                        //                                  << std::endl;
 
                         glm::vec2 direction{ glm::sin(glm::radians(playerRotation)),
                                              glm::cos(glm::radians(playerRotation)) };
