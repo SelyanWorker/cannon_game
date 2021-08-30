@@ -250,9 +250,6 @@ namespace cannon_game
         if (angularVelocitySign)
             angularVelocity *= -1;
 
-        std::cout << rawAngularVelocity << " " << angularVelocitySign << " "
-                  << rawAngularVelocity * m_enemyGeneratorParams.angularVelocityStep << std::endl;
-
         return { orbit * m_enemyGeneratorParams.orbitHeight + m_enemyGeneratorParams.spawnRadiusMin,
                  float(angle),
                  angularVelocity };
@@ -296,11 +293,6 @@ namespace cannon_game
                                         m_enemyGeneratorParams.angularVelocityMax,
                                         m_enemyGeneratorParams.angularVelocityStep);
 
-            //                std::cout << rawAngularVelocity << " " << angularVelocitySign << "
-            //                "
-            //                          << rawAngularVelocity *
-            //                          m_enemyGeneratorParams.angularVelocityStep
-            //                          << std::endl;
 
             enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
                               m_enemyGeneratorParams.spawnRadiusMin,
@@ -373,9 +365,6 @@ namespace cannon_game
         float angularVelocity = rawAngularVelocity * step + min;
         if (angularVelocitySign)
             angularVelocity *= -1;
-
-        std::cout << "min: " << min << " max: " << max << " step: " << step
-                  << " angularVelocity: " << angularVelocity << std::endl;
 
         return angularVelocity;
     }

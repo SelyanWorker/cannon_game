@@ -7,7 +7,7 @@ namespace cannon_game
     {
         constexpr float minAngleDifferenceBetweenTwoEnemies = 10;
         // constexpr float spawnRadiusMax = 7;
-        constexpr float minSpawnRadius = 2;
+        constexpr float minSpawnRadius = 4;
         constexpr float orbitSize = 1;
 
         constexpr float coordSystemWidth = 10.f;
@@ -539,9 +539,9 @@ namespace cannon_game
                         playerRotation +=
                             nearestEnemy->getAngularVelocity() >= 0 ? -angleOffset : angleOffset;
                         m_player->setRotation(-playerRotation);
-                        std::cout << "player roation: " << m_player->getRotation()
-                                  << ", enemy position: "
-                                  << glm::to_string(nearestEnemy->getPosition()) << std::endl;
+//                        std::cout << "player roation: " << m_player->getRotation()
+//                                  << ", enemy position: "
+//                                  << glm::to_string(nearestEnemy->getPosition()) << std::endl;
 
                         glm::vec2 direction{ glm::sin(glm::radians(playerRotation)),
                                              glm::cos(glm::radians(playerRotation)) };
@@ -552,7 +552,7 @@ namespace cannon_game
                                                               m_params.playersProjectileSpeed,
                                                               glm::vec2{ 1.f, 1.f },
                                                               0.1f);
-                        std::cout << "Rotate to enemy" << std::endl;
+                        //std::cout << "Rotate to enemy" << std::endl;
                         m_player->decreaseAmmo();
                     }
                     else if (nearestProjectile != nullptr)
@@ -573,9 +573,9 @@ namespace cannon_game
                                                               m_params.playersProjectileSpeed,
                                                               glm::vec2{ 1.f, 1.f },
                                                               0.1f);
-                        std::cout << "Rotate to projectile, player id: " << m_player->getUniqueId()
-                                  << " projectile parent id: " << nearestProjectile->getParentId()
-                                  << std::endl;
+//                        std::cout << "Rotate to projectile, player id: " << m_player->getUniqueId()
+//                                  << " projectile parent id: " << nearestProjectile->getParentId()
+//                                  << std::endl;
                         m_player->decreaseAmmo();
                     }
                 }

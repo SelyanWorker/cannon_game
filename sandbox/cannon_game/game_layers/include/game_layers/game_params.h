@@ -9,25 +9,15 @@ namespace cannon_game
 {
     struct GameParams
     {
-        /*
-        начальное количество врагов,
-        минимальная и максимальная угловая скорость врага,
-        время кулдауна перерождения врага,
-        время кулдауна между выстрелами врага,
-        скорость полёта ракет врага,
-        начальный боезапас игрока,
-        скорость восстановления боезапаса игрока,
-        скорость полёта бомб игрока.
-         */
         int initialEnemyCount = 3;
         float enemyAngularVelocityMin = 20;   // degrees
-        float enemyAngularVelocityMax = 40;   // degrees
-        float enemyRespawnDelay = 999.1f;     // seconds
-        float enemyReloadTime = 999.f;        // seconds
-        float enemyProjectileSpeed = 10;      // parrots
-        int initialPlayerAmmo = 3;
-        float playerAmmoRecoveryTime = 3.f;    // seconds
-        float playersProjectileSpeed = 10.f;   // parrots
+        float enemyAngularVelocityMax = 25;   // degrees
+        float enemyRespawnDelay = 5.f;     // seconds
+        float enemyReloadTime = 7.f;        // seconds
+        float enemyProjectileSpeed = 2;      // parrots
+        int initialPlayerAmmo = 5;
+        float playerAmmoRecoveryTime = 0.75f;    // seconds
+        float playersProjectileSpeed = 4.f;   // parrots
         float maxSpawnRadius = 7;
         int initialPlayerHealth = 3;
     };
