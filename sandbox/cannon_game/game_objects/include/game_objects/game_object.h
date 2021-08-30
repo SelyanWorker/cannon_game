@@ -17,7 +17,7 @@ namespace cannon_game
 
         virtual ~GameObject() = default;
 
-        virtual void draw(selyan::Shader *shader) = 0;
+        virtual void draw(std::shared_ptr<selyan::Shader> shader) = 0;
 
         uint32_t getUniqueId() const;
 

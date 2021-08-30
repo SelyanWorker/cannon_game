@@ -22,7 +22,7 @@ namespace cannon_game
 
         uint32_t ammo() const;
 
-        void draw(selyan::Shader *shader) override;
+        void draw(std::shared_ptr<selyan::Shader> shader) override;
 
         void reset();
 

@@ -22,7 +22,7 @@ namespace cannon_game
         move(0);
     }
 
-    void Enemy::draw(selyan::Shader *shader)
+    void Enemy::draw(std::shared_ptr<selyan::Shader> shader)
     {
         assert(shader != nullptr);
 
@@ -292,7 +292,6 @@ namespace cannon_game
                 calcRandAngularVelocity(m_enemyGeneratorParams.angularVelocityMin,
                                         m_enemyGeneratorParams.angularVelocityMax,
                                         m_enemyGeneratorParams.angularVelocityStep);
-
 
             enemyData = { orbit * m_enemyGeneratorParams.orbitHeight +
                               m_enemyGeneratorParams.spawnRadiusMin,

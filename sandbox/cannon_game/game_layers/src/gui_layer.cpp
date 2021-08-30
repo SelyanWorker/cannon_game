@@ -11,8 +11,8 @@ namespace cannon_game
         using GameSpeedUpModeCallbackType = std::function<void(bool)>;
 
         impl(const GameParams &gameParams,
-                   GameParamsCallbackType gameParamsCallback,
-                   bool showSettings = false)
+             GameParamsCallbackType gameParamsCallback,
+             bool showSettings = false)
           : m_gameParamsCallback(std::move(gameParamsCallback)),
             m_gameParams(gameParams),
             m_playerAmmo(gameParams.initialPlayerAmmo),
@@ -231,11 +231,11 @@ namespace cannon_game
     ImGuiLayer::ImGuiLayer(const GameParams &gameParams,
                            ImGuiLayer::GameParamsCallbackType gameParamsCallback,
                            bool showSettings)
-    :   pImpl(new impl(gameParams, gameParamsCallback, showSettings))
+      : pImpl(new impl(gameParams, gameParamsCallback, showSettings))
     {
     }
 
-    void ImGuiLayer::onEvent(selyan::Event &e) {  }
+    void ImGuiLayer::onEvent(selyan::Event &e) {}
 
     void ImGuiLayer::onUpdate(const selyan::TimeStep &timeStep) {}
 

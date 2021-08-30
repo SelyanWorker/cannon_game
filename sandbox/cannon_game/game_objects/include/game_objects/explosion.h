@@ -14,7 +14,7 @@ namespace cannon_game
                   float rotation,
                   const glm::vec2 &scale);
 
-        void draw(selyan::Shader *shader) override;
+        void draw(std::shared_ptr<selyan::Shader> shader) override;
 
         void update(float elapsedTime);
 
@@ -36,7 +36,7 @@ namespace cannon_game
 
         void update(float elapsedTime);
 
-        void draw(selyan::Shader *shader);
+        void draw(std::shared_ptr<selyan::Shader> shader);
 
         void removeAll();
 

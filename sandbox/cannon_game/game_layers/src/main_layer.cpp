@@ -2,7 +2,6 @@
 
 namespace cannon_game
 {
-
     namespace config
     {
         constexpr float minAngleDifferenceBetweenTwoEnemies = 10;
@@ -18,7 +17,7 @@ namespace cannon_game
         float get_current_window_aspect_ratio()
         {
             return float(selyan::Application::get()->getWindow()->getHeight()) /
-            selyan::Application::get()->getWindow()->getWidth();
+                   selyan::Application::get()->getWindow()->getWidth();
         }
     }
 
@@ -28,19 +27,20 @@ namespace cannon_game
             std::shared_ptr<cannon_game::ProjectileManager> projectileManager,
             std::shared_ptr<cannon_game::GameObject> gameObject,
             uint32_t prevTargetId)
-            {
+        {
             if (projectileManager->begin() == projectileManager->end())
                 return nullptr;
 
             constexpr float minDistance = 0.1f;
             auto playerPosition = gameObject->getPosition();
-            std::shared_ptr<cannon_game::Projectile> nearestProjectile = *projectileManager->begin();
+            std::shared_ptr<cannon_game::Projectile> nearestProjectile =
+                *projectileManager->begin();
             auto nearestProjectileDistance =
                 glm::length2(playerPosition - nearestProjectile->getPosition());
             for (auto i = std::next(projectileManager->begin()); i != projectileManager->end(); ++i)
             {
                 if ((*i)->getParentId() == gameObject->getUniqueId() ||
-                (*i)->getUniqueId() == prevTargetId)
+                    (*i)->getUniqueId() == prevTargetId)
                     continue;
 
                 auto projectilePosition = (*i)->getPosition();
@@ -56,17 +56,17 @@ namespace cannon_game
             }
 
             if (nearestProjectile->getParentId() == gameObject->getUniqueId() ||
-            nearestProjectile->getUniqueId() == prevTargetId)
+                nearestProjectile->getUniqueId() == prevTargetId)
                 return nullptr;
 
             return nearestProjectile;
-            }
+        }
 
-            std::shared_ptr<cannon_game::Enemy> findNearestEnemy(
-                std::shared_ptr<cannon_game::EnemiesManager> enemiesManager,
-                std::shared_ptr<cannon_game::GameObject> gameObject,
-                uint32_t prevTargetId)
-                {
+        std::shared_ptr<cannon_game::Enemy> findNearestEnemy(
+            std::shared_ptr<cannon_game::EnemiesManager> enemiesManager,
+            std::shared_ptr<cannon_game::GameObject> gameObject,
+            uint32_t prevTargetId)
+        {
             if (enemiesManager->begin() == enemiesManager->end())
                 return nullptr;
 
@@ -84,20 +84,19 @@ namespace cannon_game
                 if (distance < minDistance)
                     continue;   // return?
 
-                    if (distance > nearestEnemyDistance)
-                        continue;
+                if (distance > nearestEnemyDistance)
+                    continue;
 
-                    nearestEnemy = i->second;
-                    nearestEnemyDistance = distance;
+                nearestEnemy = i->second;
+                nearestEnemyDistance = distance;
             }
 
             if (nearestEnemy->getUniqueId() == prevTargetId)
                 return nullptr;
 
             return nearestEnemy;
-                }
+        }
     }
-
 
     struct MainLayer::impl
     {
@@ -107,11 +106,10 @@ namespace cannon_game
             m_gameStop(false),
             m_prevTargetId(0)
         {
-            m_shader = selyan::ShaderLibrary::createShaderFromFile(
-                ".\\res\\shaders\\Sprite.glsl");
+            m_shader = std::shared_ptr<selyan::Shader>(
+                selyan::ShaderLibrary::createShaderFromFile(".\\res\\shaders\\Sprite.glsl"));
 
-            auto image = selyan::Image::create(
-                ".\\res\\enemy\\Hull_02.png");
+            auto image = selyan::Image::create(".\\res\\enemy\\Hull_02.png");
             auto enemyBodyTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             enemyBodyTexture->textureData(image);
             delete image;
@@ -123,8 +121,7 @@ namespace cannon_game
                     enemyBodySpriteSheet->getRelativeSpriteSize(),
                     -2);
 
-            image = selyan::Image::create(
-                ".\\res\\enemy\\Gun_01.png");
+            image = selyan::Image::create(".\\res\\enemy\\Gun_01.png");
             auto enemyHeadTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             enemyHeadTexture->textureData(image);
             delete image;
@@ -167,8 +164,7 @@ namespace cannon_game
                 std::make_shared<cannon_game::ProjectileManager>(projectileSpriteGeometry,
                                                                  projectileSpriteSheet);
 
-            image = selyan::Image::create(
-                ".\\res\\player\\tower2.png");
+            image = selyan::Image::create(".\\res\\player\\tower2.png");
             auto playerBodyTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             playerBodyTexture->textureData(image);
@@ -183,8 +179,7 @@ namespace cannon_game
             selyan::Sprite playerBodySprite(playerBodySpriteGeometry,
                                             playerBodySpriteSheet,
                                             selyan::SpriteFrame{});
-            image = selyan::Image::create(
-                ".\\res\\player\\cannon2.png");
+            image = selyan::Image::create(".\\res\\player\\cannon2.png");
             auto playerHeadTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             playerHeadTexture->textureData(image);
@@ -539,9 +534,12 @@ namespace cannon_game
                         playerRotation +=
                             nearestEnemy->getAngularVelocity() >= 0 ? -angleOffset : angleOffset;
                         m_player->setRotation(-playerRotation);
-//                        std::cout << "player roation: " << m_player->getRotation()
-//                                  << ", enemy position: "
-//                                  << glm::to_string(nearestEnemy->getPosition()) << std::endl;
+                        //                        std::cout << "player roation: " <<
+                        //                        m_player->getRotation()
+                        //                                  << ", enemy position: "
+                        //                                  <<
+                        //                                  glm::to_string(nearestEnemy->getPosition())
+                        //                                  << std::endl;
 
                         glm::vec2 direction{ glm::sin(glm::radians(playerRotation)),
                                              glm::cos(glm::radians(playerRotation)) };
@@ -552,7 +550,7 @@ namespace cannon_game
                                                               m_params.playersProjectileSpeed,
                                                               glm::vec2{ 1.f, 1.f },
                                                               0.1f);
-                        //std::cout << "Rotate to enemy" << std::endl;
+                        // std::cout << "Rotate to enemy" << std::endl;
                         m_player->decreaseAmmo();
                     }
                     else if (nearestProjectile != nullptr)
@@ -573,9 +571,11 @@ namespace cannon_game
                                                               m_params.playersProjectileSpeed,
                                                               glm::vec2{ 1.f, 1.f },
                                                               0.1f);
-//                        std::cout << "Rotate to projectile, player id: " << m_player->getUniqueId()
-//                                  << " projectile parent id: " << nearestProjectile->getParentId()
-//                                  << std::endl;
+                        //                        std::cout << "Rotate to projectile, player id: "
+                        //                        << m_player->getUniqueId()
+                        //                                  << " projectile parent id: " <<
+                        //                                  nearestProjectile->getParentId()
+                        //                                  << std::endl;
                         m_player->decreaseAmmo();
                     }
                 }
@@ -613,12 +613,10 @@ namespace cannon_game
 
         std::shared_ptr<cannon_game::Player> m_player;
 
-        selyan::Shader *m_shader;
+        std::shared_ptr<selyan::Shader> m_shader;
     };
 
-    MainLayer::MainLayer(const GameParams &initParams) : pImpl(new impl(initParams))
-    {
-    }
+    MainLayer::MainLayer(const GameParams &initParams) : pImpl(new impl(initParams)) {}
 
     void MainLayer::onEvent(selyan::Event &e) {}
 
