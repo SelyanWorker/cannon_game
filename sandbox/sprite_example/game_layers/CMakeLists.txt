@@ -8,12 +8,10 @@ target_include_directories(cannon_game.game_layers
         )
 target_link_libraries(cannon_game.game_layers
         PUBLIC
-        render
-        application
         sprite
-        cannon_game.game_objects
         platform.ogl
         platform.glfw
         platform.stb_image
+        cannon_game.game_objects
         imgui
         )

@@ -30,13 +30,6 @@ namespace cannon_game
         float playersProjectileSpeed = 10.f;   // parrots
         float maxSpawnRadius = 7;
         int initialPlayerHealth = 3;
-//
-//        float minAngleDifferenceBetweenTwoEnemies = 10;
-//        float spawnRadiusMax = 7;
-//        float spawnRadiusMin = 2;
-//        float orbitSize = 1;
-//
-//        float coordSystemWidth = 10.f;
     };
 
     class GameConfig

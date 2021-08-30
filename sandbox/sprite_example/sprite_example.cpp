@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 
     selyan::Application app{};
 
-    cannon_game::SpriteLayer mainLayer(initialGameParams);
+    cannon_game::MainLayer mainLayer(initialGameParams);
     auto gameParamsCallback = [&](const cannon_game::GameParams &newParams)
     {
         if (initialGameParams.initialEnemyCount != newParams.initialEnemyCount)
@@ -69,11 +69,11 @@ int main(int argc, char **argv)
     }
 
     cannon_game::ImGuiLayer guiLayer(initialGameParams, gameParamsCallback, showSettings);
-    guiLayer.setGameRestartCallback(std::bind(&cannon_game::SpriteLayer::restart, &mainLayer));
+    guiLayer.setGameRestartCallback(std::bind(&cannon_game::MainLayer::restart, &mainLayer));
     guiLayer.setGameStopCallback(
-        std::bind(&cannon_game::SpriteLayer::stop, &mainLayer, std::placeholders::_1));
+        std::bind(&cannon_game::MainLayer::stop, &mainLayer, std::placeholders::_1));
     guiLayer.setGameSpeedUpModeCallback(
-        std::bind(&cannon_game::SpriteLayer::speedUpMode, &mainLayer, std::placeholders::_1));
+        std::bind(&cannon_game::MainLayer::speedUpMode, &mainLayer, std::placeholders::_1));
 
     mainLayer.setHealthChangedCallback(
         std::bind(&cannon_game::ImGuiLayer::setPlayerHealth, &guiLayer, std::placeholders::_1));

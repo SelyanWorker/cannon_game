@@ -4,12 +4,8 @@ add_subdirectory(game_layers)
 add_executable(sb.sprite_example sprite_example.cpp)
 target_link_libraries(sb.sprite_example
         PRIVATE
+        cannon_game.game_layers
+        cannon_game.game_objects
         render
         application
-        sprite
-        cannon_game.game_objects
-        cannon_game.game_layers
-        platform.ogl
-        platform.glfw
-        platform.stb_image
         )
