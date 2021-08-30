@@ -24,8 +24,8 @@ namespace cannon_game
     namespace detail
     {
         inline std::shared_ptr<cannon_game::Projectile> findNearestProjectile(
-            const std::shared_ptr<cannon_game::ProjectileManager>& projectileManager,
-            const std::shared_ptr<cannon_game::GameObject>& gameObject,
+            const std::shared_ptr<cannon_game::ProjectileManager> &projectileManager,
+            const std::shared_ptr<cannon_game::GameObject> &gameObject,
             uint32_t prevTargetId)
         {
             if (projectileManager->begin() == projectileManager->end())
@@ -63,8 +63,8 @@ namespace cannon_game
         }
 
         std::shared_ptr<cannon_game::Enemy> findNearestEnemy(
-            const std::shared_ptr<cannon_game::EnemiesManager>& enemiesManager,
-            const std::shared_ptr<cannon_game::GameObject>& gameObject,
+            const std::shared_ptr<cannon_game::EnemiesManager> &enemiesManager,
+            const std::shared_ptr<cannon_game::GameObject> &gameObject,
             uint32_t prevTargetId)
         {
             if (enemiesManager->begin() == enemiesManager->end())
@@ -532,6 +532,25 @@ namespace cannon_game
                             glm::normalize(nearestEnemy->getPosition() - m_player->getPosition());
                         float playerRotation = glm::degrees(
                             std::atan2(normalizeEnemyPosition.x, normalizeEnemyPosition.y));
+
+                        float nearestEnemyRotationAfterSecond = glm::radians(
+                            nearestEnemy->getRotation() + nearestEnemy->getAngularVelocity());
+                        glm::vec2 nearestEnemyPositionAfterSecond =
+                            glm::normalize(m_player->getPosition() +
+                            glm::vec2(nearestEnemy->getRadius() *
+                                          glm::cos(nearestEnemyRotationAfterSecond),
+                                      nearestEnemy->getRadius() *
+                                          glm::sin(nearestEnemyRotationAfterSecond)));
+                        float playerRotationAfterSecond = glm::degrees(
+                            std::atan2(nearestEnemyPositionAfterSecond.x, nearestEnemyPositionAfterSecond.y));
+
+                        float projectileFlyTimeInSeconds =
+                            nearestEnemy->getRadius() / m_params.playersProjectileSpeed;
+
+                        float playerAngleDifference = playerRotationAfterSecond - playerRotation;
+
+                        float angleOffset = playerAngleDifference * projectileFlyTimeInSeconds;
+
                         playerRotation +=
                             nearestEnemy->getAngularVelocity() >= 0 ? -angleOffset : angleOffset;
                         m_player->setRotation(-playerRotation);
