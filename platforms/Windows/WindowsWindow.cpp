@@ -56,7 +56,9 @@ namespace selyan
     {
         // assertion
         // RN_ASSERT(glfwInit(), "glfwInit() error");
-        assert(glfwInit() && "glfwInit() error");
+        //assert(glfwInit() && "glfwInit() error");
+        if(!glfwInit())
+            std::cout << "glfwInit() error" << std::endl;
 
         // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -64,10 +66,18 @@ namespace selyan
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         m_window = glfwCreateWindow(m_prop.m_width, m_prop.m_height, m_prop.m_name, 0, 0);
+        if(m_window == nullptr)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+        }
         glfwMakeContextCurrent(m_window);
 
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
+        std::cout << "glfwGetProcAddress: " << glfwGetProcAddress << std::endl;
+        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+        {
+            std::cout << "Failed to initialize OpenGL context" << std::endl;
+        }
         /*GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
         if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
         {
