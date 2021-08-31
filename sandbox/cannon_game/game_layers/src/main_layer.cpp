@@ -108,9 +108,9 @@ namespace cannon_game
             m_currentPlayerHealth(initParams.initialPlayerHealth)
         {
             m_shader = std::shared_ptr<selyan::Shader>(
-                selyan::ShaderLibrary::createShaderFromFile(R"(.\res\shaders\Sprite.glsl)"));
+                selyan::ShaderLibrary::createShaderFromFile(R"(.//res//shaders//Sprite.glsl)"));
 
-            auto image = selyan::Image::create(R"(.\res\enemy\Hull_02.png)");
+            auto image = selyan::Image::create(R"(.//res//enemy//Hull_02.png)");
             auto enemyBodyTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             enemyBodyTexture->textureData(image);
             delete image;
@@ -122,7 +122,7 @@ namespace cannon_game
                     enemyBodySpriteSheet->getRelativeSpriteSize(),
                     -2);
 
-            image = selyan::Image::create(R"(.\res\enemy\Gun_01.png)");
+            image = selyan::Image::create(R"(.//res//enemy//Gun_01.png)");
             auto enemyHeadTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             enemyHeadTexture->textureData(image);
             delete image;
@@ -149,7 +149,7 @@ namespace cannon_game
                                                               enemyHeadSpriteGeometry,
                                                               enemyHeadSpriteSheet);
 
-            image = selyan::Image::create(R"(.\res\projectiles\Medium_Shell.png)");
+            image = selyan::Image::create(R"(.//res//projectiles//Medium_Shell.png)");
             auto projectileTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             projectileTexture->textureData(image);
@@ -165,7 +165,7 @@ namespace cannon_game
                 std::make_shared<cannon_game::ProjectileManager>(projectileSpriteGeometry,
                                                                  projectileSpriteSheet);
 
-            image = selyan::Image::create(R"(.\res\player\tower2.png)");
+            image = selyan::Image::create(R"(.//res//player//tower2.png)");
             auto playerBodyTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             playerBodyTexture->textureData(image);
@@ -180,7 +180,7 @@ namespace cannon_game
             selyan::Sprite playerBodySprite(playerBodySpriteGeometry,
                                             playerBodySpriteSheet,
                                             selyan::SpriteFrame{});
-            image = selyan::Image::create(R"(.\res\player\cannon2.png)");
+            image = selyan::Image::create(R"(.//res//player//cannon2.png)");
             auto playerHeadTexture =
                 std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             playerHeadTexture->textureData(image);
@@ -207,7 +207,7 @@ namespace cannon_game
             m_player->setCollision({ m_player->getPosition(), 0.5 });
             m_currentPlayerAmmo = m_params.initialPlayerAmmo;
 
-            image = selyan::Image::create(R"(.\res\explosion\explosion-sprite-sheet.png)");
+            image = selyan::Image::create(R"(.//res//explosion//explosion-sprite-sheet.png)");
             auto explosionTexture = std::shared_ptr<selyan::Texture2D>(selyan::Texture2D::create());
             explosionTexture->textureData(image);
             delete image;
