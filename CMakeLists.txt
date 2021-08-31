@@ -35,11 +35,11 @@ target_link_libraries(imgui
         PRIVATE
         Imm32
         )
-add_executable(imgui_test ${imgui_path}/examples/example_glfw_opengl3/main.cpp)
-target_link_libraries(imgui_test
-        PRIVATE
-        imgui
-        )
+#add_executable(imgui_test ${imgui_path}/examples/example_glfw_opengl3/main.cpp)
+#target_link_libraries(imgui_test
+#        PRIVATE
+#        imgui
+#        )
 
 add_executable(glad_test vendor/glad/example/c++/hellowindow2.cpp)
 target_link_libraries(glad_test PRIVATE
