@@ -4,6 +4,7 @@
 #include "stb_image/stb_image_write.h"
 
 #include <cstring>
+#include <cstdint>
 
 namespace selyan
 {
