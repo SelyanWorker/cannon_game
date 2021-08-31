@@ -15,7 +15,7 @@ namespace selyan
         m_lastFrameTime = 0;
         m_run = true;
 
-        m_window = Window::create({ "Terrain Editor", 1024, 768 });
+        m_window = Window::create({ "Cannon", 1024, 768 });
         // RN_APP_INFO("GLFW windows create!");
         std::cout << "GLFW windows create!" << std::endl;
 
