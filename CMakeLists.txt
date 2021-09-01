@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 add_compile_options(-Wall -Wextra -pedantic)
 
+include(cmake/get_link_libraries.cmake)
 
 # vendors
 add_subdirectory(vendor/glad)

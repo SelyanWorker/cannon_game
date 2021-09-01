@@ -551,8 +551,6 @@ namespace cannon_game
 
                         float angleOffset = playerAngleDifference * projectileFlyTimeInSeconds;
 
-                        std::cout << "angleOffset: " << angleOffset << std::endl;
-
                         playerRotation +=
                             nearestEnemy->getAngularVelocity() >= 0 ? angleOffset : -angleOffset;
                         m_player->setRotation(-playerRotation);

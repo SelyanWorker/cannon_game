@@ -18,3 +18,5 @@ add_custom_target(copy-runtime-files ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/sandbox/cannon_game/res ${CMAKE_BINARY_DIR}/sandbox/cannon_game/res)
 
 add_dependencies(sb.cannon_game copy-runtime-files)
+
+deploy_dlls(sb.cannon_game)
